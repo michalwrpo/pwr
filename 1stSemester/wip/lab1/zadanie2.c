@@ -27,7 +27,7 @@ int main(void) {
         if (delta < 0) {
             printf("Brak rozwiązań.\n");
         } else if (delta == 0) {
-            x1 = -b/2;
+            x1 = -b/(2 * a);
             printf("1 rozwiązanie: %lf\n", x1);
         } else {
             x1 = (-b + sqrt(delta))/(2 * a);
