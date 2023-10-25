@@ -1,4 +1,4 @@
-// Zadanie 4, Michał Waluś
+// Zadanie 4, zadanie4.c Michał Waluś
 
 #include <stdio.h>
 
