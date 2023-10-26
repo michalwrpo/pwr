@@ -55,4 +55,5 @@ int main(void) {
     days = daysTillDate(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900) - daysTillDate(05, 07, 2004);
     printf("Dni od 05.07.2004 do dnia dzisiejszego: %d\n", days);
     printf("Sekundy od 05.07.2004 do dnia dzisiejszego: %d\n", days*24*3600);
+    return 0;
 }

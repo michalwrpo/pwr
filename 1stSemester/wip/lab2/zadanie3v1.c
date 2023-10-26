@@ -8,4 +8,5 @@ int main(void) {
     root = pow(root, 1.0/1000);
     ans = root * 1000 / e;
     printf("%lf\n", ans);
+    return 0;
 }

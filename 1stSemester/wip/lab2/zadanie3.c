@@ -9,4 +9,5 @@ int main(void) {
         product *= pow( (i * (1001-i)), 1.0/100);
     }
     printf("%lf\n", pow(product, 1.0/10));
+    return 0;
 }
