@@ -13,7 +13,6 @@ int sigma(int n) {
 }
 
 int main(void) {
-    printf("%d\n", sigma(6));
     for(int i = 1; i <= 1000; i++) {
         int j = sigma(i);
         if (i == j) {
