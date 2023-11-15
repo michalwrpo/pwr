@@ -37,8 +37,14 @@ int main(void) {
         x -= q * b1;
         y += q * a1;
         if (x < - b1 / 2 || x > b1 / 2) {
-            x += b1;
-            y -= a1;
+            if (q < 0) {
+                x += b1;
+                y -= a1;
+            } else {
+                x -= b1;
+                y += a1;
+            }
+            
         }
         printf("%d * (%d) + %d * (%d) = %d\n", a, x, b, y, c);
     }
