@@ -3,11 +3,6 @@
 
 int gcd(int a, int b) {
     int temp;
-    if(a < b) {
-        temp = b;
-        b = a;
-        a = temp;
-    }
     while (b != 0) {
         temp = a - (a / b * b);
         a = b;
