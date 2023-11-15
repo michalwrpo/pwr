@@ -16,7 +16,7 @@ int main(void) {
     printf("Choose value for a: ");
     scanf("%d", &a);
     printf("Choose value for b: ");
-    scanf("%i", &b);
+    scanf("%d", &b);
     printf("The greatest common divisor of %d and %d is %d.\n", a, b, gcd(a, b));
     return 0;
 }
