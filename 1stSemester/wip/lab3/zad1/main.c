@@ -1,4 +1,4 @@
-// Zadanie 1, main.c
+// Zadanie 1, main.c Michał Waluś
 
 #include <stdio.h>
 #include <stdbool.h>
