@@ -18,7 +18,6 @@ int phi(long int n) {
             while (n % k == 0) {
                 n /= k;
             }
-            k = 1;
         }
         k += 2;
     }
