@@ -9,7 +9,9 @@ int phi(long int n) {
         while (n % 2 == 0) {
             n /= 2;
         }
-        
+        if (n == 1) {
+            return ans;
+        }
     }
     while(k * k <= n) {
         if(n % k == 0) {
