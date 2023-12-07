@@ -13,5 +13,5 @@ double rozwiazanie(double a, double b, double eps) {
             a = c;
         }
     }
-    return (a+b)/2;
+    return a;
 }

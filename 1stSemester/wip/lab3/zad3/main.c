@@ -4,7 +4,7 @@
 #include "funs.h"
 
 int main(void) {
-    long int n = 100;
+    long int n = 4000;
     printf("phi(%ld) = %d\n", n, phi(n));
     return 0;
 }
