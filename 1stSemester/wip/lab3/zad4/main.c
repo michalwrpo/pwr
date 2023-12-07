@@ -12,7 +12,6 @@ int main(void) {
     north(&Bob);
     east(&Bob);
     south(&Alice);
-    south(&Alice);
     printf("Distance = %f\n", distance(Bob, Alice));
     return 0;
 }

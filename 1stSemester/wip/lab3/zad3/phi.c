@@ -9,21 +9,18 @@ int phi(long int n) {
         while (n % 2 == 0) {
             n /= 2;
         }
-        if (n == 1) {
-            return ans;
-        }
     }
     while(k * k <= n) {
         if(n % k == 0) {
-            ans /= k;
-            ans *= k-1;
+            ans -= ans / k;
             while (n % k == 0) {
                 n /= k;
             }
         }
         k += 2;
     }
-    ans *= n-1;
-    ans /= n;
+    if(n != 1) {
+        ans -= ans / n;
+    }
     return ans;     
 }
