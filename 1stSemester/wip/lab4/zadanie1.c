@@ -10,6 +10,9 @@ bool match(char* wzorzec, char* lancuch) {
         }
         return false;
     }
+    if(*lancuch == '\0') {
+        return false;
+    }
     if(*wzorzec == *lancuch || *wzorzec == '?') {
         return match((wzorzec + 1), (lancuch + 1));
     } else if (*wzorzec == '*') {
