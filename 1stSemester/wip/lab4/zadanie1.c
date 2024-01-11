@@ -21,7 +21,6 @@ bool match(char* wzorzec, char* lancuch) {
         } else if(match((wzorzec), (lancuch + 1))) {
             return true;
         }
-        return false;
     }
     return false;
 }  
