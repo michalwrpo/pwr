@@ -20,12 +20,10 @@ bool match(char* wzorzec, char* lancuch) {
             return true;
         } else if(match((wzorzec), (lancuch + 1))) {
             return true;
-        } else {
-            return false;
         }
-    } else {
         return false;
     }
+    return false;
 }  
 
 int main(void) {
