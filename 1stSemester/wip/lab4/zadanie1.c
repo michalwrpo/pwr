@@ -28,5 +28,5 @@ bool match(char* wzorzec, char* lancuch) {
 int main(void) {
     printf("%d\n", match("a*b*a", "abababababababababababa"));
     printf("%d\n", match("a*b*a", "ababababababababababab"));
-    
+    return 0;
 }
