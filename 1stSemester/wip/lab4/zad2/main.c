@@ -44,12 +44,6 @@ void interpret(int red, int white, int guess) {
             }
         }
     }
-    // for (int i = 0; i < 1296; i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         printf("%d", allowed[i][j]);
-    //     }
-    //     printf(" ");
-    // }
 }
 
 int guess(int red, int white, int prev_guess) {
