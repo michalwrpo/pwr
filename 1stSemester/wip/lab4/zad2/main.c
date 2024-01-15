@@ -4,6 +4,7 @@
 #include <math.h>
 
 int allowed[1296][4];
+int left = 1296;
 
 void create_list(void) {
     for (int i = 0; i < 1296; i++) {
@@ -41,6 +42,7 @@ void interpret(int red, int white, int guess) {
             }
             if (innerred != red || innerwhite != white) {
                 allowed[i][0] = 0;
+                left--;
             }
         }
     }
@@ -49,6 +51,10 @@ void interpret(int red, int white, int guess) {
 int guess(int red, int white, int prev_guess) {
     interpret(red, white, prev_guess);
     int guesssix = 0;
+    if (left == 0) {
+        return 0;
+    }
+    
     for (int i = 0; i < 4; i++) {
         guesssix += ((prev_guess/(int)pow(10, 3 - i)) - (prev_guess/(int)pow(10, 4 - i))*10 - 1) * pow(6, 3 - i); 
     }
@@ -70,6 +76,10 @@ int main(void) {
     scanf("%d", &white);
     while (red != 4) {
         new_guess = guess(red, white, prev_guess);
+        if (new_guess == 0) {
+            printf("You're cheating!\n");
+            break;
+        }
         printf("%d. Guess: %d\n", try, new_guess);
         printf("Red: ");
         scanf("%d", &red);
@@ -77,6 +87,9 @@ int main(void) {
         scanf("%d", &white);
         prev_guess = new_guess;
         try++;
+    }
+    if (red == 4) {
+        printf("I win!\n");
     }
     
     return 0;
