@@ -1,5 +1,6 @@
-//Zadanie 2, main.c Michał Waluś
+//Zadanie 2, decode.c Michał Waluś
 
+#include "funs.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -20,36 +21,28 @@ void interpret(int red, int white, int guess) {
     }
     for (int i = 0; i < 1296; i++) {
         int temporary[4] = {array[0], array[1], array[2], array[3]};
-        int tallowed[4] = {allowed[i][0], allowed[i][1], allowed[i][2], allowed[i][3]};
         if (allowed[i][0] != 0) {
             int innerred = 0, innerwhite = 0;
             for (int j = 0; j < 4; j++) {
                 if (allowed[i][j] == temporary[j]) {
                     innerred++;
                     temporary[j] = 0;
-                    tallowed[j] = 7;
                 }
             }
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 3; k++) {
-                    if (tallowed[j] == temporary[(j + k + 1) % 4]) {
+                    if (allowed[i][j] == temporary[(j + k + 1) % 4]) {
                         innerwhite++;
                         temporary[(j + k + 1) % 4] = 0;
-                        break;
                     }
                 }
             }
+            //printf("%d.%d%d | ", i, innerred, innerwhite);
             if (innerred != red || innerwhite != white) {
                 allowed[i][0] = 0;
             }
         }
     }
-    // for (int i = 0; i < 1296; i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         printf("%d", allowed[i][j]);
-    //     }
-    //     printf(" ");
-    // }
 }
 
 int guess(int red, int white, int prev_guess) {
@@ -64,26 +57,14 @@ int guess(int red, int white, int prev_guess) {
     return 1000*allowed[guesssix][0] + 100*allowed[guesssix][1] + 10*allowed[guesssix][2] + allowed[guesssix][3];
 }
 
-
 int main(void) {
     create_list();
-    int white = 0, red = 0, try = 1;
-    int prev_guess = 1122, new_guess;
-    printf("%d. Guess: 1122\n", try);
-    printf("Red: ");
-    scanf("%d", &red);
-    printf("White: ");
-    scanf("%d", &white);
-    while (red != 4) {
-        new_guess = guess(red, white, prev_guess);
-        printf("%d. Guess: %d\n", try, new_guess);
-        printf("Red: ");
-        scanf("%d", &red);
-        printf("White: ");
-        scanf("%d", &white);
-        prev_guess = new_guess;
-        try++;
+    for (int i = 0; i < 1296; i++) {
+        for (int j = 0; j < 4; j++) {
+            printf("%d", allowed[i][j]);
+        }
+        printf(" ");
     }
-    
+    printf("%d", guess(1, 1, 1234));
     return 0;
 }
