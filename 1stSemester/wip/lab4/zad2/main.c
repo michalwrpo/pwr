@@ -75,6 +75,7 @@ int main(void) {
     printf("White: ");
     scanf("%d", &white);
     while (red != 4) {
+        try++;
         new_guess = guess(red, white, prev_guess);
         if (new_guess == 0) {
             printf("You're cheating!\n");
@@ -86,7 +87,6 @@ int main(void) {
         printf("White: ");
         scanf("%d", &white);
         prev_guess = new_guess;
-        try++;
     }
     if (red == 4) {
         printf("I win!\n");
