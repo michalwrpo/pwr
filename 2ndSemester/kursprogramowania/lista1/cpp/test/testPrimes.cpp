@@ -2,7 +2,6 @@
 
 #include <cassert>
 #include <stdexcept>
-#include <iostream>
 
 void testPrimes() noexcept(true);
 static void testSieveExceptions(const int n) noexcept(true);
