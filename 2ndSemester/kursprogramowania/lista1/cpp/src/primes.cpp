@@ -9,7 +9,7 @@ std::vector<bool> Primes::sieve(const int n) noexcept(false)
 {
     if (n <= 1)
     {
-        throw std::invalid_argument("parameter n should be greater than 1, got " + std::to_string(n));
+        throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter n should be greater than 1, got " + std::to_string(n));
     }
     
     std::vector<bool> primes = {false, false};
@@ -35,7 +35,7 @@ std::vector<int> Primes::primesList(const int n) noexcept(false)
 {
     if (n <= 1)
     {
-        throw std::invalid_argument("parameter n should be greater than 1, got " + std::to_string(n));
+        throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter n should be greater than 1, got " + std::to_string(n));
     }
 
     std::vector<int> primesList;
