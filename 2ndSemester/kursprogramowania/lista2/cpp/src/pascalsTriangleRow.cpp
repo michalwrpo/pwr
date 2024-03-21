@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-std::vector<int> PascalsTriangleRow::pascalsRow(int n) noexcept(false)
+std::vector<int> PascalsTriangleRow::pascalsRow(const int n) noexcept(false)
 {
     if (n < 0)
         throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter n should be nonnegative, got " + std::to_string(n));
@@ -19,7 +19,7 @@ std::vector<int> PascalsTriangleRow::pascalsRow(int n) noexcept(false)
     return nthRow;
 }
 
-PascalsTriangleRow::PascalsTriangleRow(int n) noexcept(false)
+PascalsTriangleRow::PascalsTriangleRow(const int n) noexcept(false)
 {
     if (n < 0)
         throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter n should be nonnegative, got " + std::to_string(n));
@@ -30,7 +30,7 @@ PascalsTriangleRow::PascalsTriangleRow(int n) noexcept(false)
     row = PascalsTriangleRow::pascalsRow(n);
 }
 
-int PascalsTriangleRow::mthElement(int m) noexcept(false)
+int PascalsTriangleRow::mthElement(const int m) noexcept(false)
 {
     if (m < 0)
         throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter m should be nonnegative, got " + std::to_string(m));
@@ -38,7 +38,7 @@ int PascalsTriangleRow::mthElement(int m) noexcept(false)
     int n = static_cast<int>(this->row.size()) - 1;
 
     if (m > n)
-        throw std::out_of_range(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter m should be smaller or equal to n" + std::to_string(n) + ", got " + std::to_string(m));
+        throw std::out_of_range(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter m should be smaller or equal to n (" + std::to_string(n) + "), got " + std::to_string(m));
         
     return this->row[static_cast<size_t>(m)];
 }
