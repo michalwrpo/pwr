@@ -16,8 +16,8 @@ int main(const int argc, const char* const argv[])
 
     try
     {
-        const int plenght = ValueConverter::stringToVal<int>(std::string(argv[1]));
-        p = new PrimeNumbers(plenght);
+        const int plength = ValueConverter::stringToVal<int>(std::string(argv[1]));
+        p = new PrimeNumbers(plength);
     }
     catch(const std::invalid_argument& e)
     {
