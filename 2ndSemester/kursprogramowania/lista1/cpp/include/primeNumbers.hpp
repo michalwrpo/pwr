@@ -20,7 +20,7 @@ public:
 
     PrimeNumbers() = delete;
 
-    PrimeNumbers(int n) noexcept(false);
+    PrimeNumbers(const int n) noexcept(false);
     
     /**
      * @brief returns mth primes if its smaller than n
@@ -28,7 +28,7 @@ public:
      * @param m - integer, throws an exception for negative numbers
      * @return int - mth prime if its smaller than n
      */
-    int mthprime(int m) noexcept(false);
+    int mthprime(const int m) noexcept(false);
 };
 
 #endif

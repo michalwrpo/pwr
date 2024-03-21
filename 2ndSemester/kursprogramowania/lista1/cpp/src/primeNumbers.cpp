@@ -2,7 +2,7 @@
 
 
 
-PrimeNumbers::PrimeNumbers(int n) noexcept(false)
+PrimeNumbers::PrimeNumbers(const int n) noexcept(false)
 {   
     if (n < 2)
         throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter n should be greater than 1, got " + std::to_string(n));
@@ -10,7 +10,7 @@ PrimeNumbers::PrimeNumbers(int n) noexcept(false)
     primes = Primes::primesList(n);
 }
 
-int PrimeNumbers::mthprime(int m) noexcept(false)
+int PrimeNumbers::mthprime(const int m) noexcept(false)
 {
     if (m < 0)
         throw std::invalid_argument(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "parameter n should be nonnegative, got " + std::to_string(m));
