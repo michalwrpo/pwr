@@ -28,7 +28,7 @@ public:
      * @param m - integer, throws an exception for negative numbers
      * @return int - mth prime if its smaller than n
      */
-    int mthprime(const int m) noexcept(false);
+    int mthprime(const int m) const noexcept(false);
 };
 
 #endif
