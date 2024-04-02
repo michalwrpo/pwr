@@ -4,6 +4,7 @@ extern void testSquare() noexcept(true);
 extern void testRectangle() noexcept(true);
 extern void testRhombus() noexcept(true);
 extern void testPentagon() noexcept(true);
+extern void testHexagon() noexcept(true);
 
 int main(void)
 {
@@ -13,5 +14,6 @@ int main(void)
     testRectangle();
     testRhombus();
     testPentagon();
+    testHexagon();
     return 0;
 }

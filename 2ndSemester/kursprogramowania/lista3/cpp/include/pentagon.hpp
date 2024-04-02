@@ -1,5 +1,5 @@
-#ifndef CIRCLE_HPP
-#define CIRCLE_HPP
+#ifndef PENTAGON_HPP
+#define PENTAGON_HPP
 
 #include <figure.hpp>
 

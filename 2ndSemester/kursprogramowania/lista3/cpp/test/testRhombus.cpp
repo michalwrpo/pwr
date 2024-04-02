@@ -36,28 +36,28 @@ static void testRhombusConstructor() noexcept(true)
 
     }
     {
-        Rhombus testRect = Rhombus(1, 90);
-        assert(std::fabs(testRect.area() - 1) < 0.00001);
-        assert(std::fabs(testRect.perimeter() - 4) < 0.00001);
-        assert(testRect.name().compare("Rhombus") == 0);
+        Rhombus testRho = Rhombus(1, 90);
+        assert(std::fabs(testRho.area() - 1) < 0.00001);
+        assert(std::fabs(testRho.perimeter() - 4) < 0.00001);
+        assert(testRho.name().compare("Rhombus") == 0);
     }
     {
-        Rhombus testRect = Rhombus(5, 30);
-        assert(std::fabs(testRect.area() - 12.5) < 0.00001);
-        assert(std::fabs(testRect.perimeter() - 20) < 0.00001);
-        assert(testRect.name().compare("Rhombus") == 0);
+        Rhombus testRho = Rhombus(5, 30);
+        assert(std::fabs(testRho.area() - 12.5) < 0.00001);
+        assert(std::fabs(testRho.perimeter() - 20) < 0.00001);
+        assert(testRho.name().compare("Rhombus") == 0);
     }
     {
-        Rhombus testRect = Rhombus(0.05, 60);
-        assert(std::fabs(testRect.area() - 0.00216506) < 0.00001);
-        assert(std::fabs(testRect.perimeter() - 0.2) < 0.00001);
-        assert(testRect.name().compare("Rhombus") == 0);
+        Rhombus testRho = Rhombus(0.05, 60);
+        assert(std::fabs(testRho.area() - 0.00216506) < 0.00001);
+        assert(std::fabs(testRho.perimeter() - 0.2) < 0.00001);
+        assert(testRho.name().compare("Rhombus") == 0);
     }
     {
-        Rhombus testRect = Rhombus(1.23, 22);
-        assert(std::fabs(testRect.area() - 0.566742) < 0.00001);
-        assert(std::fabs(testRect.perimeter() - 4.92) < 0.00001);
-        assert(testRect.name().compare("Rhombus") == 0);
+        Rhombus testRho = Rhombus(1.23, 22);
+        assert(std::fabs(testRho.area() - 0.566742) < 0.00001);
+        assert(std::fabs(testRho.perimeter() - 4.92) < 0.00001);
+        assert(testRho.name().compare("Rhombus") == 0);
     }
 }
 
