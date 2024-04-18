@@ -122,5 +122,7 @@ int main(const int argc, const char* const argv[])
     std::cout << "Area: " << f->area() << std::endl; 
     std::cout << "Perimeter: " << f->perimeter() << std::endl; 
     
+    delete f;
+
     return 0;
 }
