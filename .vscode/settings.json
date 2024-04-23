@@ -60,5 +60,16 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.controls.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.base.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.fxml.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.graphics.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.media.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.swing.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.web.jar",
+        "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx-swt.jar"
+    ]
 }
