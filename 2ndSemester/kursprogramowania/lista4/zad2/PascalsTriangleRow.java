@@ -8,32 +8,32 @@ import java.util.ArrayList;
  */
 public final class PascalsTriangleRow 
 {
-    private ArrayList<Integer> row;
+    private ArrayList<Long> row;
 
     /**
      * @brief returns full nth row of Pascal's Triangle
      * 
-     * @param n - should be nonnegative and smaller than 34
+     * @param n - should be nonnegative and smaller than 62
      * @return std::vector<int> of all binomials n over something
      */
-    static public ArrayList<Integer> pascalsRow(int n) throws IllegalArgumentException
+    static public ArrayList<Long> pascalsRow(int n) throws IllegalArgumentException
     {
         if (n < 0)
         {
             throw new IllegalArgumentException("parameter n should be nonnegative, got " + n);
         }
         
-        if (n > 33)
+        if (n > 61)
         {
-            throw new IllegalArgumentException("parameter n should be smaller than 34, got " + n);
+            throw new IllegalArgumentException("parameter n should be smaller than 62, got " + n);
         }
         
-        ArrayList<Integer> nthRow = new ArrayList<Integer>();
-        nthRow.add(1);
+        ArrayList<Long> nthRow = new ArrayList<Long>();
+        nthRow.add(1l);
         
         for (int i = 0; i < n; i++)
         {
-            nthRow.add((int) ( ((long)nthRow.get(i)) * ((long)(n - i)) / ((long) (i + 1))) );
+            nthRow.add(nthRow.get(i) * (long)(n - i) / (long)(i + 1));
         }
         
         return nthRow;
@@ -46,15 +46,15 @@ public final class PascalsTriangleRow
             throw new IllegalArgumentException("parameter n should be nonnegative, got " + n);
         }
         
-        if (n > 33)
+        if (n > 61)
         {
-            throw new IllegalArgumentException("parameter n should be smaller than 34, got " + n);
+            throw new IllegalArgumentException("parameter n should be smaller than 62, got " + n);
         }
 
         row = pascalsRow(n);
     }
 
-    public int mthElement(final int m) throws IllegalArgumentException
+    public Long mthElement(final int m) throws IllegalArgumentException
     {
         if (m < 0)
         {

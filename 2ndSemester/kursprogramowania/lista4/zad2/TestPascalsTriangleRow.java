@@ -21,7 +21,7 @@ public final class TestPascalsTriangleRow
     static private void testPascalsRow()
     {
         testPascalsRowExceptions(-1);
-        testPascalsRowExceptions(34);
+        testPascalsRowExceptions(62);
         testPascalsRowExceptions(1000);
         testPascalsRowExceptions(-123);
 
@@ -66,7 +66,7 @@ public final class TestPascalsTriangleRow
     {
         {
             testPascalsTriangleRowExceptions(-1);
-            testPascalsTriangleRowExceptions(35);
+            testPascalsTriangleRowExceptions(62);
             testPascalsTriangleRowExceptions(100000);
             testPascalsTriangleRowExceptions(-123);
         }
