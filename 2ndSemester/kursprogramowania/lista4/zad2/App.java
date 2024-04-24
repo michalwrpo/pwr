@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -9,8 +11,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -19,73 +22,98 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
  
 
-public class App extends Application {
-    
+public class App extends Application 
+{    
     @Override
-    public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Generate");
-        
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setFitToHeight(true);
+    public void start(Stage stage) 
+    {
+        new GUI(stage);
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.TOP_CENTER);
-        grid.setHgap(100);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.setGridLinesVisible(true);
-        grid.add(btn, 0, 2);
-        GridPane.setHalignment(btn, HPos.CENTER);
+        // VBox vBox = new VBox(0);
         
-        Text title = new Text("Pascal's Triangle Generator");
-        title.setFont(Font.font("sans serif", FontWeight.BOLD, 20));
-        grid.add(title, 0, 0);
-        GridPane.setHalignment(title, HPos.CENTER);
+        // HBox toolBar = new HBox();
+        // toolBar.setAlignment(Pos.TOP_RIGHT);
         
-        
-        TextField triangleSize = new TextField();
-        grid.add(triangleSize, 0, 1);
-        GridPane.setHalignment(triangleSize, HPos.CENTER);
-        
-        Text triangle = new Text("");
-        triangle.setTextAlignment(TextAlignment.JUSTIFY);
-        triangle.setFont(Font.font("sans serif", FontWeight.NORMAL, 18));
-        grid.add(triangle, 0, 3);
-        GridPane.setHalignment(triangle, HPos.CENTER);
+        // Button quit = new Button();
+        // quit.setText("X");
+        // quit.setOnAction((ActionEvent event) -> 
+        //     {
+        //         Platform.exit();
+        //         MyLogger.logger.log(Level.INFO, "Quit");
+        //     }
+        //     );
+            
+        // toolBar.getChildren().add(quit);
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
+        // ScrollPane scrollPane = new ScrollPane();
+        // scrollPane.setFitToWidth(true);
+        // scrollPane.setFitToHeight(true);
+        
+        // GridPane grid = new GridPane();
+        // grid.setAlignment(Pos.TOP_CENTER);
+        // grid.setHgap(100);
+        // grid.setVgap(10);
+        // grid.setPadding(new Insets(25, 25, 25, 25));
+        // grid.setGridLinesVisible(true);
+        
     
-            @Override
-            public void handle(ActionEvent event) {
-                int n = Integer.parseInt(triangleSize.getText());
-            String message = "";
-            for(int i = 0; i < n; i++)
-            {
-                for (int k = 0; k < 2*(n - i); k++)
-                {
-                    message += " ";
-                }
-                ArrayList<Integer> row =  PascalsTriangleRow.pascalsRow(i);
-                for (int j : row)
-                    message += (j + "  ");
-                message += "\n";
-            }
-                System.out.println(message);
-                triangle.setText(message);
-            }
-        });
+        // Button btn = new Button();
+        // btn.setText("Generate");
+        // grid.add(btn, 0, 2);
+        // GridPane.setHalignment(btn, HPos.CENTER);
         
-        scrollPane.setContent(grid);;
+        
+        // Text title = new Text("Pascal's Triangle Generator");
+        // title.setFont(Font.font("sans serif", FontWeight.BOLD, 20));
+        // grid.add(title, 0, 0);
+        // GridPane.setHalignment(title, HPos.CENTER);
+        
+        
+        // TextField triangleSize = new TextField();
+        // grid.add(triangleSize, 0, 1);
+        // GridPane.setHalignment(triangleSize, HPos.CENTER);
+        
+        // Text triangle = new Text("");
+        // triangle.setTextAlignment(TextAlignment.CENTER);
+        // triangle.setFont(Font.font("sans serif", FontWeight.NORMAL, 18));
+        // grid.add(triangle, 0, 3);
+        // GridPane.setHalignment(triangle, HPos.CENTER);
 
-        Scene scene = new Scene(scrollPane, 300, 250);
+        // btn.setOnAction(new EventHandler<ActionEvent>() 
+        // {
+        //     @Override
+        //     public void handle(ActionEvent event) 
+        //     {
+        //         MyLogger.logger.log(Level.FINE, "Generated a triangle");
+
+        //         int n = Integer.parseInt(triangleSize.getText());
+        //         String message = " ";
+        //         for(int i = 0; i < n; i++)
+        //         {
+        //             ArrayList<Integer> row =  PascalsTriangleRow.pascalsRow(i);
+        //             for (int j : row)
+        //                 message += (j + "  ");
+        //             message += "\n ";
+        //         }
+        //             triangle.setText(message);
+        //             scrollPane.setHvalue(0.5);
+        //     }
+        // });
+
+        // scrollPane.setContent(grid);
+        // vBox.getChildren().addAll(toolBar, scrollPane);
+
+        // Scene scene = new Scene(vBox, 300, 250);
         
-        primaryStage.setTitle("Grid");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
+        // primaryStage.setTitle("Pascal's Triangle");
+        // primaryStage.setScene(scene);
+        // primaryStage.show();
+
+        // MyLogger.logger.log(Level.INFO, "Created scene");
     }
     public static void main(String[] args) {
+        MyLogger.loggerConfig();
         launch(args);
     }
 }

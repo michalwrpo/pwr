@@ -40,7 +40,7 @@ public final class TestPascalsTriangleRow
     {
         try
         {
-            final PascalsTriangleRow val = new PascalsTriangleRow(n);
+            new PascalsTriangleRow(n);
             assert false: "Exception should be raised";
         }
         catch (final IllegalArgumentException e)
