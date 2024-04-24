@@ -42,13 +42,10 @@ public class GUIButton extends Button
                 }
                 catch(final IllegalArgumentException e)
                 {
-                    MyLogger.logger.log(Level.INFO, "Invalid Argument: " + e.getMessage());
+                    MyLogger.logger.log(Level.WARNING, "Invalid Argument: " + e.getMessage());
                     
-                    Popup popup = new Popup();
-                    popup.getContent().add(new Text("Invalid Argument: " + e.getMessage()));
+                    Popup popup = new GUIPopUp("Invalid Argument: " + e.getMessage());
                     popup.show(getScene().getWindow());
-
-                    System.out.println(popup.getContent());
                 }
             }
         });

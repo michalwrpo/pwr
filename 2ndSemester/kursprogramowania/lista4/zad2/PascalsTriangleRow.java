@@ -20,12 +20,12 @@ public final class PascalsTriangleRow
     {
         if (n < 0)
         {
-            throw new IllegalArgumentException("parameter n should be nonnegative, got " + n);
+            throw new IllegalArgumentException("parameter should be nonnegative, got " + n);
         }
         
         if (n > 61)
         {
-            throw new IllegalArgumentException("parameter n should be smaller than 62, got " + n);
+            throw new IllegalArgumentException("parameter should be smaller than 62, got " + n);
         }
         
         ArrayList<Long> nthRow = new ArrayList<Long>();

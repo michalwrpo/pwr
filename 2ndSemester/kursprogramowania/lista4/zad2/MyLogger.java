@@ -18,7 +18,7 @@ public class MyLogger
         logger.setUseParentHandlers(false);
 
         ConsoleHandler ch = new ConsoleHandler();
-        ch.setLevel(Level.ALL);
+        ch.setLevel(Level.INFO);
         logger.addHandler(ch);
 
         try
@@ -33,6 +33,6 @@ public class MyLogger
 
         }
 
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.OFF);
     }
 }

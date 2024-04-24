@@ -1,5 +1,6 @@
 import java.util.logging.Level;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -17,8 +18,12 @@ public class GUI
         HBox toolBar = new GUIHBar();
 
         Text title = new GUIText("Pascal's Triangle Generator", 20, true);
-        TextField inputField = new TextField();
         Text triangle = new GUIText("", 18, false);
+        
+        TextField inputField = new TextField();
+        inputField.setAlignment(Pos.CENTER);
+        
+
         Button button = new GUIButton("Generate", inputField, triangle);
 
         GridPane grid = new GUIGrid(title, inputField, button, triangle);
@@ -30,6 +35,7 @@ public class GUI
         stage.setScene(scene);
         stage.setTitle("Pascal's Triangle");
         stage.show();
+        
         MyLogger.logger.log(Level.INFO, "Created scene");
     }    
 }
