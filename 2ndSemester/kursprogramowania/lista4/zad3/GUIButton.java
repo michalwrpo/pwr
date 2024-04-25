@@ -14,6 +14,13 @@ import javafx.event.EventHandler;
 
 public class GUIButton extends Button
 {
+    private void pop(String argument)
+    {
+        Popup popup = new GUIPopUp("Invalid Argument: " + argument);
+        popup.show(getScene().getWindow());
+        MyLogger.logger.log(Level.FINE, "Invalid Argument");
+    }
+
     public GUIButton(String name, TextField length, TextField arguments, Text outputText)
     {
         super(name);
@@ -39,7 +46,9 @@ public class GUIButton extends Button
                     
                     try
                     {
-                        Integer.parseInt(arg1);
+                        int mainarg = Integer.parseInt(arg1);
+                        if (mainarg < 0 || mainarg > 33)
+                            pop(arg1);
                         
                         try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream())))
                         {
@@ -65,9 +74,7 @@ public class GUIButton extends Button
                     }
                     catch (NumberFormatException e)
                     {
-                        Popup popup = new GUIPopUp("Invalid Argument: " + arg1);
-                        popup.show(getScene().getWindow());
-                        MyLogger.logger.log(Level.FINE, "Invalid Argument");
+                        pop(arg1);
                     }
                 }
                 catch (IOException e)
