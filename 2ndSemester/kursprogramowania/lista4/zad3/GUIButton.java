@@ -37,32 +37,38 @@ public class GUIButton extends Button
                     
                     Process process = new ProcessBuilder(allArgs).start();
                     
-                    try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream())))
+                    try
                     {
-                        String line;
+                        Integer.parseInt(arg1);
                         
-                        while ((line = input.readLine()) != null)
+                        try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream())))
                         {
-                            message += line + "\n";
-                        }
-                        if (message.length() == 0) 
+                            String line;
+                            
+                            while ((line = input.readLine()) != null)
+                            {
+                                message += line + "\n";
+                            }
+                        } 
+                        try (BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream())))
                         {
-                            Popup popup = new GUIPopUp("Invalid Argument: " + arg1);
-                            popup.show(getScene().getWindow());
+                            String line;
+    
+                            while ((line = err.readLine()) != null)
+                            {
+                                message += line.substring(0, line.indexOf(':')) + "\n";
+                            }
                         }
-                    } 
-                    try (BufferedReader err = new BufferedReader(new InputStreamReader(process.getErrorStream())))
-                    {
-                        String line;
-
-                        while ((line = err.readLine()) != null)
-                        {
-                            message += line.substring(0, line.indexOf(':')) + "\n";
-                        }
+    
+                        outputText.setText(message);
+                        MyLogger.logger.log(Level.FINE, "Generated answers");
                     }
-
-                    outputText.setText(message);
-                    MyLogger.logger.log(Level.FINE, "Generated answers");
+                    catch (NumberFormatException e)
+                    {
+                        Popup popup = new GUIPopUp("Invalid Argument: " + arg1);
+                        popup.show(getScene().getWindow());
+                        MyLogger.logger.log(Level.FINE, "Invalid Argument");
+                    }
                 }
                 catch (IOException e)
                 {
