@@ -32,9 +32,7 @@ public class GUI
 
         
         StateButton stateButton = new StateButton();
-        
-        // IGenerator g = new RectangleGenerator();
-        
+                
         MouseHandler mouseHandler = new MouseHandler(canvas);
 
         GUIComboBox comboBox = new GUIComboBox(new ShapePair[]{Circle, Rectangle, Triangle}, mouseHandler);

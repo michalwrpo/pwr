@@ -1,3 +1,5 @@
+import java.util.logging.Level;
+
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -5,6 +7,8 @@ import javafx.scene.shape.StrokeType;
 
 public class ShapeRectangle extends Rectangle implements IShape
 {
+    private double scale = 1;
+
     public ShapeRectangle(double cornerX, double cornerY, double width, double height, Color color)
     {
         super(width, height, Paint.valueOf(color.toString()));
@@ -29,5 +33,13 @@ public class ShapeRectangle extends Rectangle implements IShape
     {
         setX(x);
         setY(y);
+    }
+
+    public final void scale(double y)
+    {
+        scale = scale * (1 + y/1000);
+        setScaleX(scale);
+        setScaleY(scale);
+        MyLogger.logger.log(Level.FINEST, "Scale: " + scale);
     }
 }

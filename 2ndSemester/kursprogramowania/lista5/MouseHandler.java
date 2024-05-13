@@ -1,5 +1,8 @@
+import java.util.logging.Level;
+
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
@@ -69,6 +72,17 @@ public class MouseHandler
                     IShape target = (IShape) mouseEvent.getTarget();
                     target.move(mouseEvent.getX(), mouseEvent.getY());
                 }
+            }    
+        });
+
+        canvas.setOnScroll(new EventHandler<ScrollEvent>() 
+        {
+            @Override
+            public void handle(ScrollEvent scrollEvent)
+            {
+                if (Selector.getSelected() != null) 
+                {
+                    Selector.getSelected().scale(scrollEvent.getDeltaY());                }
             }    
         });
     }

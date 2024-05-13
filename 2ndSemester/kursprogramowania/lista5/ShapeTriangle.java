@@ -1,9 +1,13 @@
+import java.util.logging.Level;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 
 public class ShapeTriangle extends Polygon implements IShape
 {
+    private double scale = 1;
+
     public ShapeTriangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color)
     {
         super(x1, y1, x2, y2, x3, y3);
@@ -35,5 +39,13 @@ public class ShapeTriangle extends Polygon implements IShape
     {
         setLayoutX(x);
         setLayoutY(y);
+    }
+
+    public final void scale(double y)
+    {
+        scale = scale * (1 + y/1000);
+        setScaleX(scale);
+        setScaleY(scale);
+        MyLogger.logger.log(Level.FINEST, "Scale: " + scale);
     }
 }
