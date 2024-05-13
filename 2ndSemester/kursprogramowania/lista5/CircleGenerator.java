@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import javafx.scene.paint.Color;
+
 public class CircleGenerator implements IGenerator
 {
     private ArrayList<Double[]> points = new ArrayList<Double[]>();
@@ -25,10 +27,7 @@ public class CircleGenerator implements IGenerator
             points.clear();
 
         Double[] pair = {x, y};
-        points.add(pair);
-        
-            // throw new IllegalArgumentException("Too many points");
-            
+        points.add(pair);            
     }
 
     public final ShapeCircle generate() throws IndexOutOfBoundsException
@@ -36,9 +35,17 @@ public class CircleGenerator implements IGenerator
         if (isReady()) 
         {
             MyLogger.logger.log(Level.FINER, "Created a Circle");
-            return new ShapeCircle(points.get(0)[0], points.get(0)[1], Math.sqrt(Math.pow(points.get(0)[0] - points.get(1)[0], 2) + Math.pow(points.get(0)[1] - points.get(1)[1], 2)));
+            return new ShapeCircle(points.get(0)[0], points.get(0)[1], Math.sqrt(Math.pow(points.get(0)[0] - points.get(1)[0], 2) + Math.pow(points.get(0)[1] - points.get(1)[1], 2)), Color.rgb(0, 0, 0, 1.0));
         }
         else
             throw new IndexOutOfBoundsException("Not enough points were given");
+    }
+
+    public final ShapeCircle ghost(double x, double y)
+    {
+        if (points.size() == 1) 
+            return new ShapeCircle(points.get(0)[0], points.get(0)[1], Math.sqrt(Math.pow(points.get(0)[0] - x, 2) + Math.pow(points.get(0)[1] - y, 2)), Color.rgb(0, 0, 0, 0.65));
+        else
+            return new ShapeCircle(x, y, 3, Color.rgb(0, 0, 0, 0.8));
     }
 }
