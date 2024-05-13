@@ -1,5 +1,6 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeType;
 
 public class ShapeCircle extends Circle implements IShape
 {
@@ -11,5 +12,26 @@ public class ShapeCircle extends Circle implements IShape
     {
         super(centerX, centerY, radius, color);
     }
+
+    public final void select()
+    {
+        setStroke(Color.LIME);
+        setStrokeWidth(4);
+        setStrokeType(StrokeType.CENTERED);
+        getStrokeDashArray().add(5d);
+    }
+
+    public final void unselect()
+    {
+        setStroke(null);
+    }
+
+    public final void move(double x, double y)
+    {
+        setCenterX(x);
+        setCenterY(y);
+    }
+
+    
 
 }

@@ -46,6 +46,6 @@ public class CircleGenerator implements IGenerator
         if (points.size() == 1) 
             return new ShapeCircle(points.get(0)[0], points.get(0)[1], Math.sqrt(Math.pow(points.get(0)[0] - x, 2) + Math.pow(points.get(0)[1] - y, 2)), Color.rgb(0, 0, 0, 0.65));
         else
-            return new ShapeCircle(x, y, 3, Color.rgb(0, 0, 0, 0.8));
+            return null;
     }
 }

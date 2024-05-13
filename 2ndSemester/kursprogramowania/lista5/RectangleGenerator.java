@@ -56,6 +56,6 @@ public class RectangleGenerator implements IGenerator
             return new ShapeRectangle(leftX, topY, rightX - leftX, bottomY - topY, Color.rgb(0, 0, 0, 0.65));
         }
         else
-            return new ShapeRectangle(x, y, 3, 3, Color.rgb(0, 0, 0, 0.8));
+            return new ShapeRectangle(x, y, 3, 3, Color.rgb(0, 0, 0, 0.65));
     }
 }

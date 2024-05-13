@@ -8,5 +8,5 @@ public interface IGenerator
 
     public Shape generate() throws IndexOutOfBoundsException;
 
-    public Shape ghost(double x, double y);
+    public IShape ghost(double x, double y);
 }
