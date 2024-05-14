@@ -7,7 +7,7 @@ import javafx.util.Callback;
 
 public class GUIComboBox extends ComboBox<ShapePair>
 {
-    public GUIComboBox(ShapePair[] pairs, MouseHandler mouseHandler)
+    public GUIComboBox(ShapePair[] pairs)
     {
         super();
         getItems().addAll(pairs);
@@ -39,7 +39,7 @@ public class GUIComboBox extends ComboBox<ShapePair>
 
         setOnAction(e ->
         {
-           mouseHandler.setGenerator(getValue().getGenerator()); 
+           MouseHandler.setGenerator(getValue().getGenerator()); 
            MyLogger.logger.log(Level.INFO, "Changed type to " + getValue().getName());
         });
 

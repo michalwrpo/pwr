@@ -13,6 +13,7 @@ public class StateMachine
     {
         if (state == AppState.SELECT) 
         {
+            Selector.unselect();
             state = AppState.DRAW;
             MyLogger.logger.log(Level.FINE, "Changed state from SELECT to DRAW");
         }

@@ -9,6 +9,8 @@ public class ShapeTriangle extends Polygon implements IShape
     private double scale = 1;
     private double angle = 0;
 
+    private boolean selected = false;
+
     public ShapeTriangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color)
     {
         super(x1, y1, x2, y2, x3, y3);
@@ -26,20 +28,50 @@ public class ShapeTriangle extends Polygon implements IShape
     public final void select()
     {
         setStroke(Color.LIME);
-        setStrokeWidth(4);
+        setStrokeWidth(4 / scale);
         setStrokeType(StrokeType.CENTERED);
-        getStrokeDashArray().add(5d);
+        getStrokeDashArray().add(5d / scale);
+
+        selected = true;
     }
 
     public final void unselect()
     {
         setStroke(null);
+        getStrokeDashArray().removeFirst();
+
+        selected = false;
+    }
+
+    public final void setColor(Color color)
+    {
+        setFill(color);
+    }
+
+    public final double getLocationX()
+    {
+        return (getPoints().get(0) + getPoints().get(2) + getPoints().get(4)) / 3;
+    }
+
+    public final double getLocationY()
+    {
+        return (getPoints().get(1) + getPoints().get(3) + getPoints().get(5)) / 3;
+    }
+
+    public final double getAbsoluteX()
+    {
+        return localToScreen(getBoundsInLocal()).getMinX() + localToScreen(getBoundsInLocal()).getWidth()/2;
+    }
+
+    public final double getAbsoluteY()
+    {
+        return localToScreen(getBoundsInLocal()).getMinY() + localToScreen(getBoundsInLocal()).getHeight()/2;
     }
 
     public final void move(double x, double y)
     {
-        setTranslateX(x - (getPoints().get(0) + getPoints().get(2) + getPoints().get(4)) / 3 );
-        setTranslateY(y - (getPoints().get(1) + getPoints().get(3) + getPoints().get(5)) / 3 );
+        setTranslateX(x - getLocationX());
+        setTranslateY(y - getLocationY());
     }
 
     public final void scale(double y)
@@ -47,6 +79,14 @@ public class ShapeTriangle extends Polygon implements IShape
         scale = scale * (1 + y/1000);
         setScaleX(scale);
         setScaleY(scale);
+
+        if (selected) 
+        {
+            setStrokeWidth(4 / scale);
+            getStrokeDashArray().removeFirst();
+            getStrokeDashArray().add(5d / scale);
+        }
+        
         MyLogger.logger.log(Level.FINEST, "Triangle scaled: " + scale);
     }
 

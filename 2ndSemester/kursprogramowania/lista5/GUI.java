@@ -33,9 +33,9 @@ public class GUI
         
         StateButton stateButton = new StateButton();
                 
-        MouseHandler mouseHandler = new MouseHandler(canvas);
+        MouseHandler.handleMouse(canvas);
 
-        GUIComboBox comboBox = new GUIComboBox(new ShapePair[]{Circle, Rectangle, Triangle}, mouseHandler);
+        GUIComboBox comboBox = new GUIComboBox(new ShapePair[]{Circle, Rectangle, Triangle});
         
         ToolBar toolBar = new ToolBar(file, spacer, stateButton, comboBox);
         toolBar.setPrefHeight(33);

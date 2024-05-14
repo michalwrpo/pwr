@@ -1,6 +1,7 @@
 import java.util.logging.Level;
 
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -8,36 +9,51 @@ import javafx.scene.shape.Shape;
 
 public class MouseHandler 
 {
-    private Pane canvas;
-    private IGenerator generator = new CircleGenerator();
+    private static IGenerator generator = new CircleGenerator();
     
-    public MouseHandler(Pane canvas)
+    public static void handleMouse(Pane canvas)
     {
-        this.canvas = canvas;
-        
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>() 
         {
             @Override
             public void handle(MouseEvent mouseEvent)
             {
-                switch (StateMachine.getState()) 
+                if (mouseEvent.getButton() == MouseButton.PRIMARY) 
                 {
-                    case SELECT:
-                        if (mouseEvent.getTarget() instanceof IShape) 
-                        {
-                            IShape target = (IShape) mouseEvent.getTarget(); 
-                            Selector.select(target);    
-                        }
-                        else
-                        {
-                            Selector.unselect();
-                        }
-                        break;
-                    case DRAW:
-                        generator.addPoint(mouseEvent.getX(), mouseEvent.getY());
-                        if (generator.isReady()) 
-                            canvas.getChildren().add(generator.generate()); 
-                        break;
+                    switch (StateMachine.getState()) 
+                    {
+                        case SELECT:
+                            if (mouseEvent.getTarget() instanceof IShape) 
+                            {
+                                if (mouseEvent.isAltDown()) 
+                                {
+                                    MyLogger.logger.log(Level.FINE, "Removed " + mouseEvent.getTarget());
+                                    canvas.getChildren().remove(mouseEvent.getTarget());    
+                                }
+                                else
+                                {
+                                IShape target = (IShape) mouseEvent.getTarget(); 
+                                Selector.select(target);    
+                                }
+                            }
+                            else
+                            {
+                                Selector.unselect();
+                            }
+                            break;
+                        case DRAW:
+                            generator.addPoint(mouseEvent.getX(), mouseEvent.getY());
+                            if (generator.isReady()) 
+                                canvas.getChildren().add(generator.generate()); 
+                            break;
+                    }
+                }
+                else if (mouseEvent.getButton() == MouseButton.SECONDARY && StateMachine.getState() == AppState.SELECT)
+                {
+                    if (mouseEvent.getTarget() instanceof IShape)
+                    {
+                        ColorPopUp.show(canvas.getScene().getWindow(), (IShape) mouseEvent.getTarget());
+                    }
                 }
             }    
         });
@@ -91,14 +107,9 @@ public class MouseHandler
         });
     }
 
-    public void setCanvas(Pane canvas)
+    public static final void setGenerator(IGenerator newGenerator)
     {
-        this.canvas = canvas;
-    }
-
-    public void setGenerator(IGenerator generator)
-    {
-        this.generator = generator;
+        generator = newGenerator;
     }
 
 }
