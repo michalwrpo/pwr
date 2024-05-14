@@ -10,6 +10,7 @@ public class ShapeCircle extends Circle implements IShape
     // private double centerY;
     // private double radius;
     private double scale = 1;
+    private double angle = 0;
 
     public ShapeCircle(double centerX, double centerY, double radius, Color color)
     {
@@ -40,7 +41,13 @@ public class ShapeCircle extends Circle implements IShape
         scale = scale * (1 + y/1000);
         setScaleX(scale);
         setScaleY(scale);
-        MyLogger.logger.log(Level.FINEST, "Scale: " + scale);
+        MyLogger.logger.log(Level.FINEST, "Circle scaled: " + scale);
+    }
+
+    public final void rotate(double x)
+    {
+        angle += x/10;
+        setRotate(angle);
     }
 
 }

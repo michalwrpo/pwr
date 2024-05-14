@@ -7,6 +7,7 @@ import javafx.scene.shape.StrokeType;
 public class ShapeTriangle extends Polygon implements IShape
 {
     private double scale = 1;
+    private double angle = 0;
 
     public ShapeTriangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color)
     {
@@ -37,8 +38,8 @@ public class ShapeTriangle extends Polygon implements IShape
 
     public final void move(double x, double y)
     {
-        setLayoutX(x);
-        setLayoutY(y);
+        setTranslateX(x - (getPoints().get(0) + getPoints().get(2) + getPoints().get(4)) / 3 );
+        setTranslateY(y - (getPoints().get(1) + getPoints().get(3) + getPoints().get(5)) / 3 );
     }
 
     public final void scale(double y)
@@ -46,6 +47,12 @@ public class ShapeTriangle extends Polygon implements IShape
         scale = scale * (1 + y/1000);
         setScaleX(scale);
         setScaleY(scale);
-        MyLogger.logger.log(Level.FINEST, "Scale: " + scale);
+        MyLogger.logger.log(Level.FINEST, "Triangle scaled: " + scale);
+    }
+
+    public final void rotate(double x)
+    {
+        angle += x/10;
+        setRotate(angle);
     }
 }

@@ -82,7 +82,11 @@ public class MouseHandler
             {
                 if (Selector.getSelected() != null) 
                 {
-                    Selector.getSelected().scale(scrollEvent.getDeltaY());                }
+                    if (scrollEvent.isControlDown()) 
+                        Selector.getSelected().rotate(scrollEvent.getDeltaY());
+                    else
+                        Selector.getSelected().scale(scrollEvent.getDeltaY());                
+                }
             }    
         });
     }

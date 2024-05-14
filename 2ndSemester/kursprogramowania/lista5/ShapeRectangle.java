@@ -8,6 +8,7 @@ import javafx.scene.shape.StrokeType;
 public class ShapeRectangle extends Rectangle implements IShape
 {
     private double scale = 1;
+    private double angle = 0;
 
     public ShapeRectangle(double cornerX, double cornerY, double width, double height, Color color)
     {
@@ -40,6 +41,12 @@ public class ShapeRectangle extends Rectangle implements IShape
         scale = scale * (1 + y/1000);
         setScaleX(scale);
         setScaleY(scale);
-        MyLogger.logger.log(Level.FINEST, "Scale: " + scale);
+        MyLogger.logger.log(Level.FINEST, "Rectangle scaled: " + scale);
+    }
+
+    public final void rotate(double x)
+    {
+        angle += x/10;
+        setRotate(angle);
     }
 }
