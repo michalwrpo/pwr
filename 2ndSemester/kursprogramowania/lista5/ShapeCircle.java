@@ -9,6 +9,8 @@ import javafx.scene.shape.StrokeType;
 
 public class ShapeCircle extends Circle implements IShape
 {
+    private static final long serialVersionUID = 512L;
+
     private boolean selected = false;
 
     public ShapeCircle(double centerX, double centerY, double radius, Color color)
@@ -93,6 +95,8 @@ public class ShapeCircle extends Circle implements IShape
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
     {
+        in.defaultReadObject();
+
         double x = in.readDouble();
         double y = in.readDouble();
         double radius = in.readDouble();
@@ -113,7 +117,6 @@ public class ShapeCircle extends Circle implements IShape
         setRotate(rotate);
         setScaleX(scale);
         setScaleY(scale);
-
     }
 
 }

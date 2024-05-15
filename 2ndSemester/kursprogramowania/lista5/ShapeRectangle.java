@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 
 import javafx.scene.paint.Color;
@@ -5,20 +8,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-public class ShapeRectangle extends Rectangle implements IShape, java.io.Serializable
+public class ShapeRectangle extends Rectangle implements IShape
 {
-    private double cornerX;
-    private double cornerY;
-
-    private double width;
-    private double height;
-
-    private double colorRed;
-    private double colorGreen;
-    private double colorBlue;
-
-    private double scale = 1;
-    private double angle = 0;
+    private static final long serialVersionUID = 513L;
 
     private boolean selected = false;
 
@@ -27,24 +19,14 @@ public class ShapeRectangle extends Rectangle implements IShape, java.io.Seriali
         super(width, height, Paint.valueOf(color.toString()));
         setX(cornerX);
         setY(cornerY);
-
-        this.cornerX = cornerX;
-        this.cornerY = cornerY;
-
-        this.width = width;
-        this.height = height;
-
-        this.colorRed = color.getRed();
-        this.colorGreen = color.getGreen();
-        this.colorBlue = color.getBlue();
     }
 
     public final void select()
     {
         setStroke(Color.LIME);
-        setStrokeWidth(4 / scale);
+        setStrokeWidth(4 / getScaleX());
         setStrokeType(StrokeType.CENTERED);
-        getStrokeDashArray().add(5d / scale);
+        getStrokeDashArray().add(5d / getScaleX());
 
         selected = true;
     }
@@ -74,29 +56,72 @@ public class ShapeRectangle extends Rectangle implements IShape, java.io.Seriali
 
     public final void move(double x, double y)
     {
-        setTranslateX(x - cornerX - width/2);
-        setTranslateY(y - cornerY - height/2);
+        setTranslateX(x - getX() - getWidth()/2);
+        setTranslateY(y - getY() - getHeight()/2);
     }
 
     public final void scale(double y)
     {
-        scale = scale * (1 + y/1000);
-        setScaleX(scale);
-        setScaleY(scale);
+        setScaleX(getScaleX() * (1 + y/1000));
+        setScaleY(getScaleX() * (1 + y/1000));
         
         if (selected) 
         {
-            setStrokeWidth(4 / scale);
+            setStrokeWidth(4 / getScaleX());
             getStrokeDashArray().removeFirst();
-            getStrokeDashArray().add(5d / scale);
+            getStrokeDashArray().add(5d / getScaleX());
         }
 
-        MyLogger.logger.log(Level.FINEST, "Rectangle scaled: " + scale);
+        MyLogger.logger.log(Level.FINEST, "Rectangle scaled: " + getScaleX());
     }
 
     public final void rotate(double x)
     {
-        angle += x/10;
-        setRotate(angle);
+        setRotate(getRotate() + x/10);
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+
+        out.writeDouble(getX());
+        out.writeDouble(getY());
+        out.writeDouble(getWidth());
+        out.writeDouble(getHeight());
+
+        out.writeDouble(((Color) getFill()).getRed());
+        out.writeDouble(((Color) getFill()).getGreen());
+        out.writeDouble(((Color) getFill()).getBlue());
+
+        out.writeDouble(getRotate());
+        out.writeDouble(getScaleX());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+
+        double x = in.readDouble();
+        double y = in.readDouble();
+        double width = in.readDouble();
+        double height = in.readDouble();
+
+        double red = in.readDouble();
+        double green = in.readDouble();
+        double blue = in.readDouble();
+
+        double rotate = in.readDouble();
+        double scale = in.readDouble();
+
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
+
+        setFill(new Color(red, green, blue, 1));
+
+        setRotate(rotate);
+        setScaleX(scale);
+        setScaleY(scale);
     }
 }

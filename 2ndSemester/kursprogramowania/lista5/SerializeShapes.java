@@ -24,34 +24,17 @@ public class SerializeShapes
                 ObjectOutputStream o = new ObjectOutputStream(f);
     
                 o.writeInt(nodes.size());
-
-                
-                // FileOutputStream file = new FileOutputStream(filename);
-                
-                boolean first = true;
-                
+                                
                 for (Node shape : nodes) 
                 {
                     if (shape instanceof Serializable) 
                     {
-                        if (first)
-                        {
-                            o.writeObject(shape);
-                            o.close();
-                            
-                        }
-                        else
-                        {
-                        MyObjectOutputStream out = new MyObjectOutputStream(new FileOutputStream(filename));
-
-                        out.writeObject(shape);
-                        MyLogger.logger.log(Level.INFO, "Saved: " + shape.toString());
-
-                        out.close();
-                        }
+                        o.writeObject(shape);
+                        MyLogger.logger.log(Level.FINE, "Saved: " + shape.toString());
                     }
                 }
     
+                o.close();
     
                 MyLogger.logger.log(Level.INFO, "Serialized canvas");
             }
@@ -75,12 +58,11 @@ public class SerializeShapes
                 int shapesNum = inStream.readInt();
                 for (int i = 0; i < shapesNum; i++)
                 {
-                    // Node shape = (Node) inStream.readObject();
+                    Node shape = (Node) inStream.readObject();
 
-                    // MyLogger.logger.log(Level.INFO, "Loaded: " + shape.toString());
+                    MyLogger.logger.log(Level.FINE, "Loaded: " + shape.toString());
 
-                    // shapes.add(shape);
-                    MyLogger.logger.log(Level.SEVERE, "@ " + inStream.readObject());
+                    shapes.add(shape);
                 }
     
                 inStream.close();
