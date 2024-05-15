@@ -82,12 +82,11 @@ public class ShapeTriangle extends Polygon implements IShape
     {
         out.defaultWriteObject();
 
-        out.writeDouble(getPoints().get(0));        
-        out.writeDouble(getPoints().get(1));
-        out.writeDouble(getPoints().get(2));
-        out.writeDouble(getPoints().get(3));
-        out.writeDouble(getPoints().get(4));
-        out.writeDouble(getPoints().get(5));        
+        for (int i = 0; i < 3; i++)
+        {
+            out.writeDouble(getPoints().get(2*i) + getTranslateX());
+            out.writeDouble(getPoints().get(2*i + 1) + getTranslateY());
+        }    
 
         out.writeDouble(((Color) getFill()).getRed());
         out.writeDouble(((Color) getFill()).getGreen());

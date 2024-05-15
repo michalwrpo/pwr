@@ -1,5 +1,3 @@
-import java.util.logging.Level;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,6 +28,11 @@ public class GUIFileButton extends MenuButton
             @Override
             public void handle(ActionEvent event)
             {
+                int childrenNum = canvas.getChildren().size();
+                for (int i = 0; i < childrenNum; i++)
+                {
+                    canvas.getChildren().removeFirst();
+                }
                 ObservableList<Node> nodes = SerializeShapes.deserialize(filename);
                 canvas.getChildren().addAll(nodes);
             }    

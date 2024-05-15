@@ -18,7 +18,7 @@ public class GUI
         Pane canvas = new Pane();
         final BorderPane borderPane = new BorderPane();
 
-        GUIFileButton file = new GUIFileButton(canvas, "serialized.txt");
+        GUIFileButton file = new GUIFileButton(canvas, "savefile.txt");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
