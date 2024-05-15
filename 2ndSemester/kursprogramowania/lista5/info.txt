@@ -1,4 +1,4 @@
-Name: Paint at home:
+Name: ShapesPaint
 Author: Michał Waluś
 Intented use: Creation and manipulation of geometric shapes, from amid circle, rectangle and triangle.
 

@@ -53,7 +53,7 @@ public class GUI
         KeyboardHandler.handleKeyboard(canvas, stateButton, saveFileName);
         
         stage.setScene(scene);
-        stage.setTitle("Paint at home:");
+        stage.setTitle("ShapesPaint");
         stage.show();
         
         MyLogger.logger.log(Level.INFO, "Created scene");    
