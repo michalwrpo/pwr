@@ -1,14 +1,21 @@
 import java.io.IOException;
 import java.util.logging.*;
 
+/**
+ * @brief logs information 
+ */
 public class MyLogger
 {
     private MyLogger()
     {
-        throw new InstantiationError("MyLogger is a full statc class");
+        throw new InstantiationError("MyLogger is a full static class");
     }
 
     public static final Logger logger = Logger.getGlobal();
+
+    /**
+     * @brief sets up the logger
+     */
     public static void loggerConfig()
     {
         Handler[] handlers = logger.getHandlers();

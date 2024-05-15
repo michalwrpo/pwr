@@ -3,6 +3,9 @@ import java.util.logging.Level;
 
 import javafx.scene.paint.Color;
 
+/**
+ * @brief generates rectangle
+ */
 public class RectangleGenerator implements IGenerator
 {
     private ArrayList<Double[]> points = new ArrayList<Double[]>();

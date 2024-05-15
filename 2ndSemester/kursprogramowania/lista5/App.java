@@ -1,6 +1,9 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * @brief main class, runs the program
+ */
 public class App extends Application
 {
     @Override

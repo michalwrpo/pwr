@@ -7,6 +7,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 
+/**
+ * @brief Shape class corresponding to circle
+ * 
+ * @implements IShape
+ */
 public class ShapeCircle extends Circle implements IShape
 {
     private static final long serialVersionUID = 512L;

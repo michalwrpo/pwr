@@ -5,8 +5,16 @@ import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.stage.Window;
 
+/**
+ * @brief static class creating a popup that allows to change shapes color 
+ */
 public class ColorPopUp
 {
+    private ColorPopUp() throws InstantiationError
+    {
+        throw new InstantiationError("This is a static class");
+    }
+
     private static final ColorPicker colorPicker = new ColorPicker(Color.BLACK);
     private static final Popup popup = new Popup();
 
@@ -18,6 +26,12 @@ public class ColorPopUp
         initialized = true;
     }
 
+    /**
+     * @brief shows the popup with ColorPicker
+     * 
+     * @param window
+     * @param target
+     */
     public static final void show(Window window, IShape target)
     {
         if (!initialized)
@@ -39,6 +53,9 @@ public class ColorPopUp
         colorPicker.show();
     }
 
+    /**
+     * @brief hides the popup
+     */
     public static final void hide()
     {
         popup.hide();

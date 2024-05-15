@@ -11,6 +11,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+/**
+ * @brief assembles the GUI
+ */
 public class GUI 
 {
     public GUI(Stage stage)

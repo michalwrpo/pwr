@@ -9,8 +9,19 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * @brief class containing a method to create info popup
+ */
 public class GUIInfoPopup 
 {
+    private GUIInfoPopup() throws InstantiationError
+    {
+        throw new InstantiationError("This is a static class");
+    }
+
+    /**
+     * @brief creates info popup
+     */
     public static void showInfoPopup()
     {   
         try

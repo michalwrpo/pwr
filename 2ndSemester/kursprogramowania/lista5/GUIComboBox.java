@@ -5,6 +5,9 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
+/**
+ * @brief creates a combo box allowing to change shape type
+ */
 public class GUIComboBox extends ComboBox<ShapePair>
 {
     public GUIComboBox(ShapePair[] pairs)

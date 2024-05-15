@@ -2,6 +2,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
+/**
+ * @brief class creating button responsible for changing program state
+ */
 public class StateButton extends Button
 {
     public StateButton()
@@ -20,6 +23,9 @@ public class StateButton extends Button
         });
     }
 
+    /**
+     * @brief method changing the state and updating the button
+     */
     public final void updateState()
     {
         StateMachine.changeSelectDraw();

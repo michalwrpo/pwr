@@ -7,6 +7,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 
+/**
+ * @brief Shape class corresponding to triangle
+ * 
+ * @implements IShape
+ */
 public class ShapeTriangle extends Polygon implements IShape
 {
     private static final long serialVersionUID = 514L;

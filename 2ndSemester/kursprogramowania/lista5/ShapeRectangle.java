@@ -8,6 +8,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
+/**
+ * @brief Shape class corresponding to rectangle
+ * 
+ * @implements IShape
+ */
 public class ShapeRectangle extends Rectangle implements IShape
 {
     private static final long serialVersionUID = 513L;

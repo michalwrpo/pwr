@@ -4,6 +4,9 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 
+/**
+ * @brief creates menu with Save and Open options
+ */
 public class GUIFileButton extends MenuButton
 {
     public GUIFileButton(Pane canvas, String filename)

@@ -1,14 +1,30 @@
 import java.util.logging.Level;
 
+/**
+ * @brief contains methods related to app states
+ */
 public class StateMachine 
 {
+    private StateMachine() throws InstantiationError
+    {
+        throw new InstantiationError("This is a static class");
+    }
+
     private static AppState state = AppState.SELECT;
     
+    /**
+     * @brief returns the current state
+     * 
+     * @return state
+     */
     public static AppState getState()
     {
         return state;
     }
 
+    /**
+     * @brief changes the state between SELECT and DRAW
+     */
     public static void changeSelectDraw()
     {
         if (state == AppState.SELECT) 

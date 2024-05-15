@@ -7,8 +7,16 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
+/**
+ * @brief class handling mouse inputs
+ */
 public class MouseHandler 
 {
+    private MouseHandler() throws InstantiationError
+    {
+        throw new InstantiationError("This is a static class");
+    }
+    
     private static IGenerator generator = new CircleGenerator();
     
     /**

@@ -3,6 +3,11 @@ import java.util.logging.Level;
 
 import javafx.scene.paint.Color;
 
+/**
+ * @brief generates triangle
+ * 
+ * @implements IGenerator
+ */
 public class TriangleGenerator implements IGenerator
 {
     private ArrayList<Double[]> points = new ArrayList<Double[]>();
