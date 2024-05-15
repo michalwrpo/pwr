@@ -11,6 +11,11 @@ public class MouseHandler
 {
     private static IGenerator generator = new CircleGenerator();
     
+    /**
+     * @brief handles mouse imputs
+     * 
+     * @param canvas
+     */
     public static void handleMouse(Pane canvas)
     {
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>() 

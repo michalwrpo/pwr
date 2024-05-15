@@ -1,0 +1,29 @@
+Name: Paint at home:
+Author: Michał Waluś
+Intented use: Creation and manipulation of geometric shapes, from amid circle, rectangle and triangle.
+
+Instruction:
+The app has two modes, indicated by mode button near the top right corner:
+- SELECT - allows you to select and delete figures.
+- DRAW - allows you to create new figures.
+You can change between the modes using / (slash) key or by clicking the aforementioned button.
+
+Using the dropbox on the right of the mode button, you can select which shape you want to draw, while in DRAW mode.
+
+DRAW mode:
+    You select points by clicking with LMB and can draw three types of shapes:
+    - Circle - by selecting center and any point on the perimeter
+    - Rectangle - by selecting the top-left and bottom-right corners
+    - Triangle - by selecting all three vertices 
+
+SELECT mode:
+    In select mode you can delete figure with left clicking on them with the Alt key pressed.
+    You can also select a figure with left click, which allows you to manipulate the figure:
+    - Move - you can move the figure by dragging your mouse, while holding left-click.
+    - Rotate - you can rotate the figure by scrolling while holding the Ctrl key.
+    - Scale - you can scale the figure by scrolling without holding the Ctrl key.
+    - Change color - you can change color by right clicking on the figure and selecting a new color form the Color Picker.
+
+You can also save and load figures from a file, you save by either clicking Save button from the File tab in the top-left corner 
+or clicking Ctrl + S and load by clicking either Open from the same tab, or clicking Ctrl + O.
+(WARNING: when loading figures, all your currently existing ones will be deleted!)  

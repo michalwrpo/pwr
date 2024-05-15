@@ -6,15 +6,23 @@ public class StateButton extends Button
 {
     public StateButton()
     {
-        super("State");
+        super(StateMachine.getState().toString());
+        setPrefWidth(70);
+
 
         setOnAction(new EventHandler<ActionEvent>() 
         {
             @Override
             public void handle(ActionEvent event)
             {
-                StateMachine.changeSelectDraw();
-            }
+                updateState();
+            }    
         });
+    }
+
+    public final void updateState()
+    {
+        StateMachine.changeSelectDraw();
+        setText(StateMachine.getState().toString());    
     }
 }

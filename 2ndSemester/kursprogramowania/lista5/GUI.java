@@ -18,7 +18,9 @@ public class GUI
         Pane canvas = new Pane();
         final BorderPane borderPane = new BorderPane();
 
-        GUIFileButton file = new GUIFileButton(canvas, "savefile.txt");
+        String saveFileName = "savefile.txt";
+
+        GUIFileButton file = new GUIFileButton(canvas, saveFileName);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -30,11 +32,10 @@ public class GUI
         
         StateButton stateButton = new StateButton();
                 
-        MouseHandler.handleMouse(canvas);
-
+        
         GUIComboBox comboBox = new GUIComboBox(new ShapePair[]{Circle, Rectangle, Triangle});
         
-        ToolBar toolBar = new ToolBar(file, spacer, stateButton, comboBox);
+        ToolBar toolBar = new ToolBar(file, new GUIInfoButton(), spacer, stateButton, comboBox);
         toolBar.setPrefHeight(33);
         toolBar.setPadding(new Insets(0, 10, 0, 10));
         
@@ -44,6 +45,9 @@ public class GUI
         
         
         Scene scene = new Scene(borderPane, 800, 500, Color.DARKGRAY);
+        
+        MouseHandler.handleMouse(canvas);
+        KeyboardHandler.handleKeyboard(canvas, stateButton, saveFileName);
         
         stage.setScene(scene);
         stage.setTitle("Paint at home:");

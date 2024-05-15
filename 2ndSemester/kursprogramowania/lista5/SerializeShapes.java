@@ -10,11 +10,12 @@ import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 public class SerializeShapes 
 {
 
-    public final static void serialize(ObservableList<Node> nodes, String filename)
+    public final static void serializeFromList(ObservableList<Node> nodes, String filename)
     {
         if (new File(filename).isFile()) 
         {
@@ -45,7 +46,7 @@ public class SerializeShapes
         }
     }
 
-    public final static ObservableList<Node> deserialize(String filename)
+    public final static ObservableList<Node> deserializeToList(String filename)
     {
         ObservableList<Node> shapes = FXCollections.observableArrayList();
 
@@ -80,5 +81,21 @@ public class SerializeShapes
         }
 
         return shapes;
+    }
+
+    public final static void serialize(Pane canvas, String filename)
+    {
+        serializeFromList(canvas.getChildren(), filename);
+    }
+
+    public final static void deserialize(Pane canvas, String filename)
+    {
+        int childrenNum = canvas.getChildren().size();
+                for (int i = 0; i < childrenNum; i++)
+                {
+                    canvas.getChildren().removeFirst();
+                }
+                ObservableList<Node> nodes = deserializeToList(filename);
+                canvas.getChildren().addAll(nodes);
     }
 }
