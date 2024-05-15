@@ -46,7 +46,12 @@ public class TriangleGenerator implements IGenerator
         if (points.size() == 2)
             return new ShapeTriangle(points.get(0)[0], points.get(0)[1], points.get(1)[0], points.get(1)[1], x, y, Color.rgb(0, 0, 0, 0.65));
         else if (points.size() == 1)
-            return new ShapeTriangle(points.get(0)[0], points.get(0)[1], x, y, x, y, Color.rgb(0, 0, 0, 0.65), 2, Color.rgb(0, 0, 0, 0.65));
+        {
+            ShapeTriangle ghost = new ShapeTriangle(points.get(0)[0], points.get(0)[1], x, y, x, y, Color.rgb(0, 0, 0, 0.65));
+            ghost.setStroke(Color.rgb(0, 0, 0, 0.65));
+            ghost.setStrokeWidth(2);
+            return ghost;
+        }
         else
             return new ShapeTriangle(x, y, x + 2, y, x + 1, y + 2, Color.rgb(0, 0, 0, 0.65));
     }    

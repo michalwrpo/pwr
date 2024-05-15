@@ -2,8 +2,6 @@ import java.util.logging.Level;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -20,8 +18,7 @@ public class GUI
         Pane canvas = new Pane();
         final BorderPane borderPane = new BorderPane();
 
-        MenuButton file = new MenuButton("File");
-        file.getItems().addAll(new MenuItem("Save"), new MenuItem("Open"));
+        GUIFileButton file = new GUIFileButton(canvas, "serialized.txt");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);

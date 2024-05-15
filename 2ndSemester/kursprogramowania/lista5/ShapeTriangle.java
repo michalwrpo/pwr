@@ -4,8 +4,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 
-public class ShapeTriangle extends Polygon implements IShape
+public class ShapeTriangle extends Polygon implements IShape, java.io.Serializable
 {
+    private double x1;
+    private double y1;
+
+    private double x2;
+    private double y2;
+
+    private double x3;
+    private double y3;    
+
+    private double colorRed;
+    private double colorGreen;
+    private double colorBlue;    
+
     private double scale = 1;
     private double angle = 0;
 
@@ -15,14 +28,19 @@ public class ShapeTriangle extends Polygon implements IShape
     {
         super(x1, y1, x2, y2, x3, y3);
         setFill(color);
-    }
 
-    public ShapeTriangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color, double strokeWidth, Color strokeColor)
-    {
-        super(x1, y1, x2, y2, x3, y3);
-        setFill(color);
-        setStroke(strokeColor);
-        setStrokeWidth(strokeWidth);
+        this.x1 = x1;
+        this.y1 = y1;
+
+        this.x2 = x2;
+        this.y2 = y2;
+
+        this.x3 = x3;
+        this.y3 = y3;        
+        
+        this.colorRed = color.getRed();
+        this.colorGreen = color.getGreen();
+        this.colorBlue = color.getBlue();
     }
 
     public final void select()
@@ -48,16 +66,6 @@ public class ShapeTriangle extends Polygon implements IShape
         setFill(color);
     }
 
-    public final double getLocationX()
-    {
-        return (getPoints().get(0) + getPoints().get(2) + getPoints().get(4)) / 3;
-    }
-
-    public final double getLocationY()
-    {
-        return (getPoints().get(1) + getPoints().get(3) + getPoints().get(5)) / 3;
-    }
-
     public final double getAbsoluteX()
     {
         return localToScreen(getBoundsInLocal()).getMinX() + localToScreen(getBoundsInLocal()).getWidth()/2;
@@ -70,8 +78,8 @@ public class ShapeTriangle extends Polygon implements IShape
 
     public final void move(double x, double y)
     {
-        setTranslateX(x - getLocationX());
-        setTranslateY(y - getLocationY());
+        setTranslateX(x - (x1 + x2 + x3)/3);
+        setTranslateY(y - (y1 + y2 + y3)/3);
     }
 
     public final void scale(double y)
@@ -86,7 +94,7 @@ public class ShapeTriangle extends Polygon implements IShape
             getStrokeDashArray().removeFirst();
             getStrokeDashArray().add(5d / scale);
         }
-        
+
         MyLogger.logger.log(Level.FINEST, "Triangle scaled: " + scale);
     }
 

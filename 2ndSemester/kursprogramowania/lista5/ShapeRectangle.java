@@ -5,8 +5,18 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-public class ShapeRectangle extends Rectangle implements IShape
+public class ShapeRectangle extends Rectangle implements IShape, java.io.Serializable
 {
+    private double cornerX;
+    private double cornerY;
+
+    private double width;
+    private double height;
+
+    private double colorRed;
+    private double colorGreen;
+    private double colorBlue;
+
     private double scale = 1;
     private double angle = 0;
 
@@ -17,6 +27,16 @@ public class ShapeRectangle extends Rectangle implements IShape
         super(width, height, Paint.valueOf(color.toString()));
         setX(cornerX);
         setY(cornerY);
+
+        this.cornerX = cornerX;
+        this.cornerY = cornerY;
+
+        this.width = width;
+        this.height = height;
+
+        this.colorRed = color.getRed();
+        this.colorGreen = color.getGreen();
+        this.colorBlue = color.getBlue();
     }
 
     public final void select()
@@ -41,16 +61,6 @@ public class ShapeRectangle extends Rectangle implements IShape
     {
         setFill(color);
     }
-
-    public final double getLocationX()
-    {
-        return getX() + getWidth()/2;
-    }
-
-    public final double getLocationY()
-    {
-        return getY() + getHeight()/2;
-    }
     
     public final double getAbsoluteX()
     {
@@ -64,8 +74,8 @@ public class ShapeRectangle extends Rectangle implements IShape
 
     public final void move(double x, double y)
     {
-        setTranslateX(x - getLocationX());
-        setTranslateY(y - getLocationY());
+        setTranslateX(x - cornerX - width/2);
+        setTranslateY(y - cornerY - height/2);
     }
 
     public final void scale(double y)

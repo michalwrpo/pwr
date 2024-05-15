@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 
 import javafx.scene.paint.Color;
@@ -6,12 +9,6 @@ import javafx.scene.shape.StrokeType;
 
 public class ShapeCircle extends Circle implements IShape
 {
-    // private double centerX;
-    // private double centerY;
-    // private double radius;
-    private double scale = 1;
-    private double angle = 0;
-
     private boolean selected = false;
 
     public ShapeCircle(double centerX, double centerY, double radius, Color color)
@@ -22,9 +19,9 @@ public class ShapeCircle extends Circle implements IShape
     public final void select()
     {
         setStroke(Color.LIME);
-        setStrokeWidth(4 / scale);
+        setStrokeWidth(4 / getScaleX());
         setStrokeType(StrokeType.CENTERED);
-        getStrokeDashArray().add(5d / scale);
+        getStrokeDashArray().add(5d / getScaleX());
 
         selected = true;
     }
@@ -40,16 +37,6 @@ public class ShapeCircle extends Circle implements IShape
     public final void setColor(Color color)
     {
         setFill(color);
-    }
-
-    public final double getLocationX()
-    {
-        return getCenterX();
-    }
-
-    public final double getLocationY()
-    {
-        return getCenterY();
     }
 
     public final double getAbsoluteX()
@@ -70,24 +57,63 @@ public class ShapeCircle extends Circle implements IShape
 
     public final void scale(double y)
     {
-        scale = scale * (1 + y/1000);
-        setScaleX(scale);
-        setScaleY(scale);
+        setScaleX(getScaleX() * (1 + y/1000));
+        setScaleY(getScaleX() * (1 + y/1000));
 
         if (selected) 
         {
-            setStrokeWidth(4 / scale);
+            setStrokeWidth(4 / getScaleX());
             getStrokeDashArray().removeFirst();
-            getStrokeDashArray().add(5d / scale);
+            getStrokeDashArray().add(5d / getScaleX());
         }
-        
-        MyLogger.logger.log(Level.FINEST, "Circle scaled: " + scale);
+
+        MyLogger.logger.log(Level.FINEST, "Circle scaled: " + getScaleX());
     }
 
     public final void rotate(double x)
     {
-        angle += x/10;
-        setRotate(angle);
+        setRotate(getRotate() + x/10);
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException
+    {
+        out.defaultWriteObject();
+
+        out.writeDouble(getCenterX());
+        out.writeDouble(getCenterY());
+        out.writeDouble(getRadius());
+
+        out.writeDouble(((Color) getFill()).getRed());
+        out.writeDouble(((Color) getFill()).getGreen());
+        out.writeDouble(((Color) getFill()).getBlue());
+
+        out.writeDouble(getRotate());
+        out.writeDouble(getScaleX());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        double x = in.readDouble();
+        double y = in.readDouble();
+        double radius = in.readDouble();
+
+        double red = in.readDouble();
+        double green = in.readDouble();
+        double blue = in.readDouble();
+
+        double rotate = in.readDouble();
+        double scale = in.readDouble();
+
+        setCenterX(x);
+        setCenterY(y);
+        setRadius(radius);
+
+        setFill(new Color(red, green, blue, 1));
+
+        setRotate(rotate);
+        setScaleX(scale);
+        setScaleY(scale);
+
     }
 
 }
