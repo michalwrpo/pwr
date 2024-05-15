@@ -10,7 +10,6 @@ import javafx.scene.shape.StrokeType;
 /**
  * @brief Shape class corresponding to circle
  * 
- * @implements IShape
  */
 public class ShapeCircle extends Circle implements IShape
 {

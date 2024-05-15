@@ -11,7 +11,6 @@ import javafx.scene.shape.StrokeType;
 /**
  * @brief Shape class corresponding to rectangle
  * 
- * @implements IShape
  */
 public class ShapeRectangle extends Rectangle implements IShape
 {

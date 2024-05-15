@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 /**
  * @brief generates triangle
  * 
- * @implements IGenerator
  */
 public class TriangleGenerator implements IGenerator
 {

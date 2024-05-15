@@ -6,7 +6,6 @@ import javafx.scene.paint.Color;
 /**
  * @brief generates circle
  * 
- * @implements IGenerator
  */
 public class CircleGenerator implements IGenerator
 {

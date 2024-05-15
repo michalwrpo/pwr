@@ -10,7 +10,6 @@ import javafx.scene.shape.StrokeType;
 /**
  * @brief Shape class corresponding to triangle
  * 
- * @implements IShape
  */
 public class ShapeTriangle extends Polygon implements IShape
 {
