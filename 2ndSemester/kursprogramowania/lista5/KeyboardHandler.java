@@ -19,7 +19,7 @@ public class KeyboardHandler
      * @param stateButton
      * @param filename
      */
-    public static void handleKeyboard(Pane canvas, StateButton stateButton, String filename)
+    public static void handleKeyboard(final Pane canvas, final StateButton stateButton, final String filename)
     {
         canvas.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() 
         {

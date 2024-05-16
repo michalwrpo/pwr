@@ -17,7 +17,7 @@ public class ShapeTriangle extends Polygon implements IShape
 
     private boolean selected = false;
 
-    public ShapeTriangle(double x1, double y1, double x2, double y2, double x3, double y3, Color color)
+    public ShapeTriangle(final double x1, final double y1, final double x2, final double y2, final double x3, final double y3, final Color color)
     {
         super(x1, y1, x2, y2, x3, y3);
         setFill(color);
@@ -41,7 +41,7 @@ public class ShapeTriangle extends Polygon implements IShape
         selected = false;
     }
 
-    public final void setColor(Color color)
+    public final void setColor(final Color color)
     {
         setFill(color);
     }
@@ -56,13 +56,13 @@ public class ShapeTriangle extends Polygon implements IShape
         return localToScreen(getBoundsInLocal()).getMinY() + localToScreen(getBoundsInLocal()).getHeight()/2;
     }
 
-    public final void move(double x, double y)
+    public final void move(final double x, final double y)
     {
         setTranslateX(x - (getPoints().get(0) + getPoints().get(2) + getPoints().get(4))/3);
         setTranslateY(y - (getPoints().get(1) + getPoints().get(3) + getPoints().get(5))/3);
     }
 
-    public final void scale(double y)
+    public final void scale(final double y)
     {
         setScaleX(getScaleX() * (1 + y/1000));
         setScaleY(getScaleX() * (1 + y/1000));
@@ -77,7 +77,7 @@ public class ShapeTriangle extends Polygon implements IShape
         MyLogger.logger.log(Level.FINEST, "Triangle scaled: " + getScaleX());
     }
 
-    public final void rotate(double x)
+    public final void rotate(final double x)
     {
         setRotate(getRotate() + x/10);
     }

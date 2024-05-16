@@ -17,7 +17,7 @@ public class StateMachine
      * 
      * @return state
      */
-    public static AppState getState()
+    public final static AppState getState()
     {
         return state;
     }
@@ -25,7 +25,7 @@ public class StateMachine
     /**
      * @brief changes the state between SELECT and DRAW
      */
-    public static void changeSelectDraw()
+    public final static void changeSelectDraw()
     {
         if (state == AppState.SELECT) 
         {

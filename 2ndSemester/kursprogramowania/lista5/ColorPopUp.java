@@ -32,7 +32,7 @@ public class ColorPopUp
      * @param window
      * @param target
      */
-    public static final void show(Window window, IShape target)
+    public static final void show(final Window window, final IShape target)
     {
         if (!initialized)
         {

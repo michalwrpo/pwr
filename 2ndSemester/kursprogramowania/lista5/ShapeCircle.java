@@ -17,7 +17,7 @@ public class ShapeCircle extends Circle implements IShape
 
     private boolean selected = false;
 
-    public ShapeCircle(double centerX, double centerY, double radius, Color color)
+    public ShapeCircle(final double centerX, final double centerY, final double radius, final Color color)
     {
         super(centerX, centerY, radius, color);
     }
@@ -40,7 +40,7 @@ public class ShapeCircle extends Circle implements IShape
         selected = false;
     }
 
-    public final void setColor(Color color)
+    public final void setColor(final Color color)
     {
         setFill(color);
     }
@@ -55,13 +55,13 @@ public class ShapeCircle extends Circle implements IShape
         return localToScreen(getBoundsInLocal()).getMinY() + localToScreen(getBoundsInLocal()).getHeight()/2;
     }
 
-    public final void move(double x, double y)
+    public final void move(final double x, final double y)
     {
         setCenterX(x);
         setCenterY(y);
     }
 
-    public final void scale(double y)
+    public final void scale(final double y)
     {
         setScaleX(getScaleX() * (1 + y/1000));
         setScaleY(getScaleX() * (1 + y/1000));
@@ -76,7 +76,7 @@ public class ShapeCircle extends Circle implements IShape
         MyLogger.logger.log(Level.FINEST, "Circle scaled: " + getScaleX());
     }
 
-    public final void rotate(double x)
+    public final void rotate(final double x)
     {
         setRotate(getRotate() + x/10);
     }

@@ -7,7 +7,7 @@ import javafx.scene.control.ComboBox;
  */
 public class GUIComboBox extends ComboBox<String>
 {
-    public GUIComboBox(ShapePair[] pairs)
+    public GUIComboBox(final ShapePair[] pairs)
     {
         super();
         for (ShapePair shapePair : pairs) 

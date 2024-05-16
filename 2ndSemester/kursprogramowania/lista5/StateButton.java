@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 /**
  * @brief class creating button responsible for changing program state
  */
-public class StateButton extends Button
+public final class StateButton extends Button
 {
     public StateButton()
     {

@@ -24,7 +24,7 @@ public class MouseHandler
      * 
      * @param canvas
      */
-    public static void handleMouse(Pane canvas)
+    public static void handleMouse(final Pane canvas)
     {
         canvas.setOnMouseClicked(new EventHandler<MouseEvent>() 
         {

@@ -18,7 +18,7 @@ public class ShapeRectangle extends Rectangle implements IShape
 
     private boolean selected = false;
 
-    public ShapeRectangle(double cornerX, double cornerY, double width, double height, Color color)
+    public ShapeRectangle(final double cornerX, final double cornerY, final double width, final double height, final Color color)
     {
         super(width, height, Paint.valueOf(color.toString()));
         setX(cornerX);
@@ -43,7 +43,7 @@ public class ShapeRectangle extends Rectangle implements IShape
         selected = false;
     }
 
-    public final void setColor(Color color)
+    public final void setColor(final Color color)
     {
         setFill(color);
     }
@@ -58,13 +58,13 @@ public class ShapeRectangle extends Rectangle implements IShape
         return localToScreen(getBoundsInLocal()).getMinY() + localToScreen(getBoundsInLocal()).getHeight()/2;
     }
 
-    public final void move(double x, double y)
+    public final void move(final double x, final double y)
     {
         setTranslateX(x - getX() - getWidth()/2);
         setTranslateY(y - getY() - getHeight()/2);
     }
 
-    public final void scale(double y)
+    public final void scale(final double y)
     {
         setScaleX(getScaleX() * (1 + y/1000));
         setScaleY(getScaleX() * (1 + y/1000));
@@ -79,7 +79,7 @@ public class ShapeRectangle extends Rectangle implements IShape
         MyLogger.logger.log(Level.FINEST, "Rectangle scaled: " + getScaleX());
     }
 
-    public final void rotate(double x)
+    public final void rotate(final double x)
     {
         setRotate(getRotate() + x/10);
     }

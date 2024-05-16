@@ -25,7 +25,7 @@ public class CircleGenerator implements IGenerator
 
     }
 
-    public final void addPoint(double x, double y)
+    public final void addPoint(final double x, final double y)
     {
         if (isReady()) 
             points.clear();
@@ -45,7 +45,7 @@ public class CircleGenerator implements IGenerator
             throw new IndexOutOfBoundsException("Not enough points were given");
     }
 
-    public final ShapeCircle ghost(double x, double y)
+    public final ShapeCircle ghost(final double x, final double y)
     {
         if (points.size() == 1) 
             return new ShapeCircle(points.get(0)[0], points.get(0)[1], Math.sqrt(Math.pow(points.get(0)[0] - x, 2) + Math.pow(points.get(0)[1] - y, 2)), Color.rgb(0, 0, 0, 0.65));
