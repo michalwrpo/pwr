@@ -127,13 +127,13 @@ Problem 5 filozofow
 DEADLOCK
 
 Zalozenia
-na 4: 
-    1. Gdy watek T_x zacznie zmieniac kolor, nikt nie moze czytac jego koloru, dopoki nie skonczy zmiany.
-na 5: 
-    2. Gdy zmieniam kolor nie zasypiam
-    3. Gdy ktos czyta moj kolor nie zasypiam
-    4. Gdy ktos czyta moj stan nie zmieniam stanu
-    5. Jesli moj sasiad zmienia kolor, nie zmieniam stanu
+1. na 4: 
+    - Gdy watek T_x zacznie zmieniac kolor, nikt nie moze czytac jego koloru, dopoki nie skonczy zmiany.
+2. na 5: 
+    - Gdy zmieniam kolor nie zasypiam
+    - Gdy ktos czyta moj kolor nie zasypiam
+    - Gdy ktos czyta moj stan nie zmieniam stanu
+    - Jesli moj sasiad zmienia kolor, nie zmieniam stanu
 
 
     2 boxy: T1   T2
