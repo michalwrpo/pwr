@@ -16,7 +16,7 @@ public class GUI
         GUIToolbar toolbar = new GUIToolbar();
         toolbar.prefWidthProperty().bind(vBox.widthProperty());
         
-        GUIGrid grid = new GUIGrid(10, 10);
+        GUIGrid grid = new GUIGrid(10, 10, 0.5, 1000);
 
         grid.prefWidthProperty().bind(vBox.widthProperty());
         VBox.setVgrow(grid, Priority.ALWAYS);

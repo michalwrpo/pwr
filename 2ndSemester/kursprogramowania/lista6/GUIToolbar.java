@@ -55,22 +55,28 @@ public class GUIToolbar extends GridPane
 
         setPadding(new Insets(5, 10, 5, 20));
 
-        Label widthLabel = new ToolbarLabel("Width");
-        Label heightLabel = new ToolbarLabel("Height"); 
-        Label probabilityLabel = new ToolbarLabel("Probability");
+        ToolbarLabel widthLabel = new ToolbarLabel("Width");
+        ToolbarLabel heightLabel = new ToolbarLabel("Height"); 
+
+        ToolbarLabel probabilityLabel = new ToolbarLabel("Probability");
+        ToolbarLabel delayLabel = new ToolbarLabel("Delay");
 
         add(widthLabel, 0, 0);
         add(heightLabel, 0, 1);
-        add(probabilityLabel, 0, 2);
+
+        add(probabilityLabel, 2, 0);
+        add(delayLabel, 2, 1);
 
         add(new TextField(), 1, 0);
         add(new TextField(), 1, 1);
-        add(new TextField(), 1, 2);
+
+        add(new TextField(), 3, 0);
+        add(new TextField(), 3, 1);
         
         Pane separator = new Pane();
         setHgrow(separator, Priority.ALWAYS);
 
-        add(separator, 2, 1);
+        add(separator, 4, 0);
 
         Button clearButton = new ToolbarButton("Clear");
         Button startButton = new ToolbarButton("Start");
@@ -78,10 +84,10 @@ public class GUIToolbar extends GridPane
         setHalignment(clearButton, HPos.RIGHT);
         setHalignment(startButton, HPos.RIGHT);        
 
-        add(clearButton, 3, 1);
-        add(startButton, 3, 2);
+        add(clearButton, 5, 0);
+        add(startButton, 5, 1);
 
-        setPrefHeight(100);
+        setPrefHeight(75);
 
         setBackground(new Background(new BackgroundFill(Color.rgb(30, 30, 40), new CornerRadii(0), new Insets(0))));
     }

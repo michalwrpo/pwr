@@ -6,12 +6,12 @@ public class GUIGrid extends GridPane
 {    
     LGrid lGrid;
 
-    public GUIGrid(int vSquares, int hSquares)
+    public GUIGrid(int vSquares, int hSquares, double probability, long delay)
     {
         setVgap(0);
         setHgap(0);
 
-        this.lGrid = new LGrid(vSquares, hSquares);
+        this.lGrid = new LGrid(vSquares, hSquares, probability, delay);
 
         for (int i = 0; i < vSquares; i ++)
         {

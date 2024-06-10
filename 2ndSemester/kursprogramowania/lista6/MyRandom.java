@@ -16,7 +16,7 @@ public class MyRandom
         return gen.nextInt(b - a) + a;
     }
 
-    public static final double randomDouble(final int a, final int b)
+        public static final double randomDouble(final double a, final double b)
     {
         return gen.nextDouble() * (b - a) + a;
     }
