@@ -1,3 +1,5 @@
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -17,7 +19,7 @@ import javafx.scene.paint.Color;
 
 public class GUIToolbar extends GridPane 
 {
-    public GUIToolbar()
+    public GUIToolbar(GUIGrid grid)
     {
         super();
 
@@ -67,11 +69,17 @@ public class GUIToolbar extends GridPane
         add(probabilityLabel, 2, 0);
         add(delayLabel, 2, 1);
 
-        add(new TextField(), 1, 0);
-        add(new TextField(), 1, 1);
+        TextField widthField = new TextField();
+        TextField heightField = new TextField();
 
-        add(new TextField(), 3, 0);
-        add(new TextField(), 3, 1);
+        TextField probabilityField = new TextField();
+        TextField delayField = new TextField();
+
+        add(widthField, 1, 0);
+        add(heightField, 1, 1);
+
+        add(probabilityField, 3, 0);
+        add(delayField, 3, 1);
         
         Pane separator = new Pane();
         setHgrow(separator, Priority.ALWAYS);
@@ -80,6 +88,15 @@ public class GUIToolbar extends GridPane
 
         Button clearButton = new ToolbarButton("Clear");
         Button startButton = new ToolbarButton("Start");
+
+        startButton.setOnAction(new EventHandler<ActionEvent>() 
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                // grid.initialize((int)heightField.getText(), widthField.getText(), probabilityField.getText(), delayField.getText());
+            }    
+        });
 
         setHalignment(clearButton, HPos.RIGHT);
         setHalignment(startButton, HPos.RIGHT);        

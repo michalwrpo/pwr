@@ -4,15 +4,17 @@ import javafx.scene.layout.Priority;
 
 public class GUIGrid extends GridPane 
 {    
-    LGrid lGrid;
+    private LGrid lGrid;
 
     public GUIGrid(int vSquares, int hSquares, double probability, long delay)
     {
+        super();
+
         setVgap(0);
         setHgap(0);
 
         this.lGrid = new LGrid(vSquares, hSquares, probability, delay);
-
+    
         for (int i = 0; i < vSquares; i ++)
         {
             for (int j = 0; j < hSquares; j ++)
@@ -23,6 +25,9 @@ public class GUIGrid extends GridPane
                 add(square , i, j);
             }
         }
-
     }
+
+    // public final void initialize(int vSquares, int hSquares, double probability, long delay)
+    // {
+    // }
 }

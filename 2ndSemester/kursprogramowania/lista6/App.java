@@ -9,7 +9,7 @@ public class App extends Application
     @Override
     public void start(Stage stage)
     {
-        new GUI(stage);
+        new GUI(stage, getParameters().getRaw());
     }
 
     public static void main(String[] args)

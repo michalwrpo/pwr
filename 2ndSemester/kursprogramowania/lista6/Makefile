@@ -4,7 +4,7 @@ build:
 	javac --module-path /home/michal/vsprojects/pwr/2ndSemester/kursprogramowania/lista4/javafx_modules --add-modules javafx.controls App.java
 
 run: 
-	java --module-path /home/michal/vsprojects/pwr/2ndSemester/kursprogramowania/lista4/javafx_modules --add-modules javafx.controls App
+	java --module-path /home/michal/vsprojects/pwr/2ndSemester/kursprogramowania/lista4/javafx_modules --add-modules javafx.controls App $(ARGS)
 
 test:
 	javac Test.java
