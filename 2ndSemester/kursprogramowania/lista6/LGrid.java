@@ -31,10 +31,10 @@ public class LGrid
         {
             for (int j = 0; j < hSquares; j++)
             {
-                squares.get(i).get(j).addNeighbors(squares.get((i - 1 + hSquares) % hSquares).get(j), 
-                                                   squares.get(i).get((j + 1) % vSquares), 
-                                                   squares.get((i + 1) % hSquares).get(j),
-                                                   squares.get(i).get((j - 1 + vSquares) % vSquares));
+                squares.get(i).get(j).addNeighbors(squares.get((i - 1 + vSquares) % vSquares).get(j), 
+                                                   squares.get(i).get((j + 1) % hSquares), 
+                                                   squares.get((i + 1) % vSquares).get(j),
+                                                   squares.get(i).get((j - 1 + hSquares) % hSquares));
                 
                 squares.get(i).get(j).start();
             }

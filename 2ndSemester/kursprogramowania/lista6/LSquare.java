@@ -3,7 +3,7 @@ import java.util.logging.Level;
 
 import javafx.scene.paint.Color;
 
-public class LSquare extends Thread
+public class LSquare extends Thread implements IStoppable
 {
     private final int ID;
     private GUISquare guiSquare = null;
@@ -13,7 +13,6 @@ public class LSquare extends Thread
     private final long delay;
 
     private Color color;
-    private Color inactiveColor = null;
 
     private ArrayList<LSquare> neighbors = new ArrayList<LSquare>();
     private ArrayList<Color> neighborColors = new ArrayList<Color>();
@@ -63,7 +62,10 @@ public class LSquare extends Thread
                     
                                     for (LSquare neighbor : neighbors) 
                                     {
-                                        neighborColors.add(neighbor.getColor());    
+                                        if (neighbor.getColor() != null)
+                                        {
+                                            neighborColors.add(neighbor.getColor());    
+                                        }
                                     }
                                     
                                     Color newColor = MyAverage.averageColor(neighborColors);
@@ -82,23 +84,24 @@ public class LSquare extends Thread
         }
     }
 
+    @Override
     public synchronized final void changeState()
     {
         if (isActive)
         {
             isActive = false;
-            inactiveColor = color;
-            color = Color.rgb(0, 0, 0);
 
-            updateGUI();
+            updateGUI(Color.rgb(0, 0, 0));
+
+            MyLogger.logger.log(Level.FINE, "Deactived thread " + ID); 
         }
         else
         {
             isActive = true;
-            color = inactiveColor;
-            inactiveColor = null;
 
-            updateGUI();
+            updateGUI(null);
+
+            MyLogger.logger.log(Level.FINE, "Activated thread" + ID);
         }
     }
 
@@ -115,20 +118,28 @@ public class LSquare extends Thread
         }
     }
 
-    private final void updateGUI()
+    private final void updateGUI(Color newColor)
     {
         if (guiSquare != null) 
             {
-                guiSquare.update();    
+                guiSquare.update(newColor);    
             }
     }
     
     public synchronized final Color getColor()
     {
-        return color;
+        if (isActive)
+        {
+            return color;
+        }
+        else
+        {
+            return null;
+        }
     }
 
-    public synchronized final boolean getIsActive()
+    @Override
+    public synchronized final boolean isActive()
     {
         return isActive;
     }
@@ -143,9 +154,12 @@ public class LSquare extends Thread
     {
         while (isAlive()) 
         {            
-            changeColor();
-
-            updateGUI();
+            if (isActive) 
+            {
+                changeColor();
+    
+                updateGUI(null);    
+            }
             
             try
             {

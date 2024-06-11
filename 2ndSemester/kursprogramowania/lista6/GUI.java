@@ -34,16 +34,15 @@ public class GUI
             grid = new GUIGrid(10, 10, 0.5, 1000);
         }
 
-        GUIToolbar toolbar = new GUIToolbar(grid);
-        toolbar.prefWidthProperty().bind(vBox.widthProperty());
-        
-
         grid.prefWidthProperty().bind(vBox.widthProperty());
         VBox.setVgrow(grid, Priority.ALWAYS);
+        
+        GUIToolbar toolbar = new GUIToolbar(grid);
+        toolbar.prefWidthProperty().bind(vBox.widthProperty());
 
         vBox.getChildren().addAll(toolbar, grid);
 
-        
+        GUIMouseHandler.handleMouse(grid);
 
         Scene scene = new Scene(vBox, 800, 500);
     

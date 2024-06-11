@@ -22,7 +22,7 @@ public class GUIGrid extends GridPane
                 GUISquare square = new GUISquare(lGrid.getSquares().get(i).get(j)); 
                 setHgrow(square, Priority.ALWAYS);
                 setVgrow(square, Priority.ALWAYS);
-                add(square , i, j);
+                add(square, j, i);
             }
         }
     }
