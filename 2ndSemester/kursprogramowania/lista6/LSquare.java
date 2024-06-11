@@ -7,15 +7,18 @@ public class LSquare extends Thread
 {
     private final int ID;
     private GUISquare guiSquare = null;
+    private final Object locker;
 
     private final double probability;
     private final long delay;
 
     private Color color;
-    private final Object locker;
+    private Color inactiveColor = null;
 
     private ArrayList<LSquare> neighbors = new ArrayList<LSquare>();
     private ArrayList<Color> neighborColors = new ArrayList<Color>();
+
+    private boolean isActive = true;
     
     public LSquare(LGrid lGrid, double probability, long delay, int ID)
     {
@@ -28,38 +31,74 @@ public class LSquare extends Thread
         this.ID = ID;
     }
 
-    public void changeColor()
+    public void changeColor() throws IllegalArgumentException
     {
         synchronized(locker)
         {
             synchronized(this)
             {
-                System.out.println("Start " + ID);
-    
-                double rtd = MyRandom.randomDouble(0, 1);
-                
-                if (rtd > probability) 
+                if (neighbors.isEmpty()) 
                 {
-                    color = MyRandom.randomColor();
+                    throw new IllegalArgumentException("Neighbors not initialized");    
                 }
-                else
+                synchronized(neighbors.get(0))
                 {
-                    neighborColors.clear();
-    
-                    for (LSquare neighbor : neighbors) 
+                    synchronized(neighbors.get(1))
                     {
-                        neighborColors.add(neighbor.getColor());    
+                        synchronized(neighbors.get(2))
+                        {
+                            synchronized(neighbors.get(3))
+                            {
+                                System.out.println("Start " + ID);
+                    
+                                double rtd = MyRandom.randomDouble(0, 1);
+                                
+                                if (rtd <= probability) 
+                                {
+                                    color = MyRandom.randomColor();
+                                }
+                                else
+                                {
+                                    neighborColors.clear();
+                    
+                                    for (LSquare neighbor : neighbors) 
+                                    {
+                                        neighborColors.add(neighbor.getColor());    
+                                    }
+                                    
+                                    Color newColor = MyAverage.averageColor(neighborColors);
+                                    
+                                    if (newColor == null)
+                                        return;
+                                    
+                                    color = newColor;
+                                }
+                                System.out.println("End " + ID);
+                            }
+                        }
                     }
-                    
-                    Color newColor = MyAverage.averageColor(neighborColors);
-                    
-                    if (newColor == null)
-                        return;
-                    
-                    color = newColor;
                 }
-                System.out.println("End " + ID);
             }
+        }
+    }
+
+    public synchronized final void changeState()
+    {
+        if (isActive)
+        {
+            isActive = false;
+            inactiveColor = color;
+            color = Color.rgb(0, 0, 0);
+
+            updateGUI();
+        }
+        else
+        {
+            isActive = true;
+            color = inactiveColor;
+            inactiveColor = null;
+
+            updateGUI();
         }
     }
 
@@ -74,12 +113,24 @@ public class LSquare extends Thread
             neighbors.add(neighbor3);
             neighbors.add(neighbor4);
         }
+    }
 
+    private final void updateGUI()
+    {
+        if (guiSquare != null) 
+            {
+                guiSquare.update();    
+            }
     }
     
     public synchronized final Color getColor()
     {
         return color;
+    }
+
+    public synchronized final boolean getIsActive()
+    {
+        return isActive;
     }
 
     public final void setGUISquare(GUISquare guiSquare)
@@ -94,17 +145,15 @@ public class LSquare extends Thread
         {            
             changeColor();
 
-            if (guiSquare != null) 
-            {
-                guiSquare.update();    
-            }
+            updateGUI();
+            
             try
             {
                 sleep((long)(delay * MyRandom.randomDouble(0.5, 1.5)));
             }
             catch (InterruptedException e)
             {
-                MyLogger.logger.log(Level.WARNING, "Wywrotka", e);
+                MyLogger.logger.log(Level.WARNING, "Sleep interupted", e);
             }
         }
     }
