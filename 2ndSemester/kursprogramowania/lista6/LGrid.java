@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 
-
+/**
+ * @brief class handling the logic behind the grid
+ */
 public class LGrid 
 {
     // private final int vSquares;
@@ -41,11 +43,21 @@ public class LGrid
         }
     }
 
+    /**
+     * @brief returns the list of the squares
+     * 
+     * @return list of squares
+     */
     public final ArrayList<ArrayList<LSquare>> getSquares()
     {
         return squares;
     }
 
+    /**
+     * @brief returns the locker used to synchronize threads
+     * 
+     * @return locker
+     */
     public final Object getLocker()
     {
         return locker;

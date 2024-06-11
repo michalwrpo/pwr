@@ -2,6 +2,9 @@ import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
 
+/**
+ * @brief class containing methods for calculating averages
+ */
 public class MyAverage 
 {
     private MyAverage() throws InstantiationError
@@ -9,6 +12,12 @@ public class MyAverage
         throw new InstantiationError("This is a static class");
     }    
 
+    /**
+     * @brief calculates the average of several colors
+     * 
+     * @param colors
+     * @return average color
+     */
     public static final Color averageColor(ArrayList<Color> colors)
     {
         if (colors.size() == 0)

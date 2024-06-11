@@ -3,6 +3,9 @@ import java.util.logging.Level;
 
 import javafx.scene.paint.Color;
 
+/**
+ * @brief class handling the logic behind every thread
+ */
 public class LSquare extends Thread implements IStoppable
 {
     private final int ID;
@@ -30,6 +33,11 @@ public class LSquare extends Thread implements IStoppable
         this.ID = ID;
     }
 
+    /**
+     * @brief changes color of the square
+     * 
+     * @throws IllegalArgumentException
+     */
     public void changeColor() throws IllegalArgumentException
     {
         synchronized(locker)
@@ -105,6 +113,15 @@ public class LSquare extends Thread implements IStoppable
         }
     }
 
+    /**
+     * @brief add references to neighboring squares
+     * 
+     * @param neighbor1
+     * @param neighbor2
+     * @param neighbor3
+     * @param neighbor4
+     * @throws IllegalArgumentException
+     */
     public final void addNeighbors(LSquare neighbor1, LSquare neighbor2, LSquare neighbor3, LSquare neighbor4) throws IllegalArgumentException
     {
         if (!neighbors.isEmpty()) 
@@ -118,6 +135,11 @@ public class LSquare extends Thread implements IStoppable
         }
     }
 
+    /**
+     * @brief passes the color to GUI
+     * 
+     * @param newColor
+     */
     private final void updateGUI(Color newColor)
     {
         if (guiSquare != null) 
@@ -126,6 +148,11 @@ public class LSquare extends Thread implements IStoppable
             }
     }
     
+    /**
+     * @brief gives square's current color
+     * 
+     * @return color
+     */
     public synchronized final Color getColor()
     {
         if (isActive)
@@ -144,11 +171,19 @@ public class LSquare extends Thread implements IStoppable
         return isActive;
     }
 
+    /**
+     * @brief initializes the GUISquare linked to this LSquare
+     * 
+     * @param guiSquare
+     */
     public final void setGUISquare(GUISquare guiSquare)
     {
         this.guiSquare = guiSquare;
     }
 
+    /**
+     * @brief starts the thread 
+     */
     @Override
     public void run()
     {

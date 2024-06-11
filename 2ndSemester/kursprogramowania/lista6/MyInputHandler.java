@@ -1,6 +1,9 @@
 import java.util.List;
 import java.util.logging.Level;
 
+/**
+ * @brief class contatining methods for handling inputs 
+ */
 public class MyInputHandler 
 {
     private MyInputHandler() throws InstantiationError
@@ -8,6 +11,13 @@ public class MyInputHandler
         throw new InstantiationError("This is a static class");
     }    
 
+    /**
+     * @brief check if inputs for creation of a grid are correct
+     * 
+     * @param args
+     * @return true if inputs are correct, false otherwise
+     * @throws IllegalArgumentException
+     */
     public static final boolean checkInputs(List<String> args) throws IllegalArgumentException
     {
         if (args.size() == 0) 

@@ -17,6 +17,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 
+/**
+ * @brief GUI class responsible for creating toolbar
+ */
 public class GUIToolbar extends GridPane 
 {
     public GUIToolbar(GUIGrid grid)

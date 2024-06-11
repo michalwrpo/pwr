@@ -1,7 +1,9 @@
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-
+/**
+ * @brief class creating GUI for LGrid
+ */
 public class GUIGrid extends GridPane 
 {    
     private LGrid lGrid;
@@ -26,8 +28,4 @@ public class GUIGrid extends GridPane
             }
         }
     }
-
-    // public final void initialize(int vSquares, int hSquares, double probability, long delay)
-    // {
-    // }
 }

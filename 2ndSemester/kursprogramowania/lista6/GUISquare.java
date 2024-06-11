@@ -6,6 +6,9 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
+/**
+ * @brief GUI for LSquare
+ */
 public class GUISquare extends Region implements IGUIField
 {
     private final LSquare lSquare;
@@ -31,9 +34,18 @@ public class GUISquare extends Region implements IGUIField
         setBackground(new Background(new BackgroundFill(color, new CornerRadii(0), new Insets(0))));
     }
 
+    /**
+     * @brief updates the color of the square
+     * 
+     * @param newColor
+     */
     public final void update(Color newColor)
     {
-        updateColor(newColor);
+        if (newColor == null)
+            color = lSquare.getColor();
+        else
+            color = newColor;
+
         Platform.runLater(updater);
     }
 
@@ -41,13 +53,5 @@ public class GUISquare extends Region implements IGUIField
     public final LSquare getLSquare()
     {
         return lSquare;
-    }
-
-    public final void updateColor(Color newColor)
-    {
-        if (newColor == null)
-            color = lSquare.getColor();
-        else
-            color = newColor;
     }
 }
