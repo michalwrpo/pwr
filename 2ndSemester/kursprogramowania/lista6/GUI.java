@@ -37,10 +37,7 @@ public class GUI
         grid.prefWidthProperty().bind(vBox.widthProperty());
         VBox.setVgrow(grid, Priority.ALWAYS);
         
-        GUIToolbar toolbar = new GUIToolbar(grid);
-        toolbar.prefWidthProperty().bind(vBox.widthProperty());
-
-        vBox.getChildren().addAll(toolbar, grid);
+        vBox.getChildren().addAll(grid);
 
         GUIMouseHandler.handleMouse(grid);
 
@@ -49,6 +46,9 @@ public class GUI
         stage.setScene(scene);
         stage.setTitle("Colored Squares");
         stage.show();
+        stage.setOnCloseRequest(event -> {
+            System.exit(0);
+        });
     
         MyLogger.logger.log(Level.INFO, "Created scene");
     }
