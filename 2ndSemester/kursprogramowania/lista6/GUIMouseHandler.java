@@ -20,7 +20,7 @@ public class GUIMouseHandler
             {
                 if (mouseEvent.getTarget() instanceof IGUIField)
                 {                    
-                    ((LSquare)((IGUIField) mouseEvent.getTarget()).getLSquare()).changeState();
+                    ((IGUIField) mouseEvent.getTarget()).getLSquare().changeState();
                 }
             }    
         });
