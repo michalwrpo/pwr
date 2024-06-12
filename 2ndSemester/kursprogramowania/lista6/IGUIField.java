@@ -1,5 +1,5 @@
 /**
- * @brief interface containing methods for GUI of IStoppable objects
+ * @brief interface containing methods for GUI of grid items
  */
 public interface IGUIField 
 {
