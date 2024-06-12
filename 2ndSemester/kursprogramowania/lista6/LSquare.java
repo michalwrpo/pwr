@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 /**
  * @brief class handling the logic behind every thread
  */
-public class LSquare extends Thread implements IStoppable
+public class LSquare extends Thread
 {
     private final int ID;
     private GUISquare guiSquare = null;
@@ -92,7 +92,9 @@ public class LSquare extends Thread implements IStoppable
         }
     }
 
-    @Override
+    /**
+     * @brief changes state from active to not and vice versa
+     */
     public synchronized final void changeState()
     {
         if (isActive)
@@ -165,7 +167,11 @@ public class LSquare extends Thread implements IStoppable
         }
     }
 
-    @Override
+    /**
+     * @brief returns the current state of the square
+     * 
+     * @return boolean isActive
+     */
     public synchronized final boolean isActive()
     {
         return isActive;

@@ -19,13 +19,8 @@ public class GUIMouseHandler
             public void handle(MouseEvent mouseEvent)
             {
                 if (mouseEvent.getTarget() instanceof IGUIField)
-                {
-                    IGUIField target = (IGUIField) mouseEvent.getTarget();
-                    
-                    if (target.getLSquare() instanceof IStoppable)
-                    {
-                        ((IStoppable)target.getLSquare()).changeState();
-                    }
+                {                    
+                    ((LSquare)((IGUIField) mouseEvent.getTarget()).getLSquare()).changeState();
                 }
             }    
         });
