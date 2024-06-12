@@ -15,24 +15,7 @@ public class GUI
     {
         VBox vBox = new VBox();
 
-        boolean inputCorrect = MyInputHandler.checkInputs(inputs);
-
-        GUIGrid grid;
-
-        if (inputCorrect)
-        {
-            int height = Integer.parseInt(inputs.get(0));
-            int width = Integer.parseInt(inputs.get(1));
-
-            double probability = Double.parseDouble(inputs.get(2));
-            long delay = Long.parseLong(inputs.get(3));
-
-            grid = new GUIGrid(height, width, probability, delay);
-        }
-        else
-        {
-            grid = new GUIGrid(10, 10, 0.5, 1000);
-        }
+        GUIGrid grid = MyInputHandler.makeGrid(inputs);
 
         grid.prefWidthProperty().bind(vBox.widthProperty());
         VBox.setVgrow(grid, Priority.ALWAYS);

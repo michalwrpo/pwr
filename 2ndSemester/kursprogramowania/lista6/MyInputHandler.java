@@ -58,4 +58,28 @@ public class MyInputHandler
             return false;
         }
     }
+
+    /**
+     * @brief creates grid from inputs
+     * 
+     * @param inputs
+     * @return grid
+     */
+    public static final GUIGrid makeGrid(List<String> inputs)
+    {
+        if (checkInputs(inputs))
+        {
+            int height = Integer.parseInt(inputs.get(0));
+            int width = Integer.parseInt(inputs.get(1));
+
+            double probability = Double.parseDouble(inputs.get(2));
+            long delay = Long.parseLong(inputs.get(3));
+
+            return new GUIGrid(height, width, probability, delay);
+        }
+        else
+        {
+            return new GUIGrid(10, 10, 0.5, 1000);
+        }
+    }
 }
