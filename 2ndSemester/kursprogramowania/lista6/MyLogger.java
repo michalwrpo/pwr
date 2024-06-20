@@ -40,6 +40,6 @@ public class MyLogger
 
         }
 
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.OFF);
     }
 }
