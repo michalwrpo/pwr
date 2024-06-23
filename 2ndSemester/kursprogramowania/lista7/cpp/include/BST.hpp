@@ -10,7 +10,7 @@
 template <typename T>
 class BST
 {
-    public:
+    protected:
         template <typename T1>
         class Node
         {
