@@ -116,7 +116,6 @@ public class BST<T extends Comparable<T>>
                 node.value = temp.value;
                 node.right = deleteNode(node.right, temp.value);
             }    
-            
         }
 
         return node;

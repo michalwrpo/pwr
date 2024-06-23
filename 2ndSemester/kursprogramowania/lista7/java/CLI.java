@@ -36,7 +36,7 @@ public class CLI<T extends Comparable<T>>
 
         while (!quit)
         {
-            System.out.print("Enter command: ");
+            System.out.print("Enter a command: ");
 
             try
             {
