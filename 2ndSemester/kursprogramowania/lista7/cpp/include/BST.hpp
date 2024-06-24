@@ -142,6 +142,11 @@ class BST
             this->root = nullptr;
         }
 
+        ~BST()
+        {
+            deleteTree();
+        }
+
         /**
          * @brief inserts a value into the BST
          * 

@@ -112,8 +112,6 @@ class CLI
                 }
                 
             }  
-
-            tree->deleteTree();
         }
 
 };
