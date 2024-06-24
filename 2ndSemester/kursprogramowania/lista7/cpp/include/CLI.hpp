@@ -45,12 +45,18 @@ class CLI
             bool quit = false;
 
             std::string command = "";
-            std::cin.ignore();
+            std::cin.ignore(1000, '\n');
 
             while (!quit)
             {
                 std::cout << "Enter a command: ";
                 std::getline(std::cin, command);
+
+                if (!std::cin)
+                {
+                    std::cout << "Quiting..." << std::endl;
+                    break;
+                }
 
                 if (command == "p")
                 {
