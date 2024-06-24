@@ -126,6 +126,16 @@ class BST
             return ss.str();
         }
 
+        void freeTreeMemory(Node<T>* node)
+        {
+            if (node != nullptr)
+            {
+                freeTreeMemory(node->right);
+                freeTreeMemory(node->left);
+                delete node;
+            }
+        }
+
     public:
         BST() noexcept(true)
         {
@@ -175,6 +185,15 @@ class BST
         {
             return treePrint(root, 0);
         }
+
+        /**
+         * @brief recursively deletes the tree
+         */
+        void deleteTree()
+        {
+            freeTreeMemory(root);
+        }
+
 };
 
 

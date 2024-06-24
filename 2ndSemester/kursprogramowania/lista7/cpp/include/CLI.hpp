@@ -17,12 +17,17 @@ template <typename T>
 class CLI
 {
     private:
-        BST<T> tree;
+        BST<T>* tree;
         
     public:
         CLI() noexcept(true) 
         {
-            tree = BST<T>();
+            tree = new BST<T>();
+        }
+
+        ~CLI()
+        {
+            delete tree;
         }
 
         /**
@@ -49,7 +54,7 @@ class CLI
 
                 if (command == "p")
                 {
-                    std::cout << tree.print();
+                    std::cout << tree->print();
                     continue;
                 }
 
@@ -78,16 +83,16 @@ class CLI
                     case 'i':
                     case 'a':
                         std::cout << "Inserting " << strValue << " into the tree" << std::endl;
-                        tree.insert(value);
+                        tree->insert(value);
                         break;
                     case 'r':
                     case 'd':
                         std::cout << "Deleting " << strValue << " from the tree" << std::endl;
-                        tree.remove(value);
+                        tree->remove(value);
                         break;
                     case 's':
                     case 'f':
-                        std::cout << strValue << (tree.search(value) ? " is" : " is not") << " in the tree" << std::endl;
+                        std::cout << strValue << (tree->search(value) ? " is" : " is not") << " in the tree" << std::endl;
                         break;
                     default:
                         std::cout << "Invalid command" << std::endl;
@@ -101,6 +106,8 @@ class CLI
                 }
                 
             }  
+
+            tree->deleteTree();
         }
 
 };
