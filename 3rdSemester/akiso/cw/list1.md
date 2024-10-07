@@ -2,6 +2,8 @@
 
 ## Zad.1
 
+<p>Zapisz 20 pierwszych liczb naturalnych przy podstawie: 2; 3; 5; 16.</p>
+
 ### Base 2
 
 0, 1, 10, 11, 100, 101, 110, 111, 1000, 1001, 1010, 1011, 1100, 1101, 1110, 1111, 10000, 10001, 10010, 10011
@@ -46,3 +48,16 @@
 367<sub>8</sub> * 715<sub>8</sub> = 330100<sub>8</sub> + 3670<sub>8</sub> + 2323<sub>8</sub> = 336313<sub>8</sub>
 4. 296<sub>12</sub> + 57<sub>12</sub> = 331<sub>12</sub> <br>
 296<sub>12</sub> * 57<sub>12</sub> = 11B60<sub>12</sub> + 1766<sub>12</sub> = 13706<sub>12</sub>
+
+
+## Zad. bonus
+
+Zapisac dowolna liczbe przy ujemnej podstawie.
+
+- n<sup>even</sup> = (-n)<sup>even</sup>
+- n<sup>odd</sup> = (-n)<sup>odd+1</sup> + (n - 1) \* (-n)<sup>odd</sup>
+
+- overflow on even: n \* (-n)<sup>even</sup> = (-n)<sup>even+2</sup> + (n - 1) \* (-n)<sup>even+1</sup>
+- overflow on odd: n \* (-n)<sup>odd</sup> = (-n)<sup>odd+2</sup> + (n - 1) \* (-n)<sup>odd+1</sup>
+
+Patrz bonus1.py
