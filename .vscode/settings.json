@@ -71,5 +71,6 @@
         "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.swing.jar",
         "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx.web.jar",
         "2ndSemester/kursprogramowania/lista4/javafx_modules/javafx-swt.jar"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
