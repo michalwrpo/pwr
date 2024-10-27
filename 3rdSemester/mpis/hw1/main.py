@@ -11,6 +11,9 @@ def f2(x: float) -> float:
 def f3(x: float) -> float:
     return 4*x*(1-x)**3
 
+def fpi(x: float) -> float:
+    return 4*np.sqrt(1-x**2);
+
 def makegraph(fileName: str, x: List[int], y: List[float], avgX: List[int], avgY: List[float], trueValue: float, title: str, subtitle: str) -> None:
     plt.clf()
     plt.grid(True)
@@ -20,7 +23,7 @@ def makegraph(fileName: str, x: List[int], y: List[float], avgX: List[int], avgY
     plt.xlabel('Number of points')
     plt.ylabel('Approximated value')
     plt.suptitle(title)
-    plt.title(subtitle)
+    plt.title(subtitle, fontsize=10)
     plt.legend()
     plt.savefig(fileName)
 
@@ -75,3 +78,5 @@ if __name__ == "__main__":
     quickSimulate(f2, 0, np.pi, 1.5, 50, 2, "$\sin{x}$")
     quickSimulate(f3, 0, 1, 0.5, 5, 0.2, "$4x(1-x)^3$")
     quickSimulate(f3, 0, 1, 0.5, 50, 0.2, "$4x(1-x)^3$")
+    quickSimulate(fpi, 0, 1, 6, 5, np.pi, "$\pi$ using $4\sqrt{1-x^2}$")
+    quickSimulate(fpi, 0, 1, 6, 50, np.pi, "$\pi$ using $4\sqrt{1-x^2}$")
