@@ -87,3 +87,35 @@ GROUP BY Firma.Nazwa
 HAVING Zarobek = (
     
 )
+
+14.
+```sql 
+SELECT Nazwa_firmy 
+FROM Obroty
+WHERE Rok = YEAR(CURDATE()) - 1
+GROUP BY Nazwa_firmy
+HAVING SUM(Przychod) < SUM(Wydatki);
+```
+
+15. 
+```sql
+SELECT F1.Nazwa, F2.Nazwa 
+FROM Firma AS F1
+JOIN Firma AS F2 ON F1.Adres = F2.Adres 
+WHERE F1.Nazwa < F2.Nazwa;
+```
+
+16. 
+```sql
+SELECT Nazwa_firmy, Rok, SUM(Wydatki)
+FROM Obroty
+WHERE Miesiac < 7
+GROUP BY Nazwa_firmy, Rok; 
+```
+
+17.
+```sql
+SELECT Nazwa, YEAR(Data_zalozenia)
+FROM Firma
+ORDER BY Data_zalozenia ASC;
+```

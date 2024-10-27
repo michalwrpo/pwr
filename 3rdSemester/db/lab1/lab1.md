@@ -19,11 +19,29 @@ WHERE length > 120;
 3. Wypisz tytuły 4 najkrótszych filmów o kategorii wiekowej PG-13.
 
 ```sql
-SELECT title
+SELECT title, length
 FROM film
 WHERE rating='PG-13'
 ORDER BY length ASC
 LIMIT 4;
+```
+
+```sql
+CREATE TABLE temp1 AS
+    SELECT length
+    FROM film
+    WHERE rating='PG-13'
+    GROUP BY length
+    ORDER BY length ASC
+    LIMIT 4;
+
+SELECT title, length
+FROM film
+WHERE rating='PG-13' AND length IN (
+    SELECT length
+    FROM temp1
+)
+ORDER BY length ASC;
 ```
 
 4. Wypisz tytuły filmów oraz ich język, dla wszystkich filmów, w których opisie występuje słowo Drama.
@@ -87,6 +105,15 @@ JOIN film ON film_actor.film_id = film.film_id
 WHERE film.special_features LIKE '%Deleted scenes%'
 GROUP BY actor.actor_id;
 -- 200 rows
+```
+
+Using FIND_IN_SET:
+```sql
+SELECT actor.first_name, actor.last_name FROM actor
+JOIN film_actor ON actor.actor_id = film_actor.actor_id
+JOIN film ON film_actor.film_id = film.film_id
+WHERE FIND_IN_SET('Deleted scenes', film.special_features)
+GROUP BY actor.actor_id;
 ```
 
 10. Wypisz imiona oraz nazwiska wszystkich klientów, których wypożyczenie i odpowiadająca mu płatność były obsłużone przez 2 różnych pracowników.
