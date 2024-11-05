@@ -7,7 +7,7 @@
 
 ### - $\int_0^8 \sqrt[3]{x} \,dx$
 
-\[\int_0^8 \sqrt[3]{x} \,dx = \int_0^8 x^{\frac{1}{3}} \,dx = \frac{3}{4}x^{\frac{4}{3}} \Big\rvert_{x=0}^8 = \frac{3}{4} \left(8^{\frac{4}{3}} - 0^{\frac{4}{3}} \right) = \frac{3}{4} \cdot 16 = 12\]
+$\int_0^8 \sqrt[3]{x} \,dx = \int_0^8 x^{\frac{1}{3}} \,dx = \frac{3}{4}x^{\frac{4}{3}} \Big\rvert_{x=0}^8 = \frac{3}{4} \left(8^{\frac{4}{3}} - 0^{\frac{4}{3}} \right) = \frac{3}{4} \cdot 16 = 12$
 
 <div style="display: flex; justify-content: space-between;">
   <img src="./f1k1.png" alt="f1k=5" style="width: 48%;">
