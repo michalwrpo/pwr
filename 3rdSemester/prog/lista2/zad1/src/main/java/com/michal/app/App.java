@@ -1,10 +1,11 @@
 package com.michal.app;
 
 /**
- * Hello world!
+ * Starts the program
  */
 public class App {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        Library library = new Library();
+        CLI.start(library);
     }
 }
