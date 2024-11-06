@@ -9,11 +9,9 @@ import java.util.HashMap;
  */
 public class Library {
     private HashMap<Integer, Book> books = new HashMap<Integer, Book>();
-    private HashMap<Integer, BookCopy> copies = new HashMap<Integer, BookCopy>();
     private HashMap<Integer, Customer> customers = new HashMap<Integer, Customer>();
 
     private int availableBookID = 0;
-    private int availableCopyID = 0;
     private int availableCustomerID = 0;
 
     /**
@@ -32,16 +30,6 @@ public class Library {
     public void addBook(String author, String title) {
         books.put(availableBookID, new Book(availableBookID, author, title));
         availableBookID += 1;
-    }
-
-    /**
-     * Adds a new copy of an existing book to the library's collection.
-     *
-     * @param bookID the ID of the book for which the copy is created
-     */
-    public void addCopy(int bookID) {
-        copies.put(availableCopyID, new BookCopy(availableCopyID, bookID));
-        availableCopyID += 1;
     }
 
     /**
@@ -65,15 +53,6 @@ public class Library {
     }
 
     /**
-     * Returns the library's collection of book copies.
-     *
-     * @return a {@code HashMap} of book copies, where keys are copy IDs and values are {@code BookCopy} objects
-     */
-    public HashMap<Integer, BookCopy> getCopies() {
-        return copies;
-    }
-
-    /**
      * Returns the library's collection of customers.
      *
      * @return a {@code HashMap} of customers, where keys are customer IDs and values are {@code Customer} objects
@@ -89,15 +68,6 @@ public class Library {
      */
     public int getLastBookID() {
         return availableBookID - 1;
-    }
-
-    /**
-     * Returns the ID of the last book copy added to the library.
-     *
-     * @return the ID of the last added book copy, or -1 if no copies have been added
-     */
-    public int getLastCopyID() {
-        return availableCopyID - 1;
     }
 
     /**
@@ -120,16 +90,6 @@ public class Library {
     }
 
     /**
-     * Retrieves a book copy by its ID.
-     *
-     * @param id the ID of the book copy to retrieve
-     * @return the {@code BookCopy} with the specified ID, or {@code null} if not found
-     */
-    public BookCopy getCopy(int id) {
-        return copies.get(id);
-    }
-
-    /**
      * Retrieves a customer by their ID.
      *
      * @param id the ID of the customer to retrieve
@@ -137,5 +97,14 @@ public class Library {
      */
     public Customer getCustomer(int id) {
         return customers.get(id);
+    }
+
+        /**
+     * Adds a new copy of an existing book to the library's collection.
+     *
+     * @param bookID the ID of the book for which the copy is created
+     */
+    public void addCopy(int bookID) {
+        books.get(bookID).addCopy();
     }
 }

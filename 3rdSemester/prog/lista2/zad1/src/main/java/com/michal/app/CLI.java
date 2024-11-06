@@ -83,28 +83,17 @@ public final class CLI {
                             scanner.nextLine();
     
                             lib.addCopy(bookID);
-                            System.out.println("Added copy of " + lib.getBooks().get(bookID).getTitle() + " with ID" + lib.getLastCopyID());
+                            System.out.println("Added copy of " + lib.getBook(bookID).getTitle() + " with ID" + lib.getBook(bookID).getLastCopyID());
                         } catch (NullPointerException | InputMismatchException e) {
                             throw new IllegalArgumentException("Id should be an integer");
                         }
                         break;
-                    case "show":
-                        System.out.print("Enter copy's ID: ");
-                        try {
-                            int id = scanner.nextInt();
-                            scanner.nextLine();
-                            int book = lib.getCopy(id).getBookID();
-
-                            System.out.println("A copy of " + lib.getBook(book).getAuthor() + " " + lib.getBook(book).getTitle());
-                        } catch (NullPointerException | IndexOutOfBoundsException e) {
-                            System.err.println("Invalid copy ID");
-                        } catch (InputMismatchException e) {
-                            throw new IllegalArgumentException("Id should be an integer");
-                        }
-                        break;
                     case "lend":
-                        System.out.print("Enter copy's ID: ");
+                        System.out.print("Enter book's ID: ");
                         try {
+                            int bookID = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.print("Enter copy's ID: ");
                             int copyID = scanner.nextInt();
                             scanner.nextLine();
 
@@ -112,25 +101,28 @@ public final class CLI {
                             int customerID = scanner.nextInt();
                             scanner.nextLine();
     
-                            lib.getCustomer(customerID).rentBook(lib.getCopy(copyID));
+                            lib.getCustomer(customerID).rentBook(lib.getBook(bookID).getCopy(copyID));
                         } catch (NullPointerException | IndexOutOfBoundsException e) {
-                            System.err.println("Invalid copy's or customer's ID");
+                            System.err.println("Invalid book's, copy's or customer's ID");
                         } catch (InputMismatchException e) {
                             throw new IllegalArgumentException("Id should be an integer");
                         }
                         break;
                     case "return":
-                        System.out.print("Enter copy's ID: ");
+                        System.out.print("Enter book's ID: ");
                         try {
+                            int book = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.print("Enter copy's ID: ");
                             int copy = scanner.nextInt();
                             scanner.nextLine();
                             System.out.print("Enter customer's ID: ");
                             int customer = scanner.nextInt();
                             scanner.nextLine();
     
-                            lib.getCustomer(customer).returnBook(lib.getCopy(copy));
+                            lib.getCustomer(customer).returnBook(lib.getBook(book).getCopy(copy));
                         } catch (NullPointerException | IndexOutOfBoundsException e) {
-                            System.err.println("Invalid copy's or customer's ID");
+                            System.err.println("Invalid book's, copy's or customer's ID");
                         } catch (InputMismatchException e) {
                             throw new IllegalArgumentException("Id should be an integer");
                         }

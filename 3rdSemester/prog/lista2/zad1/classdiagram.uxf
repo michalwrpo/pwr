@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>450</x>
+      <y>230</y>
+      <w>550</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>Library
+--
+-books = new HashMap&lt;Integer, Book&gt;(): HashMap&lt;Integer, Book&gt;
+-copies = new HashMap&lt;Integer, BookCopy&gt;(): HashMap&lt;Integer, BookCopy&gt;
+-customers = new HashMap&lt;Integer, Customer&gt;(): HashMap&lt;Integer, Customer&gt;
+-availableBookID = 0: int
+-availableCopyID = 0: int
+-availableCustomerID = 0: int
+--
++Library(): ctor
++addBook(String author, String title): void
++addCopy(int bookID): void
++addCustomer(String firstName, String lastName): void
++getBooks(): HashMap&lt;Integer, Book&gt;
++getCopies(): HashMap&lt;Integer, BookCopy&gt;
++getCustomers(): HashMap&lt;Integer, Customer&gt;
++getLastBookID(): int
++getLastCopyID(): int
++getLastCustomerID(): int
++getBook(int id): Book
++getCopy(int id): BookCopy
++getCustomer(int id): Customer
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>830</x>
+      <y>650</y>
+      <w>460</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>Customer
+--
+-customerID: int
+-firstName: String
+-lastName: String
+-rentedBooks: ArrayList&lt;BookCopy&gt;
+--
++Customer(int customerID, String firstName, String lastName): ctor
++getCustomerID(): int
++getFirstName(): String
++getLastName(): String
++getName(): String
++getRentedBooks(): ArrayList&lt;Integer&gt;
++setFirstName(String newName): void
++setLastName(String newName): void
++rentBook(BookCopy copy): void
++returnBook(BookCopy copy): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>620</x>
+      <y>1020</y>
+      <w>280</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>Copy
+--
+-copyID: int
+-bookID: int
+-customerID: int
+-available: boolean
+--
++BookCopy(int copyID, int bookID): ctor
++getCopyID(): int
++getBookID(): int
++getCustomerID(): int
++getAvailable(): boolean
++borrowCopy(int customerID): void
++returnCopy(): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>370</x>
+      <y>670</y>
+      <w>340</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>Book
+--
+-bookID: int
+-author: String
+-title: String
+--
++Book(int bookID, String author, String title): ctor
++getBookID(): int
++getAuthor(): String
++getTitle(): String
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>520</x>
+      <y>0</y>
+      <w>420</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>CLI
+--
+--
+-interpret(String command, Library lib, Scanner scanner): void
++start(Library lib): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>100</y>
+      <w>110</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1
+m1=1
+manipulates</panel_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>900</x>
+      <y>570</y>
+      <w>160</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1
+m1=*
+manages</panel_attributes>
+    <additional_attributes>140.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>830</x>
+      <y>910</y>
+      <w>210</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=0,1
+m1=*
+borrows</panel_attributes>
+    <additional_attributes>10.0;110.0;190.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>570</y>
+      <w>110</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1
+m1=*
+manages</panel_attributes>
+    <additional_attributes>10.0;100.0;50.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>830</y>
+      <w>150</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=1
+m1=*
+has</panel_attributes>
+    <additional_attributes>130.0;190.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
