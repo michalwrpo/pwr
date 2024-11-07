@@ -37,7 +37,7 @@ public final class CLI {
                             scanner.nextLine();
                             
                             System.out.println(lib.getCustomers().get(id).getName());
-                        } catch (IndexOutOfBoundsException e) {
+                        } catch (NullPointerException | IndexOutOfBoundsException e) {
                             System.err.println("Invalid customer ID");
                         } catch (InputMismatchException e) {
                             throw new IllegalArgumentException("Id should be an integer", e);
@@ -85,7 +85,9 @@ public final class CLI {
     
                             lib.addCopy(bookID);
                             System.out.println("Added copy of " + lib.getBook(bookID).getTitle() + " with ID" + lib.getBook(bookID).getLastCopyID());
-                        } catch (NullPointerException | InputMismatchException e) {
+                        } catch (NullPointerException | IndexOutOfBoundsException e) {
+                            System.err.println("Invalid book ID"); 
+                        }catch (InputMismatchException e) {
                             throw new IllegalArgumentException("Id should be an integer", e);
                         }
                         break;
