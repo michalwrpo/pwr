@@ -4,39 +4,6 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>450</x>
-      <y>230</y>
-      <w>550</w>
-      <h>350</h>
-    </coordinates>
-    <panel_attributes>Library
---
--books = new HashMap&lt;Integer, Book&gt;(): HashMap&lt;Integer, Book&gt;
--copies = new HashMap&lt;Integer, BookCopy&gt;(): HashMap&lt;Integer, BookCopy&gt;
--customers = new HashMap&lt;Integer, Customer&gt;(): HashMap&lt;Integer, Customer&gt;
--availableBookID = 0: int
--availableCopyID = 0: int
--availableCustomerID = 0: int
---
-+Library(): ctor
-+addBook(String author, String title): void
-+addCopy(int bookID): void
-+addCustomer(String firstName, String lastName): void
-+getBooks(): HashMap&lt;Integer, Book&gt;
-+getCopies(): HashMap&lt;Integer, BookCopy&gt;
-+getCustomers(): HashMap&lt;Integer, Customer&gt;
-+getLastBookID(): int
-+getLastCopyID(): int
-+getLastCustomerID(): int
-+getBook(int id): Book
-+getCopy(int id): BookCopy
-+getCustomer(int id): Customer
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
       <x>830</x>
       <y>650</y>
       <w>460</w>
@@ -91,28 +58,6 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>370</x>
-      <y>670</y>
-      <w>340</w>
-      <h>170</h>
-    </coordinates>
-    <panel_attributes>Book
---
--bookID: int
--author: String
--title: String
---
-+Book(int bookID, String author, String title): ctor
-+getBookID(): int
-+getAuthor(): String
-+getTitle(): String
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
       <x>520</x>
       <y>0</y>
       <w>420</w>
@@ -144,16 +89,16 @@ manipulates</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>900</x>
-      <y>570</y>
-      <w>160</w>
-      <h>100</h>
+      <x>850</x>
+      <y>490</y>
+      <w>210</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=1
 m1=*
 manages</panel_attributes>
-    <additional_attributes>140.0;80.0;10.0;10.0</additional_attributes>
+    <additional_attributes>190.0;160.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -172,29 +117,86 @@ borrows</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>560</x>
-      <y>570</y>
-      <w>110</w>
-      <h>120</h>
+      <x>550</x>
+      <y>490</y>
+      <w>130</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=1
 m1=*
 manages</panel_attributes>
-    <additional_attributes>10.0;100.0;50.0;10.0</additional_attributes>
+    <additional_attributes>10.0;160.0;100.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>550</x>
-      <y>830</y>
+      <y>890</y>
       <w>150</w>
-      <h>210</h>
+      <h>150</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=1
 m1=*
 has</panel_attributes>
-    <additional_attributes>130.0;190.0;10.0;10.0</additional_attributes>
+    <additional_attributes>130.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>460</x>
+      <y>230</y>
+      <w>550</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>Library
+--
+-books = new HashMap&lt;Integer, Book&gt;(): HashMap&lt;Integer, Book&gt;
+-customers = new HashMap&lt;Integer, Customer&gt;(): HashMap&lt;Integer, Customer&gt;
+-availableBookID = 0: int
+-availableCustomerID = 0: int
+--
++Library(): ctor
++addBook(String author, String title): void
++addCustomer(String firstName, String lastName): void
++getBooks(): HashMap&lt;Integer, Book&gt;
++getCustomers(): HashMap&lt;Integer, Customer&gt;
++getLastBookID(): int
++getLastCustomerID(): int
++getBook(int id): Book
++getCustomer(int id): Customer
++addCopy(int bookID): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>290</x>
+      <y>650</y>
+      <w>530</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>Book
+--
+-bookID: int
+-author: String
+-title: String
+-copies = new HashMap&lt;Integer, BookCopy&gt;(): HashMap&lt;Integer, BookCopy&gt;
+-availableCopyID = 0: int
+--
++Book(int bookID, String author, String title): ctor
++getBookID(): int
++getAuthor(): String
++getTitle(): String
++getCopies(): HashMap&lt;Integer, BookCopy&gt;
++getLastCopyID(): int
++getCopy(int id): BookCopy
++addCopy(): void
+
+</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

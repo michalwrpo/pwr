@@ -14,13 +14,7 @@ public class Library {
     private int availableBookID = 0;
     private int availableCustomerID = 0;
 
-    /**
-     * Constructs a new, empty library.
-     */
-    public Library() {
-
-    }
-
+    // Library keeps track of books, so it is responsible for creating them.
     /**
      * Adds a new book to the library's collection with a unique ID, author, and title.
      *
@@ -32,6 +26,7 @@ public class Library {
         availableBookID += 1;
     }
 
+    // Library keeps track of customers, so it is responsible for creating them.
     /**
      * Adds a new customer to the library's system with a unique ID, first name, and last name.
      *
@@ -99,7 +94,8 @@ public class Library {
         return customers.get(id);
     }
 
-        /**
+    // Book deals with copies so Library outsource the task.
+    /**
      * Adds a new copy of an existing book to the library's collection.
      *
      * @param bookID the ID of the book for which the copy is created

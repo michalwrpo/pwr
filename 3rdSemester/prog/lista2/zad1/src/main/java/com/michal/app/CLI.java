@@ -3,6 +3,7 @@ package com.michal.app;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+// Class responsible only for command line interface, to not add it in different classes.
 /**
  * Command line interface
  */
@@ -39,7 +40,7 @@ public final class CLI {
                         } catch (IndexOutOfBoundsException e) {
                             System.err.println("Invalid customer ID");
                         } catch (InputMismatchException e) {
-                            throw new IllegalArgumentException("Id should be an integer");
+                            throw new IllegalArgumentException("Id should be an integer", e);
                         }
                         break;
                     default:
@@ -67,7 +68,7 @@ public final class CLI {
                         } catch (NullPointerException | IndexOutOfBoundsException e) {
                             System.err.println("Invalid book ID");
                         } catch (InputMismatchException e) {
-                            throw new IllegalArgumentException("Id should be an integer");
+                            throw new IllegalArgumentException("Id should be an integer", e);
                         }
                         break;
                     default:
@@ -85,7 +86,7 @@ public final class CLI {
                             lib.addCopy(bookID);
                             System.out.println("Added copy of " + lib.getBook(bookID).getTitle() + " with ID" + lib.getBook(bookID).getLastCopyID());
                         } catch (NullPointerException | InputMismatchException e) {
-                            throw new IllegalArgumentException("Id should be an integer");
+                            throw new IllegalArgumentException("Id should be an integer", e);
                         }
                         break;
                     case "lend":
@@ -105,7 +106,7 @@ public final class CLI {
                         } catch (NullPointerException | IndexOutOfBoundsException e) {
                             System.err.println("Invalid book's, copy's or customer's ID");
                         } catch (InputMismatchException e) {
-                            throw new IllegalArgumentException("Id should be an integer");
+                            throw new IllegalArgumentException("Id should be an integer", e);
                         }
                         break;
                     case "return":
@@ -124,7 +125,7 @@ public final class CLI {
                         } catch (NullPointerException | IndexOutOfBoundsException e) {
                             System.err.println("Invalid book's, copy's or customer's ID");
                         } catch (InputMismatchException e) {
-                            throw new IllegalArgumentException("Id should be an integer");
+                            throw new IllegalArgumentException("Id should be an integer", e);
                         }
                         break;
                     default:

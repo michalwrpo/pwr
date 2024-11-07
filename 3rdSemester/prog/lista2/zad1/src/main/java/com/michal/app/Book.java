@@ -81,7 +81,7 @@ public final class Book {
         return copies.get(id);
     }
 
-    
+    // Book knows the most about copies so it creates and contains them.
     /**
      * Adds a new copy of the book.
      */
