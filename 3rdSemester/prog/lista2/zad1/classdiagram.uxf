@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>10</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>830</x>
-      <y>650</y>
-      <w>460</w>
-      <h>270</h>
+      <x>920</x>
+      <y>560</y>
+      <w>368</w>
+      <h>216</h>
     </coordinates>
     <panel_attributes>Customer
 --
@@ -33,10 +33,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>620</x>
-      <y>1020</y>
-      <w>280</w>
-      <h>220</h>
+      <x>752</x>
+      <y>856</y>
+      <w>224</w>
+      <h>176</h>
     </coordinates>
     <panel_attributes>Copy
 --
@@ -58,10 +58,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>520</x>
-      <y>0</y>
-      <w>420</w>
-      <h>110</h>
+      <x>672</x>
+      <y>40</y>
+      <w>336</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>CLI
 --
@@ -75,10 +75,10 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>720</x>
-      <y>100</y>
-      <w>110</w>
-      <h>150</h>
+      <x>832</x>
+      <y>120</y>
+      <w>88</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=1
@@ -89,24 +89,10 @@ manipulates</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>850</x>
-      <y>490</y>
-      <w>210</w>
-      <h>180</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m2=1
-m1=*
-manages</panel_attributes>
-    <additional_attributes>190.0;160.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>830</x>
-      <y>910</y>
-      <w>210</w>
-      <h>130</h>
+      <x>920</x>
+      <y>768</y>
+      <w>168</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=0,1
@@ -115,40 +101,12 @@ borrows</panel_attributes>
     <additional_attributes>10.0;110.0;190.0;10.0</additional_attributes>
   </element>
   <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>550</x>
-      <y>490</y>
-      <w>130</w>
-      <h>180</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m2=1
-m1=*
-manages</panel_attributes>
-    <additional_attributes>10.0;160.0;100.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>550</x>
-      <y>890</y>
-      <w>150</w>
-      <h>150</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m2=1
-m1=*
-has</panel_attributes>
-    <additional_attributes>130.0;130.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>460</x>
-      <y>230</y>
-      <w>550</w>
-      <h>270</h>
+      <x>624</x>
+      <y>224</y>
+      <w>440</w>
+      <h>216</h>
     </coordinates>
     <panel_attributes>Library
 --
@@ -174,10 +132,10 @@ has</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>290</x>
-      <y>650</y>
-      <w>530</w>
-      <h>250</h>
+      <x>488</x>
+      <y>560</y>
+      <w>424</w>
+      <h>200</h>
     </coordinates>
     <panel_attributes>Book
 --
@@ -198,5 +156,38 @@ has</panel_attributes>
 
 </panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>944</x>
+      <y>432</y>
+      <w>136</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;150.0;160.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>712</x>
+      <y>752</y>
+      <w>136</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;150.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>736</x>
+      <y>432</y>
+      <w>88</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;160.0</additional_attributes>
   </element>
 </diagram>
