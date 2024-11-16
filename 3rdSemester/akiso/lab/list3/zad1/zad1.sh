@@ -1,5 +1,7 @@
+# -----------------
 # script akin to ps using /proc
 # Michał Waluś 2024
+# -----------------
 
 # ------------------------
 # PPID - parent process ID

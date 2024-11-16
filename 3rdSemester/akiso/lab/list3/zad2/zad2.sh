@@ -1,3 +1,8 @@
+# -----------------
+# Script showing information about system until interrupted
+# Michał Waluś 2024
+# -----------------
+
 # initializes variables that shouldn't change during working of the script or that need to be initialized
 init () { 
     core_num=$(cat /proc/stat | grep -E "cpu[0-9]" -c)
