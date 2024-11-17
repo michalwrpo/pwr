@@ -1,0 +1,1 @@
+Makefile użyty w tym zadaniu to ten sam, który użyty został do zadania 4 (wszystkie modyfikacje zostały wprowadzone tam).
