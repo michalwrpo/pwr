@@ -9,7 +9,7 @@ sudo dd if=/dev/nvme0n1p1 of=/dev/stdout bs=512 count=1 2> /dev/null | hexdump -
 ## Zad. 2
 
 ```sh
-ps -eH -o pri,pid,ppid,state,c,sz,rss,stime,tname,nice,cmd
+ps -eH -o pri,pid,ppid,state,c,sz,rss,stime,tname,cmd
 ```
 
 ## Zad. 3
