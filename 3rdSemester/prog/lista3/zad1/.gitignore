@@ -1,0 +1,8 @@
+adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/exceptions
+adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/model
+adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/*Door*
+adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/*Door.java
+adapter/src/main/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/exceptions
+
+adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/*Door*
+adapter/src/test/java/eu/jpereira/trainings/designpatterns/structural/adapter/thirdparty/*DoorTest.java
