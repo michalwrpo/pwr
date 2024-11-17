@@ -2,15 +2,17 @@ package eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty;
 
 import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.CodeMismatchException;
 import eu.jpereira.trainings.designpatterns.structural.adapter.exceptions.IncorrectDoorCodeException;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotChangeCodeForUnlockedDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotChangeStateOfLockedDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.exceptions.CannotUnlockDoorException;
+
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.ThirdPartyDoor;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.ThirdPartyDoor.DoorState;
+import eu.jpereira.trainings.designpatterns.structural.adapter.thirdparty.ThirdPartyDoor.LockStatus;
 
 public class ThirdPartyDoorObjectAdapter implements eu.jpereira.trainings.designpatterns.structural.adapter.model.Door {
     
-    public enum DoorState {
-		OPEN, CLOSED;
-	}
-	public static final String DEFAULT_CODE ="AAAAHHHH";
-    private String code = DEFAULT_CODE;
-	private DoorState doorState = DoorState.CLOSED;
+	ThirdPartyDoor door = new ThirdPartyDoor();
 
     /**
 	 * Open the door if the code is correct
@@ -21,18 +23,24 @@ public class ThirdPartyDoorObjectAdapter implements eu.jpereira.trainings.design
 	 *             if the code is not correct
 	 */
 	public void open(String code) throws IncorrectDoorCodeException {
-        if (code.equals(this.code)) {
-            doorState = DoorState.OPEN;
-        } else {
-            throw new IncorrectDoorCodeException();
-        }
+        try {
+			door.unlock(code);
+			door.setState(DoorState.OPEN);
+		} catch (CannotUnlockDoorException | CannotChangeStateOfLockedDoor e) {
+			throw new IncorrectDoorCodeException();
+		}
     }
 
 	/**
 	 * Attempt to close the door
 	 */
 	public void close() {
-        doorState = DoorState.CLOSED;
+		try {
+			door.setState(DoorState.CLOSED);
+		} catch (CannotChangeStateOfLockedDoor e) {
+
+		}
+		door.lock();
     }
 
     /**
@@ -41,7 +49,7 @@ public class ThirdPartyDoorObjectAdapter implements eu.jpereira.trainings.design
 	 * @return
 	 */
 	public boolean isOpen() {
-        if (doorState == DoorState.OPEN) {
+        if (door.getState().equals(DoorState.OPEN)) {
             return true;
         } else {
             return false;
@@ -61,13 +69,14 @@ public class ThirdPartyDoorObjectAdapter implements eu.jpereira.trainings.design
      * @throws CodeMismatchException
 	 */
 	public void changeCode(String oldCode, String newCode, String newCodeConfirmation) throws IncorrectDoorCodeException, CodeMismatchException {
-        if (oldCode.equals(code)) {
+        try {
+			door.unlock(oldCode);
             if (newCode.equals(newCodeConfirmation)) {
-                this.code = newCode; 
+                door.setNewLockCode(newCode);
             } else {
                 throw new CodeMismatchException();
             }
-        } else {
+        } catch (CannotUnlockDoorException | CannotChangeCodeForUnlockedDoor e) {
             throw new IncorrectDoorCodeException();
         }
     }
@@ -80,10 +89,21 @@ public class ThirdPartyDoorObjectAdapter implements eu.jpereira.trainings.design
 	 * @return true if the code can open the door, false otherwise
 	 */
 	public boolean testCode(String code) {
-        if (code.equals(this.code)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+		if (door.getLockStatus().equals(LockStatus.LOCKED)) {
+			try {
+				door.unlock(code);
+				door.lock();
+				return true;
+			} catch (CannotUnlockDoorException e) {
+				return false;
+			}
+		} else {
+			try {
+				door.unlock(code);
+				return true;
+			} catch (CannotUnlockDoorException e) {
+				return false;
+			}
+		}
+	}
 }
