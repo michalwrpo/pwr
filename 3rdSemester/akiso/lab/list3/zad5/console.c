@@ -124,13 +124,11 @@ panic(char *s)
 }
 
 // Created new variable and function for ex. 5
-int color = 7;
+unsigned char color = 7;
 
 void
-setcolor(int newColor)
+setcolor(unsigned char newColor)
 {
-  if (newColor < 1 || newColor > 255)
-    color = 7;
   color = newColor;
 }
 
@@ -294,7 +292,7 @@ consolewrite(struct inode *ip, char *buf, int n)
     // Create escape sequence for ex. 5
     if (buf[i] == '\x1B' && i + 1 < n) 
     {
-      int colorcode = buf[i + 1];
+      unsigned char colorcode = buf[i + 1];
       setcolor(colorcode);
       i += 2;
       continue;
