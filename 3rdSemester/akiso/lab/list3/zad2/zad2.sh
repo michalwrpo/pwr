@@ -150,7 +150,7 @@ update () {
     done
     echo "Uptime: ${uptime_days}d ${uptime_hours}h ${uptime_minutes}m ${uptime_seconds}s"
     echo "Battery: ${battery_percentage}%"
-    echo "Average load (over last 1/5/15minuts): $load"
+    echo "Average load (over last 1/5/15minutes): $load"
     echo "Available memory: ${mem_available}B/${memory_total}B (${mem_free}B free)"
 
     graph
