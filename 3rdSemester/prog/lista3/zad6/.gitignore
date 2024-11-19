@@ -1,0 +1,8 @@
+/composite/src/test
+Circle.java
+Triangle.java
+Rectangle.java
+Line.java
+LeafShape.java
+ShapeType.java
+ShapeDoesNotSupportChildren.java
