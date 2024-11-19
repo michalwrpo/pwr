@@ -1,0 +1,11 @@
+state/src/test
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/command
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/event
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/interpreter
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/mapper
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/appliance/dao
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/appliance/snapshot
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/appliance/*Appliance*
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/appliance/state/ApplianceStateB*
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/appliance/state/StoppedState.java
+state/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/state/appliance/state/U*
