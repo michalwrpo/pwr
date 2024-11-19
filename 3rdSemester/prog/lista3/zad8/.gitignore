@@ -1,0 +1,10 @@
+decorator/src/test/java/eu/jpereira/trainings/designpatterns/structural/decorator/*.java
+decorator/src/test/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/*.java
+decorator/src/test/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/dummy
+decorator/src/test/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/spy
+decorator/src/test/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/decorator/[AMSU]*
+decorator/src/main/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/*.java
+decorator/src/main/java/eu/jpereira/trainings/designpatterns/structural/decorator/*.java
+decorator/src/main/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/decorator/M*
+decorator/src/main/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/decorator/S*
+decorator/src/main/java/eu/jpereira/trainings/designpatterns/structural/decorator/channel/decorator/U*
