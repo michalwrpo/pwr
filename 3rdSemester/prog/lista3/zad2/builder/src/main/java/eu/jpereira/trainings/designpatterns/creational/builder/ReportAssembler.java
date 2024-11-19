@@ -23,6 +23,8 @@ import eu.jpereira.trainings.designpatterns.creational.builder.json.JSONReportBo
 import eu.jpereira.trainings.designpatterns.creational.builder.xml.XMLReportBodyBuilder;
 import eu.jpereira.trainings.designpatterns.creational.builder.ReportBodyBuilder;
 import eu.jpereira.trainings.designpatterns.creational.builder.html.HTMLReportBodyBuilder;
+import eu.jpereira.trainings.designpatterns.creational.builder.ReportType;
+
 
 public class ReportAssembler {
 
@@ -43,19 +45,7 @@ public class ReportAssembler {
     public Report getReport(String type) {
         ReportBodyBuilder builder;
 
-        switch (type.toUpperCase()) {
-            case "JSON":
-                builder = new JSONReportBodyBuilder();
-                break;
-            case "XML":
-                builder = new XMLReportBodyBuilder();
-                break;
-            case "HTML":
-                builder = new HTMLReportBodyBuilder();
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported report type: " + type);
-        }
+        builder = ReportType.getTypes().get(type.toUpperCase());
 
         builder.setSaleEntry(this.saleEntry);
         return builder.buildReport();
