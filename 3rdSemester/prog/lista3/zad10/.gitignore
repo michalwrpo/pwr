@@ -1,0 +1,12 @@
+mediator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/mediator/command
+mediator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/mediator/appliance/*.java
+mediator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/mediator/appliance/director/[CEF]*
+mediator/src/test/java/eu/jpereira/trainings/designpatterns/behavioral/mediator/command/*.java
+iterator/src/test/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/*/
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iteratoor
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/commands
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/service
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/command/scheduler
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/command/model/*/
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/command/model/[DQS]*
+iterator/src/main/java/eu/jpereira/trainings/designpatterns/behavioral/iterator/command/model/*d.java
