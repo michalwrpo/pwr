@@ -195,9 +195,10 @@ Tworzenie procedurę tworzącą 100 losowych aparatów
 ```sql
 DELIMITER $$
 
-CREATE PROCEDURE GenerujLosoweAparaty()
+CREATE OR REPLACE PROCEDURE GenerujLosoweAparaty()
 BEGIN
     DECLARE i INT DEFAULT 0;
+    DECLARE n INT DEFAULT 0;
     DECLARE nazwa_modelu VARCHAR(255);
     DECLARE losowy_producent INT;
     DECLARE losowa_matryca INT;
@@ -206,11 +207,15 @@ BEGIN
     DECLARE losowy_typ ENUM('kompaktowy', 'lustrzanka', 'profesjonalny', 'inny');
 
     WHILE i < 100 DO
-        SET nazwa_modelu = CONCAT('Model ', i + 1);
+        WHILE EXISTS (SELECT 1 FROM Aparat WHERE model = CONCAT('Model ', n + 1)) DO
+            SET n = n + 1;
+        END WHILE;
+
+        SET nazwa_modelu = CONCAT('Model ', n + 1);
         
-        SET losowy_producent = FLOOR(1 + (RAND() * 15)); 
-        SET losowa_matryca = FLOOR(100 + (RAND() * 15));
-        SET losowy_obiektyw = FLOOR(1 + (RAND() * 15));
+        SET losowy_producent = (SELECT ID FROM Producent ORDER BY RAND() LIMIT 1); 
+        SET losowa_matryca = (SELECT ID FROM Matryca ORDER BY RAND() LIMIT 1);
+        SET losowy_obiektyw = (SELECT ID FROM Obiektyw ORDER BY RAND() LIMIT 1);
         
         SET losowa_waga = FLOOR(300 + (RAND() * 1200)); 
         SET losowy_typ = ELT(FLOOR(1 + (RAND() * 4)), 'kompaktowy', 'lustrzanka', 'profesjonalny', 'inny');
@@ -221,6 +226,7 @@ BEGIN
         END IF;
         
         SET i = i + 1;
+        SET n = n + 1;
     END WHILE;
     
 END$$
@@ -394,3 +400,12 @@ DELIMITER ;
 ```
 
 Użytkownik nie może utworzyć trigger'a, bo nie ma uprawnienie `CREATE TRIGGER`, ale już stworzony będzie działać niezależnie od tego, który użytkownik go wykona.
+
+
+```sql
+UPDATE Aparat SET producent = 2 WHERE producent = 1;
+```
+
+```sql
+INSERT INTO Aparat(model, producent, matryca, obiektyw, waga, typ) VALUES ('Canon EOS 5D Mark VI', 17, 100, 1, 800, 'lustrzanka');
+```
