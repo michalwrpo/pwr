@@ -18,7 +18,6 @@ int main()
     const unsigned int increaste = 1000;
     const unsigned int samplesCount = 100;
 
-    unsigned long long totalBalls = 0;
     unsigned long urns = 0;
 
     for (unsigned int i = 0; i < samplesCount; i++)
@@ -73,12 +72,8 @@ int main()
             allTwo = counter;
 
             results << urns << " " << k << " " << firstRepeat << " " << nEmpty << " " << allOne << " " << allTwo << "\n";
-
-            totalBalls += counter;
         }    
     }
-
-    std::cout << "We ball: " << totalBalls << std::endl;
 
     time(&end);
     double duration = double(end - start);
