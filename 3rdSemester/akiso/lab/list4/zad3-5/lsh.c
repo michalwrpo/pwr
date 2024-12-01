@@ -73,37 +73,7 @@ char **lsh_split_line(char *line) {
 
     token = strtok(line, LSH_TOK_DELIM);
     while (token != NULL) {
-        // if (strcmp(token, "<") == 0 || strcmp(token, ">") == 0 || strcmp(token, "2>") == 0) {
-        //     char *filename = strtok(NULL, " \n");
-
-        //     if (filename == NULL) {
-        //         fprintf(stderr, "lsh: missing file name");
-        //         exit(EXIT_FAILURE);
-        //     }
-
-        //     if (strcmp(token, "<") == 0) {
-        //         if (dup2(open(filename, O_RDONLY), 0) != 0) {
-        //             perror("lsh: dup2 in");
-        //             exit(1);
-        //         }
-        //     }
-            
-        //     if (strcmp(token, ">") == 0) {
-        //         if (dup2(open(filename, O_WRONLY | O_CREAT | O_TRUNC), 1) != 1) {
-        //             perror("lsh: dup2 in");
-        //             exit(1);
-        //         }
-        //     }
-
-        //     if (strcmp(token, "<") == 0) {
-        //         if (dup2(open(filename, O_WRONLY | O_CREAT | O_TRUNC), 2) != 2) {
-        //             perror("lsh: dup2 in");
-        //             exit(1);
-        //         }
-        //     }            
-        // } else {
-            tokens[position] = token;
-        // }
+        tokens[position] = token;
         
         position++;
 
@@ -302,14 +272,7 @@ int lsh_execute(char **args) {
             }
 
         position++;
-    }
-
-    // position = 0;
-    // while (args[position] != NULL) {
-    //     printf("%s\n", args[position]);
-    //     position++;
-    // }
-    
+    }    
 
     if (!piped) {
         for (i = 0; i < lsh_num_builtins(); i++) {
