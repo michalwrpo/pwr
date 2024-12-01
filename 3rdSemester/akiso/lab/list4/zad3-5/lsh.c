@@ -294,7 +294,7 @@ int lsh_execute(char **args) {
                     in = open(filename, O_RDONLY);
                 } else if (strcmp(args[position], ">") == 0) {
                     args[position] = NULL;
-                    out = open(filename, O_WRONLY | O_CREAT | O_TRUNC);
+                    out = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
                 } else if (strcmp(args[position], "2>") == 0) {
                     args[position] = NULL;
                     err = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
