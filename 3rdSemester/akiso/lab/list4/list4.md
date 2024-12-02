@@ -14,4 +14,5 @@ Linux:
     - Process ignores multiple signals - `multiplesignals.c` and `receivesignals.c`
 
 xv6:
-    - It's impossible.
+    - It's impossible, there are no signals.
+    - It accepts everythings, it's possible to kill 1. 

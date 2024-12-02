@@ -11,7 +11,8 @@ int main(int argc, char *argv[]) {
     } else {
         int pid = atoi(argv[1]);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
+            printf("Send SIGUSR1\n");
             kill(pid, 10);
         }
 
