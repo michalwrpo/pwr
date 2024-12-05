@@ -45,7 +45,9 @@ CREATE TABLE Ludzie (
     nazwisko VARCHAR(30),
     data_urodzenia DATE,
     plec ENUM('K', 'M'),
-    CONSTRAINT peselDay CHECK (SUBSTRING(PESEL, 5, 2) < 32),
+    -- CONSTRAINT peselDay CHECK (SUBSTRING(PESEL, 5, 2) < 32),
+    CONSTRAINT peselDay CHECK (SUBSTRING(PESEL, 5, 2) = DAY(data_urodzenia)),
+    CONSTRAINT peselYear CHECK (SUBSTRING(PESEL, 0, 2) = SUBSTRING(YEAR(data_urodzenia), 3, 2))
     CONSTRAINT peselGender CHECK ((SUBSTRING(PESEL, 10, 1) % 2 = 0 AND plec = 'K') OR (SUBSTRING(PESEL, 10, 1) % 2 = 1 AND plec = 'M')),
     CONSTRAINT peselLastDigit CHECK (((SUBSTRING(pesel, 1, 1) + 3*SUBSTRING(pesel, 2, 1) + 7*SUBSTRING(pesel, 3, 1) + 9*SUBSTRING(pesel, 4, 1) + SUBSTRING(pesel, 5, 1) + 3*SUBSTRING(pesel, 6, 1) + 7*SUBSTRING(pesel, 7, 1) + 9*SUBSTRING(pesel, 8, 1) + SUBSTRING(pesel, 9, 1) + 3*SUBSTRING(pesel, 10, 1) + SUBSTRING(pesel, 11, 1)) % 10) = 0)
 );
@@ -270,6 +272,35 @@ BEGIN
     UPDATE Pracownicy
     SET pensja = 1.05 * pensja
     WHERE zawod_id = jobID;
+  END IF;
+END$$
+
+DELIMITER ;
+```
+Wersja z transakcjami
+```sql
+DELIMITER $$
+
+CREATE OR REPLACE PROCEDURE Raise (job VARCHAR(50))
+BEGIN
+  DECLARE overflow INT;
+  DECLARE maxSalary FLOAT DEFAULT (SELECT pensja_max FROM Zawody WHERE nazwa = job);
+  DECLARE jobID INT DEFAULT (SELECT zawod_id FROM Zawody WHERE nazwa = job);
+
+  START TRANSACTION;
+
+  UPDATE Pracownicy
+  SET pensja = 1.05 * pensja
+  WHERE zawod_id = jobID;
+
+  SET overflow = (SELECT COUNT(*)
+  FROM Pracownicy
+  WHERE pensja > maxSalary);
+
+  IF overflow = 0 THEN
+    COMMIT;
+  ELSE
+    ROLLBACK;
   END IF;
 END$$
 
