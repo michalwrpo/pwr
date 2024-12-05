@@ -229,6 +229,53 @@ DELIMITER ;
 CALL AddEmployment();
 ```
 
+### Zad. 3
+
+Tworzenie procedury
+```sql
+DELIMITER $$
+
+CREATE OR REPLACE PROCEDURE Raise (job VARCHAR(50))
+BEGIN
+  DECLARE done BOOLEAN DEFAULT FALSE;
+  DECLARE allowed BOOLEAN DEFAULT TRUE;
+  DECLARE curSalary FLOAT;
+  DECLARE maxSalary FLOAT DEFAULT (SELECT pensja_max FROM Zawody WHERE nazwa = job);
+  DECLARE jobID INT DEFAULT (SELECT zawod_id FROM Zawody WHERE nazwa = job);
+
+  DECLARE pracownicyCursor CURSOR FOR
+    SELECT pensja FROM Pracownicy 
+    WHERE zawod_id = jobID;
+  
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  OPEN pracownicyCursor;
+
+  pracownicyLoop: LOOP
+    IF done THEN
+      LEAVE pracownicyLoop;
+    END IF;
+
+    FETCH pracownicyCursor INTO curSalary;
+
+    IF (1.05 * curSalary) > maxSalary THEN
+      SET allowed = FALSE;
+      LEAVE pracownicyLoop;
+    END IF;
+  END LOOP;
+
+  CLOSE pracownicyCursor;
+
+  IF allowed THEN
+    UPDATE Pracownicy
+    SET pensja = 1.05 * pensja
+    WHERE zawod_id = jobID;
+  END IF;
+END$$
+
+DELIMITER ;
+```
+
 ### Zad. 4
 
 Przygotowanie zapytania
@@ -298,6 +345,7 @@ ALTER TABLE employees ADD COLUMN phone VARCHAR(20);
 
 - Ex. 5
 ```sql
+GRANT ALL ON grant_rights TO unauthorized_user;
  ```
 
 - Ex. 9
