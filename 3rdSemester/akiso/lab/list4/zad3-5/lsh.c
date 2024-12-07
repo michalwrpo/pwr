@@ -10,6 +10,7 @@
 #define LSH_RL_BUFSIZE 1024
 #define LSH_TOK_BUFSIZE 64
 #define LSH_TOK_DELIM " \t\n\r\a"
+#define LSH_MAX_JOBS 255
 
 void remove_element(char **array, int index, int array_length) {
     int i;
@@ -200,6 +201,10 @@ void INThandler(int sig) {
     (void)sig;
 }
 
+void TSTPhandler(int sig) {
+    (void)sig;
+}
+
 int lsh_execute(char **args) {
     int t1, t2, i;
     int position = 0;
@@ -315,6 +320,9 @@ void lsh() {
     char *line;
     char **args;
     int status;
+    int max_jobs = LSH_MAX_JOBS;
+    int *jobs = malloc(sizeof(int) * max_jobs);
+
 
     do {
         if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -336,6 +344,7 @@ void lsh() {
 int main() {
     signal(SIGCHLD, CHLDhandler);
     signal(SIGINT, INThandler);
+    signal(SIGTSTP, TSTPhandler);
 
     lsh();
 

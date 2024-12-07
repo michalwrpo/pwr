@@ -454,6 +454,6 @@ int
 sys_getppid(void)
 {
   struct proc *curproc = myproc();
-  cprintf("%d", curproc->parent->pid);
+  cprintf("%d\n", curproc->parent->pid);
   return 0;
 }
