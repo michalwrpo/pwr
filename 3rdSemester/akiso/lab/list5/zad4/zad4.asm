@@ -7,9 +7,9 @@ SECTION .bss
 numArr  resd      100000        ; array of 100,000 ints
 
 SECTION .text
-global _start
+global main
 
-_start:
+main:
     mov     ecx, 0              ; ecx plays role of index looping through array
     mov     ebx, 1              ; ebx is used to go through all numbers smaller than 100,000
 
