@@ -1,3 +1,9 @@
+test: test_compile
+	@./test
+
+test_compile:
+	@nasm -f elf test.asm
+	@ld -m elf_i386 test.o -o test
 
 fizz: fizz_compile
 	@./fizzbuzz
