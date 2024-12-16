@@ -23,10 +23,11 @@ _start:
                             ; z0 = a + bi 
     push    cx
     fild    word [esp]
-    pop     eax
+    pop     ax
     mov     eax, 100
     push    eax
     fisub   dword [esp]
+    pop     eax
     mov     eax, 75
     push    eax
     fidiv   dword [esp]
@@ -34,7 +35,7 @@ _start:
 
     push    dx
     fild    word [esp]
-    pop     eax
+    pop     ax
     mov     eax, 160
     push    eax
     fisub   dword [esp]

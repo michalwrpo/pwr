@@ -54,17 +54,18 @@ boot2:
     mov     dx, 0            ; 320 piksli na linie
 .loop1:
     mov     esi, 0
-    mov     eax, 5          ; insert limit into float stack
+    mov     eax, 255          ; insert limit into float stack
     push    eax
     fild    dword [esp]
     pop     eax
                             ; z0 = a + bi 
     push    cx
     fild    word [esp]
-    pop     eax
+    pop     ax
     mov     eax, 100
     push    eax
     fisub   dword [esp]
+    pop     eax
     mov     eax, 80
     push    eax
     fidiv   dword [esp]
@@ -72,7 +73,7 @@ boot2:
 
     push    dx
     fild    word [esp]
-    pop     eax
+    pop     ax
     mov     eax, 240
     push    eax
     fisub   dword [esp]
@@ -127,7 +128,7 @@ boot2:
     fistp   dword [esp]     ; remove distance from stack
     pop     eax
 
-    cmp     esi, 16
+    cmp     esi, 127
     je      .end
 
     jmp     .mandelbrotLoop
@@ -147,7 +148,14 @@ boot2:
     finit                   ; clean the stack
 
     mov     eax, esi
-    add     al, 15
+    add     eax, 128
+    push    edx
+    push    ecx
+    mov     ecx, 8
+    xor     edx, edx
+    div     ecx
+    pop     ecx
+    pop     edx
     cmp     al, 31
     je      .black
 
