@@ -8,15 +8,15 @@ SECTION .text
 global _start
 
 _start:
-    mov     cx, 200
-
-.loop1:
-    mov     dx, 320
-
+.mandel:
+    mov     edi, 50
+    mov     ebx, 0xa0000     ; adres ekranu graficznego
+    mov     cx, 200          ; 200 lini ekranu
 .loop2:
-
+    mov     dx, 0            ; 320 piksli na linie
+.loop1:
     mov     esi, 0
-    mov     eax, 5          ; insert limit into float stack
+    mov     eax, 255          ; insert limit into float stack
     push    eax
     fild    dword [esp]
     pop     eax
@@ -24,11 +24,11 @@ _start:
     push    cx
     fild    word [esp]
     pop     ax
-    mov     eax, 100
+    mov     eax, 150
     push    eax
     fisub   dword [esp]
     pop     eax
-    mov     eax, 75
+    mov     eax, edi
     push    eax
     fidiv   dword [esp]
     pop     eax             ; store b
@@ -36,11 +36,11 @@ _start:
     push    dx
     fild    word [esp]
     pop     ax
-    mov     eax, 160
+    mov     eax, 240
     push    eax
     fisub   dword [esp]
     pop     eax
-    mov     eax, 75
+    mov     eax, edi
     push    eax
     fidiv   dword [esp]
     pop     eax             ; store a
@@ -90,7 +90,7 @@ _start:
     fistp   dword [esp]     ; remove distance from stack
     pop     eax
 
-    cmp     esi, 10
+    cmp     esi, 127
     je      .end
 
     jmp     .mandelbrotLoop
@@ -100,6 +100,7 @@ _start:
     push    eax
     fistp   dword [esp]     ; remove distance from stack
     pop     eax
+    jmp     .end
 
 .end:
     finit                   ; clean the stack
@@ -117,9 +118,13 @@ _start:
     call    sprint
 
 
-    dec dx
-    jne .loop2               ; when dx reaches 0, ZF is automatically set to 1
-    dec cx
-    jne .loop1
+    inc     dx
+    cmp     dx, 320
+    jne     .loop1               
+    dec     cx
+    jne     .loop2
+    mov     esi, 0
+    add     edi, 50
+    jmp     .mandel    
 
     call    quit

@@ -5,7 +5,7 @@ msg     db      'Enter a number: ', 0h
 end     db      'Digit sum: ', 0h
 
 SECTION .bss
-num:    resb    15
+num:    resb    50
 
 SECTION .text
 global _start

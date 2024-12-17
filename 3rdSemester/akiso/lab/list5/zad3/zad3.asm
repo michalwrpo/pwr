@@ -4,7 +4,7 @@ SECTION .text
 global _start
 
 _start:
-    mov     eax, 54238719
+    mov     eax, 3735928559
     mov     ebx, 16
     mov     ecx, 0
 

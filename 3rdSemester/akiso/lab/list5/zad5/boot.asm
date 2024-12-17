@@ -48,6 +48,8 @@ boot2:
     mov     fs, ax
     mov     gs, ax
     mov     ss, ax
+    mov     edi, 50
+.mandel:
     mov     ebx, 0xa0000     ; adres ekranu graficznego
     mov     cx, 200          ; 200 lini ekranu
 .loop2:
@@ -62,11 +64,12 @@ boot2:
     push    cx
     fild    word [esp]
     pop     ax
-    mov     eax, 100
+    mov     eax, 3
+    mul     edi
     push    eax
     fisub   dword [esp]
     pop     eax
-    mov     eax, 80
+    mov     eax, edi
     push    eax
     fidiv   dword [esp]
     pop     eax             ; store b
@@ -74,11 +77,12 @@ boot2:
     push    dx
     fild    word [esp]
     pop     ax
-    mov     eax, 240
+    mov     eax, 5
+    mul     edi
     push    eax
     fisub   dword [esp]
     pop     eax
-    mov     eax, 100
+    mov     eax, edi
     push    eax
     fidiv   dword [esp]
     pop     eax             ; store a
@@ -149,15 +153,15 @@ boot2:
 
     mov     eax, esi
     add     eax, 128
-    push    edx
-    push    ecx
-    mov     ecx, 8
-    xor     edx, edx
-    div     ecx
-    pop     ecx
-    pop     edx
-    cmp     al, 31
-    je      .black
+    ; push    edx
+    ; push    ecx
+    ; mov     ecx, 8
+    ; xor     edx, edx
+    ; div     ecx
+    ; pop     ecx
+    ; pop     edx
+    ; cmp     al, 31
+    ; je      .black
 
 .color:
     mov     byte [ebx], al       ; set color
@@ -167,6 +171,16 @@ boot2:
     jne     .loop1               
     dec     cx
     jne     .loop2
+    mov     esi, 0
+    add     edi, 50
+    mov     eax, 0
+
+.busyLoop:
+    inc     eax
+    cmp     eax, 1000000000
+    jne     .busyLoop
+
+    jmp     .mandel    
 halt:
     cli
     hlt                      ; halt
