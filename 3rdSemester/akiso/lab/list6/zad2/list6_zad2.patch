@@ -1,0 +1,192 @@
+---
+ Makefile    |  7 ++++---
+ syscall.c   |  4 ++++
+ syscall.h   |  2 ++
+ sysfile.c   | 41 +++++++++++++++++++++++++++++++++++++++++
+ testpages.c | 23 +++++++++++++++++++++++
+ user.h      |  2 ++
+ usys.S      |  2 ++
+ 7 files changed, 78 insertions(+), 3 deletions(-)
+ create mode 100644 testpages.c
+
+diff --git a/Makefile b/Makefile
+index a6878f0..179f01d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -167,7 +167,7 @@ mkfs: mkfs.c fs.h
+ # http://www.gnu.org/software/make/manual/html_node/Chained-Rules.html
+ .PRECIOUS: %.o
+ 
+-# added _testvm from list 6 ex. 1
++# added _testvm for list 6 ex. 1 and _testpages for list 6 ex. 2
+ 
+ UPROGS=\
+ 	_cat\
+@@ -183,6 +183,7 @@ UPROGS=\
+ 	_sh\
+ 	_stressfs\
+ 	_testvm\
++	_testpages\
+ 	_usertests\
+ 	_wc\
+ 	_zombie\
+@@ -252,12 +253,12 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
+ # rename it to rev0 or rev1 or so on and then
+ # check in that version.
+ 
+-# added testvm.c for ex. 1 from list 6
++# added testvm.c for ex. 1 from list 6 and testpages.c for ex. 2 from list 6
+ 
+ EXTRA=\
+ 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
+ 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
+-	printf.c umalloc.c testvm.c\
++	printf.c umalloc.c testvm.c testpages.c\
+ 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
+ 	.gdbinit.tmpl gdbutil\
+ 
+diff --git a/syscall.c b/syscall.c
+index ee85261..2964c60 100644
+--- a/syscall.c
++++ b/syscall.c
+@@ -103,6 +103,8 @@ extern int sys_unlink(void);
+ extern int sys_wait(void);
+ extern int sys_write(void);
+ extern int sys_uptime(void);
++extern int sys_usedvp(void); // added for list 6 ex. 2
++extern int sys_usedpp(void); // added for list 6 ex. 2
+ 
+ static int (*syscalls[])(void) = {
+ [SYS_fork]    sys_fork,
+@@ -126,6 +128,8 @@ static int (*syscalls[])(void) = {
+ [SYS_link]    sys_link,
+ [SYS_mkdir]   sys_mkdir,
+ [SYS_close]   sys_close,
++[SYS_usedvp] sys_usedvp,
++[SYS_usedpp] sys_usedpp,
+ };
+ 
+ void
+diff --git a/syscall.h b/syscall.h
+index bc5f356..84464b7 100644
+--- a/syscall.h
++++ b/syscall.h
+@@ -20,3 +20,5 @@
+ #define SYS_link   19
+ #define SYS_mkdir  20
+ #define SYS_close  21
++#define SYS_usedvp 22 // added for list 6 ex. 2
++#define SYS_usedpp 23 // added for list 6 ex. 2
+\ No newline at end of file
+diff --git a/sysfile.c b/sysfile.c
+index bfe61b7..a36c0a1 100644
+--- a/sysfile.c
++++ b/sysfile.c
+@@ -15,6 +15,7 @@
+ #include "sleeplock.h"
+ #include "file.h"
+ #include "fcntl.h"
++#include "memlayout.h"
+ 
+ // Fetch the nth word-sized system call argument as a file descriptor
+ // and return both the descriptor and the corresponding struct file.
+@@ -442,3 +443,43 @@ sys_pipe(void)
+   fd[1] = fd1;
+   return 0;
+ }
++
++// added for list 6 ex. 2
++int
++sys_usedvp(void)
++{
++  struct proc *curproc = myproc();
++  uint vp = (curproc->sz)/PGSIZE + 2; // stack and guard pages
++
++  return vp;
++}
++
++// added for list 6 ex. 2
++int
++sys_usedpp(void)
++{
++  struct proc *curproc = myproc();
++  pde_t *pde;
++  pte_t *pte;
++  uint pp = 2; // stack and guard pages
++  uint i, j;
++
++  pde = curproc->pgdir;
++
++  for (i = 0; i < 512; i++) {
++    if (!(*pde & PTE_P)) {
++      break;
++    }
++    pte = (pte_t*)P2V(PTE_ADDR(*pde));
++    for (j = 0; j < 1024; j++) {
++      if (!(*pte & PTE_P)) {
++        break;
++      }
++      pp++;
++      pte++;
++    }
++    pde++;
++  }
++
++  return pp;
++}
+\ No newline at end of file
+diff --git a/testpages.c b/testpages.c
+new file mode 100644
+index 0000000..9be7b66
+--- /dev/null
++++ b/testpages.c
+@@ -0,0 +1,23 @@
++#include "types.h"
++#include "stat.h"
++#include "user.h"
++#include "mmu.h"
++
++int main() {
++  int used_virtual = usedvp();
++  int used_physical = usedpp();
++
++  printf(1, "Liczba użytych stron wirtualnych: %d\n", used_virtual);
++  printf(1, "Liczba użytych stron fizycznych: %d\n", used_physical);
++
++  // Przydziel pamięć, aby sprawdzić, czy liczniki się zmieniają
++  sbrk(PGSIZE);
++  used_virtual = usedvp();
++  used_physical = usedpp();
++
++  printf(1, "Po przydzieleniu jednej strony:\n");
++  printf(1, "Liczba użytych stron wirtualnych: %d\n", used_virtual);
++  printf(1, "Liczba użytych stron fizycznych: %d\n", used_physical);
++
++  exit();
++}
+diff --git a/user.h b/user.h
+index 4f99c52..2c20d45 100644
+--- a/user.h
++++ b/user.h
+@@ -23,6 +23,8 @@ int getpid(void);
+ char* sbrk(int);
+ int sleep(int);
+ int uptime(void);
++int usedvp(void); // added for list 6 ex. 2
++int usedpp(void); // added for list 6 ex. 2
+ 
+ // ulib.c
+ int stat(const char*, struct stat*);
+diff --git a/usys.S b/usys.S
+index 8bfd8a1..4b8bb3e 100644
+--- a/usys.S
++++ b/usys.S
+@@ -29,3 +29,5 @@ SYSCALL(getpid)
+ SYSCALL(sbrk)
+ SYSCALL(sleep)
+ SYSCALL(uptime)
++SYSCALL(usedvp)
++SYSCALL(usedpp)
+-- 
+2.47.1
+

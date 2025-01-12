@@ -1,8 +1,3 @@
-From 808760bfe2a9f8a4dba0f406c70af4de1408bff4 Mon Sep 17 00:00:00 2001
-From: michalwrpo <michal.p.walus@gmail.com>
-Date: Sun, 12 Jan 2025 01:52:26 +0100
-Subject: [PATCH] ex. 1
-
 ---
  Makefile |  7 ++++++-
  exec.c   |  3 +++
@@ -131,6 +126,18 @@ index 7134cff..afb9a0d 100644
 +  }
 +}
 \ No newline at end of file
+diff --git a/defs.h b/defs.h
+index 82fb982..ccfeed5 100644
+--- a/defs.h
++++ b/defs.h
+@@ -185,6 +185,7 @@ void            switchuvm(struct proc*);
+ void            switchkvm(void);
+ int             copyout(pde_t*, uint, void*, uint);
+ void            clearpteu(pde_t *pgdir, char *uva);
++void            vmprint(pde_t *pgdir, char *func); // Added for ex.1 from list 6
+ 
+ // number of elements in fixed-size array
+ #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
 -- 
 2.47.1
 
