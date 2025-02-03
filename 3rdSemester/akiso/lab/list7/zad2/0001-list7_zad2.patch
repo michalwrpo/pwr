@@ -1,0 +1,352 @@
+From 3aebaf3fc0290566b1ac098f6a6fac15e639d6b6 Mon Sep 17 00:00:00 2001
+From: michalwrpo <michal.p.walus@gmail.com>
+Date: Mon, 3 Feb 2025 00:55:24 +0100
+Subject: [PATCH] list7_zad2
+
+---
+ Makefile    |  5 ++++-
+ exec.c      |  2 +-
+ proc.c      | 35 +++++++++++++++++++++++++++++-
+ proc.h      |  4 +++-
+ syscall.c   | 10 ++++++---
+ syscall.h   |  4 +++-
+ sysfile.c   | 27 +++++++++++++++++++++++
+ testsched.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ trap.c      |  8 ++++---
+ user.h      |  8 ++++---
+ usys.S      |  4 +++-
+ 11 files changed, 154 insertions(+), 15 deletions(-)
+ create mode 100644 testsched.c
+
+diff --git a/Makefile b/Makefile
+index 3c03728..b51a94f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -169,6 +169,7 @@ mkfs: mkfs.c fs.h
+ 
+ # added _testvm for list 6 ex. 1 and _testpages for list 6 ex. 2
+ # added _ps for list 7 ex. 1
++# added _testsched for list 7 ex. 2
+ 
+ UPROGS=\
+ 	_cat\
+@@ -186,6 +187,7 @@ UPROGS=\
+ 	_stressfs\
+ 	_testvm\
+ 	_testpages\
++	_testsched\
+ 	_usertests\
+ 	_wc\
+ 	_zombie\
+@@ -257,11 +259,12 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
+ 
+ # added testvm.c for ex. 1 from list 6 and testpages.c for ex. 2 from list 6
+ # added ps.c for list 7 ex. 1
++# added testsched.c for list 7 ex.2
+ 
+ EXTRA=\
+ 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
+ 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
+-	printf.c umalloc.c testvm.c testpages.c ps.c\
++	printf.c umalloc.c testvm.c testpages.c ps.c testsched.c\
+ 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
+ 	.gdbinit.tmpl gdbutil\
+ 
+diff --git a/exec.c b/exec.c
+index a85c045..e6b36ee 100644
+--- a/exec.c
++++ b/exec.c
+@@ -94,7 +94,7 @@ exec(char *path, char **argv)
+   safestrcpy(curproc->name, last, sizeof(curproc->name));
+ 
+   // Added for ex.1 from list 6
+-  vmprint(pgdir, "exec");
++  // vmprint(pgdir, "exec");
+ 
+   // Commit to the user image.
+   oldpgdir = curproc->pgdir;
+diff --git a/proc.c b/proc.c
+index 793ad83..72bb1a4 100644
+--- a/proc.c
++++ b/proc.c
+@@ -88,6 +88,8 @@ allocproc(void)
+ found:
+   p->state = EMBRYO;
+   p->pid = nextpid++;
++  p->prio = 100; // added for list 7 ex.2
++  p->ticks = 0; // added for list 7 ex.2
+ 
+   release(&ptable.lock);
+ 
+@@ -234,7 +236,7 @@ exit(void)
+   int fd;
+ 
+   // Added for ex.1 from list 6
+-  vmprint(curproc->pgdir, "exit");
++  // vmprint(curproc->pgdir, "exit");
+ 
+   if(curproc == initproc)
+     panic("init exiting");
+@@ -328,7 +330,11 @@ void
+ scheduler(void)
+ {
+   struct proc *p;
++  struct proc *prioProc; // added for list 7 ex. 2
++  struct proc *loopProc; // using Fixed-priority pre-emptive scheduling
+   struct cpu *c = mycpu();
++  uint expired = 0; // 7.2 how many process don't have ticks
++  uint procs = 0; // 7.2 how many processes there are
+   c->proc = 0;
+   
+   for(;;){
+@@ -341,6 +347,33 @@ scheduler(void)
+       if(p->state != RUNNABLE)
+         continue;
+ 
++      prioProc = p;
++
++      expired = 0;
++      procs = 0;
++
++      for(loopProc = ptable.proc; loopProc < &ptable.proc[NPROC]; loopProc++){
++        procs++;
++        if(loopProc->state != RUNNABLE)
++          continue;
++        if (loopProc->ticks > loopProc->prio){
++          expired++;
++          continue;
++        }
++        if(loopProc->prio > prioProc->prio)
++          prioProc = loopProc;
++      }
++      
++      if (expired == procs){
++        for(loopProc = ptable.proc; loopProc < &ptable.proc[NPROC]; loopProc++){
++          if(loopProc->state != RUNNABLE)
++            continue;
++          loopProc->ticks = 0; // reset ticks
++        }
++      }
++      
++      p = prioProc;
++
+       // Switch to chosen process.  It is the process's job
+       // to release ptable.lock and then reacquire it
+       // before jumping back to us.
+diff --git a/proc.h b/proc.h
+index 98d68bc..4adad75 100644
+--- a/proc.h
++++ b/proc.h
+@@ -49,7 +49,9 @@ struct proc {
+   struct file *ofile[NOFILE];  // Open files
+   struct inode *cwd;           // Current directory
+   char name[16];               // Process name (debugging)
+-  uint cs;                     // Context switches
++  uint cs;                     // Context switches added for list 7 ex. 1
++  uint prio;                   // Priority added for list 7 ex. 2 (max 1000)
++  uint ticks;                  // Count how long proc has been executing
+ };
+ 
+ // Process memory is laid out contiguously, low addresses first:
+diff --git a/syscall.c b/syscall.c
+index 4fa6ac9..dd107f8 100644
+--- a/syscall.c
++++ b/syscall.c
+@@ -105,9 +105,11 @@ extern int sys_write(void);
+ extern int sys_uptime(void);
+ extern int sys_usedvp(void); // added for list 6 ex. 2
+ extern int sys_usedpp(void); // added for list 6 ex. 2
+-extern int sys_getnumproc(void); // added for list 1 ex. 1
+-extern int sys_getmaxpid(void); // added for list 1 ex. 1
+-extern int sys_getprocinfo(void); // added for list 1 ex. 1
++extern int sys_getnumproc(void); // added for list 7 ex. 1
++extern int sys_getmaxpid(void); // added for list 7 ex. 1
++extern int sys_getprocinfo(void); // added for list 7 ex. 1
++extern int sys_setprio(void); // added for list 7 ex.2
++extern int sys_getprio(void); // added for list 7 ex.1
+ 
+ static int (*syscalls[])(void) = {
+ [SYS_fork]    sys_fork,
+@@ -136,6 +138,8 @@ static int (*syscalls[])(void) = {
+ [SYS_getnumproc] sys_getnumproc,
+ [SYS_getmaxpid] sys_getmaxpid,
+ [SYS_getprocinfo] sys_getprocinfo,
++[SYS_setprio] sys_setprio,
++[SYS_getprio] sys_getprio,
+ };
+ 
+ void
+diff --git a/syscall.h b/syscall.h
+index 582cf2d..a561332 100644
+--- a/syscall.h
++++ b/syscall.h
+@@ -24,4 +24,6 @@
+ #define SYS_usedpp 23 // added for list 6 ex. 2
+ #define SYS_getnumproc 24 // added for list 7 ex. 1
+ #define SYS_getmaxpid 25 // added for list 7 ex. 1
+-#define SYS_getprocinfo 26 // added for list 7 ex. 1 
+\ No newline at end of file
++#define SYS_getprocinfo 26 // added for list 7 ex. 1 
++#define SYS_setprio 27 // added for list 7 ex.2
++#define SYS_getprio 28 // added for list 7 ex.2
+\ No newline at end of file
+diff --git a/sysfile.c b/sysfile.c
+index 3697f71..be029ef 100644
+--- a/sysfile.c
++++ b/sysfile.c
+@@ -568,3 +568,30 @@ sys_getprocinfo(void) {
+   release(&ptable.lock);
+   return -1;
+ }
++
++// added for list 7 ex. 2
++int
++sys_setprio(void) {
++  int n;
++  struct proc *p = myproc();
++
++  if (argint(0, &n) < 0) {
++    return -1;
++  }
++
++  if (n < 0 || n > 1000) {
++    return -2;
++  }
++
++  p->prio = n;
++
++  return 0;
++}
++
++// added for list 7 ex. 2
++int
++sys_getprio(void) {
++  struct proc *p = myproc();
++
++  return p->prio;
++}
+\ No newline at end of file
+diff --git a/testsched.c b/testsched.c
+new file mode 100644
+index 0000000..a5e82c3
+--- /dev/null
++++ b/testsched.c
+@@ -0,0 +1,62 @@
++// added for list 7 ex.2
++
++#include "types.h"
++#include "stat.h"
++#include "user.h"
++
++void longf() {
++    volatile int a = 0;
++    for (int i = 0; i < 50000; i++) {
++        for (int j = 0; j < 10000; j++) {
++            a += 2*i + j;
++        }
++    }
++}
++
++void quickf() {
++    volatile int a = 0;
++    for (int i = 0; i < 10000; i++) {
++        for (int j = 0; j < 2000; j++) {
++            a += 2*i + j;
++        }
++    }
++}
++
++void create_child(int id, int prio, void (*func)(), char *length) {
++    int pid = fork();
++    if (pid < 0) {
++        printf(1, "Fork failed\n");
++        exit();    
++    } else if (pid == 0) {
++        setprio(prio);
++        func();
++
++        printf(1, "Finished: id: %d, priority: %d, length: %s\n", id, prio, length);
++        exit();    
++    }
++}
++
++int main() {
++    printf(1, "Scheduler test\n");
++
++    create_child(1, 100, longf, "long");
++    create_child(2, 50, longf, "long");
++    create_child(3, 500, longf, "long");
++    create_child(4, 250, longf, "long");
++    create_child(5, 700, longf, "long");
++    create_child(6, 100, quickf, "short");
++    create_child(7, 1, quickf, "short");
++    create_child(8, 30, quickf, "short");
++    create_child(9, 99, quickf, "short");
++    create_child(10, 1, quickf, "short");
++
++    // expected order of long: 5, 3, 4, 1, 6, 5
++    // expected order of short: 6, 9, 7, 8, 10
++
++    for (int i = 0; i < 10; i++) {
++        wait();
++    }
++
++    printf(1, "Scheduler test done\n");
++    exit();
++}
+\ No newline at end of file
+diff --git a/trap.c b/trap.c
+index 41c66eb..5ed0b3a 100644
+--- a/trap.c
++++ b/trap.c
+@@ -102,9 +102,11 @@ trap(struct trapframe *tf)
+ 
+   // Force process to give up CPU on clock tick.
+   // If interrupts were on while locks held, would need to check nlock.
+-  if(myproc() && myproc()->state == RUNNING &&
+-     tf->trapno == T_IRQ0+IRQ_TIMER)
+-    yield();
++  if(myproc() && myproc()->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER) {
++    myproc()->ticks += 10;
++    if (myproc()->ticks >= myproc()->prio)
++      yield();
++    }
+ 
+   // Check if the process has been killed since we yielded
+   if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)
+diff --git a/user.h b/user.h
+index 0940ebf..b88afef 100644
+--- a/user.h
++++ b/user.h
+@@ -33,9 +33,11 @@ int sleep(int);
+ int uptime(void);
+ int usedvp(void); // added for list 6 ex. 2
+ int usedpp(void); // added for list 6 ex. 2
+-int getnumproc(void);
+-int getmaxpid(void);
+-int getprocinfo(int pid, struct processInfo*);
++int getnumproc(void); // added for list 7 ex.1
++int getmaxpid(void); // added for list 7 ex.1
++int getprocinfo(int pid, struct processInfo*); // added for list 7 ex.1
++int setprio(int); // added for list 7 ex.2
++int getprio(); // added for list 7 ex.2
+ 
+ // ulib.c
+ int stat(const char*, struct stat*);
+diff --git a/usys.S b/usys.S
+index 42172dd..29d5cde 100644
+--- a/usys.S
++++ b/usys.S
+@@ -33,4 +33,6 @@ SYSCALL(usedvp)
+ SYSCALL(usedpp)
+ SYSCALL(getnumproc)
+ SYSCALL(getmaxpid)
+-SYSCALL(getprocinfo)
+\ No newline at end of file
++SYSCALL(getprocinfo)
++SYSCALL(setprio)
++SYSCALL(getprio)
+\ No newline at end of file
+-- 
+2.48.1
+

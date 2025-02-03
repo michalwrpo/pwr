@@ -1,0 +1,252 @@
+From 82b385bc11cbf8e36b76f40b85c72fa7c01c6b1b Mon Sep 17 00:00:00 2001
+From: michalwrpo <michal.p.walus@gmail.com>
+Date: Mon, 3 Feb 2025 01:20:41 +0100
+Subject: [PATCH] list7_zad3
+
+---
+ Makefile   |  5 ++++-
+ defs.h     |  1 +
+ proc.c     |  7 +++++++
+ proc.h     |  4 +++-
+ syscall.c  |  7 ++++++-
+ syscall.h  |  4 +++-
+ sysfile.c  | 23 +++++++++++++++++++++++
+ testfork.c | 31 +++++++++++++++++++++++++++++++
+ user.h     |  2 ++
+ usys.S     |  4 +++-
+ 10 files changed, 83 insertions(+), 5 deletions(-)
+ create mode 100644 testfork.c
+
+diff --git a/Makefile b/Makefile
+index b51a94f..8b52e71 100644
+--- a/Makefile
++++ b/Makefile
+@@ -170,6 +170,7 @@ mkfs: mkfs.c fs.h
+ # added _testvm for list 6 ex. 1 and _testpages for list 6 ex. 2
+ # added _ps for list 7 ex. 1
+ # added _testsched for list 7 ex. 2
++# added _testfork for list 7 ex. 3
+ 
+ UPROGS=\
+ 	_cat\
+@@ -185,6 +186,7 @@ UPROGS=\
+ 	_rm\
+ 	_sh\
+ 	_stressfs\
++	_testfork\
+ 	_testvm\
+ 	_testpages\
+ 	_testsched\
+@@ -260,11 +262,12 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
+ # added testvm.c for ex. 1 from list 6 and testpages.c for ex. 2 from list 6
+ # added ps.c for list 7 ex. 1
+ # added testsched.c for list 7 ex.2
++# added testfork.c for list 7 ex. 3
+ 
+ EXTRA=\
+ 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
+ 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
+-	printf.c umalloc.c testvm.c testpages.c ps.c testsched.c\
++	printf.c umalloc.c testvm.c testpages.c ps.c testsched.c testfork.c\
+ 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
+ 	.gdbinit.tmpl gdbutil\
+ 
+diff --git a/defs.h b/defs.h
+index bac4161..c3f5043 100644
+--- a/defs.h
++++ b/defs.h
+@@ -11,6 +11,7 @@ struct stat;
+ struct superblock;
+ 
+ struct ptable; // add ptable for list 7 ex.1
++struct trapframe; // added trapframe for list 7 ex. 3
+ 
+ // bio.c
+ void            binit(void);
+diff --git a/proc.c b/proc.c
+index 72bb1a4..c56774a 100644
+--- a/proc.c
++++ b/proc.c
+@@ -90,6 +90,7 @@ found:
+   p->pid = nextpid++;
+   p->prio = 100; // added for list 7 ex.2
+   p->ticks = 0; // added for list 7 ex.2
++  p->forkcb = 0; // added for list 7 ex. 3
+ 
+   release(&ptable.lock);
+ 
+@@ -216,6 +217,12 @@ fork(void)
+ 
+   np->cs = 0; // added for list 7 ex. 1
+ 
++  // added for list 7 ex. 3
++  if (curproc->forkcb) {
++    np->orgeip = np->tf->eip;
++    np->tf->eip = curproc->forkcb;
++  }
++
+   acquire(&ptable.lock);
+ 
+   np->state = RUNNABLE;
+diff --git a/proc.h b/proc.h
+index 4adad75..d302034 100644
+--- a/proc.h
++++ b/proc.h
+@@ -51,7 +51,9 @@ struct proc {
+   char name[16];               // Process name (debugging)
+   uint cs;                     // Context switches added for list 7 ex. 1
+   uint prio;                   // Priority added for list 7 ex. 2 (max 1000)
+-  uint ticks;                  // Count how long proc has been executing
++  uint ticks;                  // Count how long proc has been executing list 7 ex. 2
++  uint forkcb;                 // Address of function to be called after fork list 7 ex. 3
++  uint orgeip;                 // Original EIP list 7 ex. 3
+ };
+ 
+ // Process memory is laid out contiguously, low addresses first:
+diff --git a/syscall.c b/syscall.c
+index dd107f8..4b82a48 100644
+--- a/syscall.c
++++ b/syscall.c
+@@ -109,7 +109,10 @@ extern int sys_getnumproc(void); // added for list 7 ex. 1
+ extern int sys_getmaxpid(void); // added for list 7 ex. 1
+ extern int sys_getprocinfo(void); // added for list 7 ex. 1
+ extern int sys_setprio(void); // added for list 7 ex.2
+-extern int sys_getprio(void); // added for list 7 ex.1
++extern int sys_getprio(void); // added for list 7 ex.2
++extern int sys_forkcb(void); // added for list 7 ex.3
++extern int sys_exitcb(void); // added for list 7 ex.3
++
+ 
+ static int (*syscalls[])(void) = {
+ [SYS_fork]    sys_fork,
+@@ -140,6 +143,8 @@ static int (*syscalls[])(void) = {
+ [SYS_getprocinfo] sys_getprocinfo,
+ [SYS_setprio] sys_setprio,
+ [SYS_getprio] sys_getprio,
++[SYS_forkcb] sys_forkcb,
++[SYS_exitcb] sys_exitcb,
+ };
+ 
+ void
+diff --git a/syscall.h b/syscall.h
+index a561332..3fdb3c7 100644
+--- a/syscall.h
++++ b/syscall.h
+@@ -26,4 +26,6 @@
+ #define SYS_getmaxpid 25 // added for list 7 ex. 1
+ #define SYS_getprocinfo 26 // added for list 7 ex. 1 
+ #define SYS_setprio 27 // added for list 7 ex.2
+-#define SYS_getprio 28 // added for list 7 ex.2
+\ No newline at end of file
++#define SYS_getprio 28 // added for list 7 ex.2
++#define SYS_forkcb 29 // added for list 7 ex.3
++#define SYS_exitcb 30 // added for list 7 ex.3
+\ No newline at end of file
+diff --git a/sysfile.c b/sysfile.c
+index be029ef..f4e7f6c 100644
+--- a/sysfile.c
++++ b/sysfile.c
+@@ -16,6 +16,7 @@
+ #include "file.h"
+ #include "fcntl.h"
+ #include "memlayout.h"
++#include "x86.h" // added for list 7 ex. 3
+ 
+ // Fetch the nth word-sized system call argument as a file descriptor
+ // and return both the descriptor and the corresponding struct file.
+@@ -594,4 +595,26 @@ sys_getprio(void) {
+   struct proc *p = myproc();
+ 
+   return p->prio;
++}
++
++// added for list 7 ex. 3
++int
++sys_forkcb(void) {
++  struct proc *curproc = myproc();
++
++  void (*callback)(void);
++
++  if (argptr(0, (void*)&callback, sizeof(void*)) < 0)
++    return -1;
++  
++  curproc->forkcb = (uint)callback;
++  return 0;
++}
++
++// added for list 7 ex. 3
++int
++sys_exitcb(void) {
++  struct proc *curproc = myproc();
++  curproc->tf->eip = curproc->orgeip;
++  return 0;
+ }
+\ No newline at end of file
+diff --git a/testfork.c b/testfork.c
+new file mode 100644
+index 0000000..0d63757
+--- /dev/null
++++ b/testfork.c
+@@ -0,0 +1,31 @@
++#include "types.h"
++#include "user.h"
++
++void testfunc(void) {
++  printf(1, "Funkcja wykonana przez dziecko!\n");
++  exitcb(); // Powrót do oryginalnego kodu
++}
++
++int main() {
++  int pid;
++
++  printf(1, "Proces nadrzędny nie ustawia funkcji\n");
++  pid = fork();
++  if (pid == 0) {
++    printf(1, "Proces podrzędny bez funkcji\n");
++    exit();
++  }
++  wait();
++
++  printf(1, "Proces nadrzędny ustawia funkcję\n");
++  forkcb(&testfunc);
++  pid = fork();
++  if (pid == 0) {
++    printf(1, "Proces podrzędny z funkcją\n");
++    exit();
++  }
++  wait();
++
++  printf(1, "Test zakończony\n");
++  exit();
++}
+\ No newline at end of file
+diff --git a/user.h b/user.h
+index b88afef..c869085 100644
+--- a/user.h
++++ b/user.h
+@@ -38,6 +38,8 @@ int getmaxpid(void); // added for list 7 ex.1
+ int getprocinfo(int pid, struct processInfo*); // added for list 7 ex.1
+ int setprio(int); // added for list 7 ex.2
+ int getprio(); // added for list 7 ex.2
++int forkcb(void (*callback)(void)); // added for list 7 ex. 3
++int exitcb(void); // added for list 7 ex. 3
+ 
+ // ulib.c
+ int stat(const char*, struct stat*);
+diff --git a/usys.S b/usys.S
+index 29d5cde..55b99e6 100644
+--- a/usys.S
++++ b/usys.S
+@@ -35,4 +35,6 @@ SYSCALL(getnumproc)
+ SYSCALL(getmaxpid)
+ SYSCALL(getprocinfo)
+ SYSCALL(setprio)
+-SYSCALL(getprio)
+\ No newline at end of file
++SYSCALL(getprio)
++SYSCALL(forkcb)
++SYSCALL(exitcb)
+\ No newline at end of file
+-- 
+2.48.1
+
