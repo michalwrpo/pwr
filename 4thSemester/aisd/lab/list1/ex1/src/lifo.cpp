@@ -5,13 +5,15 @@ LIFO::LIFO() {
 }
 
 void LIFO::add(int value) noexcept(true) {
-    Node n;
-    n.value = value;
-    n.next = top;
+    Node* n = new Node();
+    n->value = value;
+    n->next = top;
+
+    top = n;
 }
 
 int LIFO::pop() noexcept(false) {
-    if (top = nullptr) {
+    if (top == nullptr) {
         throw std::out_of_range(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "LIFO is empty.");
     }
 

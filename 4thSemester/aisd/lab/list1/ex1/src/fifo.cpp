@@ -1,16 +1,18 @@
 #include <fifo.hpp>
 
+#include <iostream>
+
 FIFO::FIFO() {
     first = nullptr;
 }
 
 void FIFO::add(int value) noexcept(true) {
-    Node n;
-    n.value = value;
-    n.next = nullptr;
+    Node* n = new Node();
+    n->value = value;
+    n->next = nullptr;
 
     if (first == nullptr) {
-        first = &n;
+        first = n;
         return;
     }
 
@@ -20,17 +22,23 @@ void FIFO::add(int value) noexcept(true) {
         nodeptr = nodeptr->next;
     }
     
-    nodeptr->next = &n;
+    nodeptr->next = n;
+
+    nodeptr = first;
 }
 
 int FIFO::pop() noexcept(false) {
-    if (first = nullptr) {
+    if (first == nullptr) {
         throw std::out_of_range(std::string(__FILE__) + ":" + std::to_string(__LINE__) + " [" + __func__ + "] " + "FIFO is empty.");
     }
 
     int value = first->value;
 
-    first = first->next;
+    Node* temp = first->next;
+
+    free(first);
+    
+    first = temp;
 
     return value;
 }
