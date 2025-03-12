@@ -23,7 +23,7 @@ struct cycliclist* insert(struct cycliclist* list, int value) {
 }
 
 int merge(struct cycliclist* list1, struct cycliclist* list2) {
-    if (list1 == 0 || list2 == 0)
+    if (!list1 || !list2)
         return -1;
     
     struct cycliclist* temp = list2->next;
