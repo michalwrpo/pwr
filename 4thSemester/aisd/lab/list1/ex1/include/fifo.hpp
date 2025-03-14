@@ -14,6 +14,7 @@ class FIFO {
 
     public:
         FIFO();
+        ~FIFO();
 
         void add(int value) noexcept(true);
 

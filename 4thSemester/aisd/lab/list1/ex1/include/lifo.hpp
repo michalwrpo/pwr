@@ -14,6 +14,7 @@ class LIFO {
 
     public:
         LIFO();
+        ~LIFO();
 
         void add(int value) noexcept(true);
 

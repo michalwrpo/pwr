@@ -4,6 +4,20 @@ LIFO::LIFO() {
     top = nullptr;
 }
 
+LIFO::~LIFO() {
+    if (top == nullptr) {
+        return;
+    }
+
+    Node* cur = top;
+    Node* next = top->next;
+    while(cur->next != nullptr) {
+        next = cur->next;
+        delete(cur);
+        cur = next;
+    }
+}
+
 void LIFO::add(int value) noexcept(true) {
     Node* n = new Node();
     n->value = value;

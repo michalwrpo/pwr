@@ -15,7 +15,7 @@ int main() {
         std::cout << "Removed " << fifo->pop() << " from FIFO" << std::endl;
     }
 
-    free(fifo);
+    delete fifo;
     LIFO* lifo = new LIFO();
 
     for (int i = 0; i < 50; i++) {
@@ -27,5 +27,5 @@ int main() {
         std::cout << "Removed " << lifo->pop() << " from LIFO" << std::endl;
     }
 
-    free(lifo);
+    delete lifo;
 }

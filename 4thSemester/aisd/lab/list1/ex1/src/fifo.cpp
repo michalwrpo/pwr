@@ -6,6 +6,20 @@ FIFO::FIFO() {
     first = nullptr;
 }
 
+FIFO::~FIFO() {
+    if (first == nullptr) {
+        return;
+    }
+    
+    Node* cur = first;
+    Node* next = first->next;
+    while(cur->next != nullptr) {
+        next = cur->next;
+        delete(cur);
+        cur = next;
+    }
+}
+
 void FIFO::add(int value) noexcept(true) {
     Node* n = new Node();
     n->value = value;
