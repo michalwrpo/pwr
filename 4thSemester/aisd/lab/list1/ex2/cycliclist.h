@@ -8,5 +8,6 @@ struct cycliclist {
 
 struct cycliclist* insert(struct cycliclist* list, int value);
 int merge(struct cycliclist* list1, struct cycliclist* list2);
+void delete(struct cycliclist* list);
 
 #endif

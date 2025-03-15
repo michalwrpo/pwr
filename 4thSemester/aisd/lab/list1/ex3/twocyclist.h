@@ -9,5 +9,6 @@ struct twocyclist {
 
 struct twocyclist* insert(struct twocyclist* list, int value);
 int merge(struct twocyclist* list1, struct twocyclist* list2);
+void delete(struct twocyclist* list);
 
 #endif

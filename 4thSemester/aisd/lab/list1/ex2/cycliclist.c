@@ -32,3 +32,23 @@ int merge(struct cycliclist* list1, struct cycliclist* list2) {
 
     return 0;
 }
+
+void delete(struct cycliclist* list) {
+    if (!list) {
+        return;
+    }
+
+    if (list == list->next) {
+        free(list);
+        return;
+    }
+    
+    struct cycliclist* cur = list;
+    struct cycliclist* next = list->next;
+
+    while (next != list) {
+        free(cur);
+        cur = next;
+        next = cur->next;
+    }
+}

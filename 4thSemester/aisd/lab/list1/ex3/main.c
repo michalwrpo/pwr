@@ -54,6 +54,8 @@ int main() {
 
     printf("\n");
 
+    delete(list1);
+
     printf("Cost of a search:\n");
 
     MTRand r = seedRand(1);
@@ -120,6 +122,8 @@ int main() {
     avgcost = (double)cost / SEARCHES;
 
     printf("Average cost (from interval): %f\n", avgcost);
+
+    delete(list3);
 
     return 0;
 }

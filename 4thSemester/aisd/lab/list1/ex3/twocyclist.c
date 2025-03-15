@@ -38,3 +38,23 @@ int merge(struct twocyclist* list1, struct twocyclist* list2) {
 
     return 0;
 }
+
+void delete(struct twocyclist* list) {
+    if (!list) {
+        return;
+    }
+
+    if (list == list->next) {
+        free(list);
+        return;
+    }
+    
+    struct twocyclist* cur = list;
+    struct twocyclist* next = list->next;
+
+    while (next != list) {
+        free(cur);
+        cur = next;
+        next = cur->next;
+    }
+}
