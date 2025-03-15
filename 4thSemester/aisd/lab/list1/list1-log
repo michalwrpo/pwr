@@ -1,0 +1,227 @@
+[Michal@CrimsonNight ex1]$ ./app.out 
+Adding 0 to FIFO
+Adding 1 to FIFO
+Adding 2 to FIFO
+Adding 3 to FIFO
+Adding 4 to FIFO
+Adding 5 to FIFO
+Adding 6 to FIFO
+Adding 7 to FIFO
+Adding 8 to FIFO
+Adding 9 to FIFO
+Adding 10 to FIFO
+Adding 11 to FIFO
+Adding 12 to FIFO
+Adding 13 to FIFO
+Adding 14 to FIFO
+Adding 15 to FIFO
+Adding 16 to FIFO
+Adding 17 to FIFO
+Adding 18 to FIFO
+Adding 19 to FIFO
+Adding 20 to FIFO
+Adding 21 to FIFO
+Adding 22 to FIFO
+Adding 23 to FIFO
+Adding 24 to FIFO
+Adding 25 to FIFO
+Adding 26 to FIFO
+Adding 27 to FIFO
+Adding 28 to FIFO
+Adding 29 to FIFO
+Adding 30 to FIFO
+Adding 31 to FIFO
+Adding 32 to FIFO
+Adding 33 to FIFO
+Adding 34 to FIFO
+Adding 35 to FIFO
+Adding 36 to FIFO
+Adding 37 to FIFO
+Adding 38 to FIFO
+Adding 39 to FIFO
+Adding 40 to FIFO
+Adding 41 to FIFO
+Adding 42 to FIFO
+Adding 43 to FIFO
+Adding 44 to FIFO
+Adding 45 to FIFO
+Adding 46 to FIFO
+Adding 47 to FIFO
+Adding 48 to FIFO
+Adding 49 to FIFO
+Removed 0 from FIFO
+Removed 1 from FIFO
+Removed 2 from FIFO
+Removed 3 from FIFO
+Removed 4 from FIFO
+Removed 5 from FIFO
+Removed 6 from FIFO
+Removed 7 from FIFO
+Removed 8 from FIFO
+Removed 9 from FIFO
+Removed 10 from FIFO
+Removed 11 from FIFO
+Removed 12 from FIFO
+Removed 13 from FIFO
+Removed 14 from FIFO
+Removed 15 from FIFO
+Removed 16 from FIFO
+Removed 17 from FIFO
+Removed 18 from FIFO
+Removed 19 from FIFO
+Removed 20 from FIFO
+Removed 21 from FIFO
+Removed 22 from FIFO
+Removed 23 from FIFO
+Removed 24 from FIFO
+Removed 25 from FIFO
+Removed 26 from FIFO
+Removed 27 from FIFO
+Removed 28 from FIFO
+Removed 29 from FIFO
+Removed 30 from FIFO
+Removed 31 from FIFO
+Removed 32 from FIFO
+Removed 33 from FIFO
+Removed 34 from FIFO
+Removed 35 from FIFO
+Removed 36 from FIFO
+Removed 37 from FIFO
+Removed 38 from FIFO
+Removed 39 from FIFO
+Removed 40 from FIFO
+Removed 41 from FIFO
+Removed 42 from FIFO
+Removed 43 from FIFO
+Removed 44 from FIFO
+Removed 45 from FIFO
+Removed 46 from FIFO
+Removed 47 from FIFO
+Removed 48 from FIFO
+Removed 49 from FIFO
+Adding 0 to LIFO
+Adding 1 to LIFO
+Adding 2 to LIFO
+Adding 3 to LIFO
+Adding 4 to LIFO
+Adding 5 to LIFO
+Adding 6 to LIFO
+Adding 7 to LIFO
+Adding 8 to LIFO
+Adding 9 to LIFO
+Adding 10 to LIFO
+Adding 11 to LIFO
+Adding 12 to LIFO
+Adding 13 to LIFO
+Adding 14 to LIFO
+Adding 15 to LIFO
+Adding 16 to LIFO
+Adding 17 to LIFO
+Adding 18 to LIFO
+Adding 19 to LIFO
+Adding 20 to LIFO
+Adding 21 to LIFO
+Adding 22 to LIFO
+Adding 23 to LIFO
+Adding 24 to LIFO
+Adding 25 to LIFO
+Adding 26 to LIFO
+Adding 27 to LIFO
+Adding 28 to LIFO
+Adding 29 to LIFO
+Adding 30 to LIFO
+Adding 31 to LIFO
+Adding 32 to LIFO
+Adding 33 to LIFO
+Adding 34 to LIFO
+Adding 35 to LIFO
+Adding 36 to LIFO
+Adding 37 to LIFO
+Adding 38 to LIFO
+Adding 39 to LIFO
+Adding 40 to LIFO
+Adding 41 to LIFO
+Adding 42 to LIFO
+Adding 43 to LIFO
+Adding 44 to LIFO
+Adding 45 to LIFO
+Adding 46 to LIFO
+Adding 47 to LIFO
+Adding 48 to LIFO
+Adding 49 to LIFO
+Removed 49 from LIFO
+Removed 48 from LIFO
+Removed 47 from LIFO
+Removed 46 from LIFO
+Removed 45 from LIFO
+Removed 44 from LIFO
+Removed 43 from LIFO
+Removed 42 from LIFO
+Removed 41 from LIFO
+Removed 40 from LIFO
+Removed 39 from LIFO
+Removed 38 from LIFO
+Removed 37 from LIFO
+Removed 36 from LIFO
+Removed 35 from LIFO
+Removed 34 from LIFO
+Removed 33 from LIFO
+Removed 32 from LIFO
+Removed 31 from LIFO
+Removed 30 from LIFO
+Removed 29 from LIFO
+Removed 28 from LIFO
+Removed 27 from LIFO
+Removed 26 from LIFO
+Removed 25 from LIFO
+Removed 24 from LIFO
+Removed 23 from LIFO
+Removed 22 from LIFO
+Removed 21 from LIFO
+Removed 20 from LIFO
+Removed 19 from LIFO
+Removed 18 from LIFO
+Removed 17 from LIFO
+Removed 16 from LIFO
+Removed 15 from LIFO
+Removed 14 from LIFO
+Removed 13 from LIFO
+Removed 12 from LIFO
+Removed 11 from LIFO
+Removed 10 from LIFO
+Removed 9 from LIFO
+Removed 8 from LIFO
+Removed 7 from LIFO
+Removed 6 from LIFO
+Removed 5 from LIFO
+Removed 4 from LIFO
+Removed 3 from LIFO
+Removed 2 from LIFO
+Removed 1 from LIFO
+Removed 0 from LIFO
+[Michal@CrimsonNight ex1]$ cd ../ex2
+[Michal@CrimsonNight ex2]$ ./app.out 
+List 1:
+19->18->17->16->15->14->13->12->11->10->
+List 2:
+29->28->27->26->25->24->23->22->21->20->
+Merged list:
+19->28->27->26->25->24->23->22->21->20->29->18->17->16->15->14->13->12->11->10->
+Cost of a search:
+Average cost (from list): 4749.302000
+Average cost (from interval): 9643.600000
+[Michal@CrimsonNight ex2]$ cd ../ex3
+[Michal@CrimsonNight ex3]$ ./app.out 
+List 1:
+19->18->17->16->15->14->13->12->11->10->
+List 2:
+29->28->27->26->25->24->23->22->21->20->
+Merged list:
+19->28->27->26->25->24->23->22->21->20->29->18->17->16->15->14->13->12->11->10->
+Merged list (other direction):
+19->10->11->12->13->14->15->16->17->18->29->20->21->22->23->24->25->26->27->28->
+Cost of a search:
+Average cost (from list): 4737.468000
+Average cost (from interval): 9558.605000
+[Michal@CrimsonNight ex3]$ tmux capture-pane -p -S'-' -E'-' -J > ../list1-log
+
