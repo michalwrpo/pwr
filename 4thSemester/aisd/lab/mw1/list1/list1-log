@@ -1,3 +1,36 @@
+[Michal@CrimsonNight tmuxcreate]$ # Michał Waluś 279695
+[Michal@CrimsonNight tmuxcreate]$ svn export https://repo.cs.pwr.edu.pl/279695-dir/mw1/list1/
+A    list1
+A    list1/ex1
+A    list1/ex1/app
+A    list1/ex1/include
+A    list1/ex1/src
+A    list1/ex2
+A    list1/ex3
+A    list1/ex1/Makefile
+A    list1/ex1/app/main.cpp
+A    list1/ex1/include/fifo.hpp
+A    list1/ex1/include/lifo.hpp
+A    list1/ex1/src/fifo.cpp
+A    list1/ex1/src/lifo.cpp
+A    list1/ex2/Makefile
+A    list1/ex2/cycliclist.c
+A    list1/ex2/cycliclist.h
+A    list1/ex2/main.c
+A    list1/ex2/mtwister.c
+A    list1/ex2/mtwister.h
+A    list1/ex3/Makefile
+A    list1/ex3/main.c
+A    list1/ex3/mtwister.c
+A    list1/ex3/mtwister.h
+A    list1/ex3/twocyclist.c
+A    list1/ex3/twocyclist.h
+A    list1/list1-log
+Exported revision 1.
+[Michal@CrimsonNight tmuxcreate]$ cd list1/ex1/
+[Michal@CrimsonNight ex1]$ make
+make app --no-print-directory
+clang++ -O3  -Weverything -Wno-c++98-compat-pedantic -Wno-shadow-field-in-constructor -Wno-weak-vtables -Wno-padded -Wno-global-constructors -Wno-exit-time-destructors -Wno-unsupported-cb -Wno-unsafe-buffer-usage -Wno-newline-eof ./src/*.cpp ./app/*.cpp -I./include -o ./app.out
 [Michal@CrimsonNight ex1]$ ./app.out 
 Adding 0 to FIFO
 Adding 1 to FIFO
@@ -200,6 +233,8 @@ Removed 2 from LIFO
 Removed 1 from LIFO
 Removed 0 from LIFO
 [Michal@CrimsonNight ex1]$ cd ../ex2
+[Michal@CrimsonNight ex2]$ make
+gcc -Wall -o app.out main.c cycliclist.c mtwister.c
 [Michal@CrimsonNight ex2]$ ./app.out 
 List 1:
 19->18->17->16->15->14->13->12->11->10->
@@ -211,6 +246,8 @@ Cost of a search:
 Average cost (from list): 4749.302000
 Average cost (from interval): 9643.600000
 [Michal@CrimsonNight ex2]$ cd ../ex3
+[Michal@CrimsonNight ex3]$ make
+gcc -Wall -o app.out main.c twocyclist.c mtwister.c
 [Michal@CrimsonNight ex3]$ ./app.out 
 List 1:
 19->18->17->16->15->14->13->12->11->10->
