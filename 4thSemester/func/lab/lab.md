@@ -311,3 +311,188 @@ ghci> map (2 ^) [1..10]
 ```
 
 Mapujemy obie te funkcje na listę liczb naturalnych od 1 do 10 i otrzymujemy listę pierwszych 10 kwadratów i 10 kolejnych potęg 2.
+
+### Zadanie 12
+
+Przekonwertowanie Integral na Float/Double za pomocą `fromIntegral`.
+
+```
+ghci> :i fromIntegral
+fromIntegral :: (Integral a, Num b) => a -> b
+        -- Defined in ‘GHC.Real’
+```
+
+Typ `round`
+```
+type RealFrac :: * -> Constraint
+class (Real a, Fractional a) => RealFrac a where
+  ...
+  round :: Integral b => a -> b
+  ...
+```
+
+## Elementy Teorii Liczb
+
+### Zadanie 13
+
+Funkcje $\phi(n)$ oraz $sumphi(n) = \sum_{k|n} \phi(k)$:
+
+```haskell
+phin:: Int -> Int -> Int
+phin _ 1 = 1
+phin n k = 
+    if gcd n k == 1 then 1 + phin n (k-1)
+    else phin n (k-1)
+
+φ:: Int -> Int
+φ n = phin n n
+
+sumphin:: Int -> Int -> Int
+sumphin _ 1 = 1
+sumphin n k = 
+    if mod n k == 0 then φ k + sumphin n (k-1)
+    else sumphin n (k-1) 
+
+sumphi:: Int -> Int
+sumphi n = sumphin n n
+
+sumphiquick:: Int -> Int
+sumphiquick n = n
+```
+
+### Zadanie 14
+
+`perfects` zwraca wszystkie liczby doskonałe mniejsze niż n. (bardzo niewydajne)
+
+```haskell
+sumdiv :: Int -> Int -> Int
+sumdiv _ 1 = 1
+sumdiv n k =
+    if mod n k == 0 then k + sumdiv n (k-1)
+    else sumdiv n (k-1)
+
+perfectsLoop :: Int -> Int -> [Int]
+perfectsLoop _ 1 = []
+perfectsLoop n k = 
+    if sumdiv k (k-1) == k then k:perfectsLoop n (k-1)
+    else perfectsLoop n (k-1)
+
+perfects:: Int -> [Int]
+perfects n = perfectsLoop n n
+```
+
+### Zadanie 15
+
+Liczby zaprzyjaźnione - Amicable numbers
+
+```haskell
+sumdivLoop :: Int -> Int -> Int
+sumdivLoop _ 0 = 0
+sumdivLoop n k =
+    if k * k >= n then 0
+    else if k == 1 then k + sumdivLoop n (k + 1)
+    else if mod n k == 0 then k + (div n k) + sumdivLoop n (k+1)
+    else sumdivLoop n (k+1)
+
+sumdiv :: Int -> Int
+sumdiv n = sumdivLoop n 1
+
+amicables :: Int -> [(Int, Int)]
+amicables 1 = []
+amicables n = 
+    if sumdiv (sumdiv n) == n && sumdiv n < n then (n, sumdiv n):(amicables (n-1))
+    else amicables (n-1)
+```
+```sh
+ghci> amicables (10^5)
+[(88730,79750),(87633,69615),(76084,63020),(71145,67095),(66992,66928),(18416,17296),(14595,12285),(10856,10744),(6368,6232),(5564,5020),(2924,2620),(1210,1184),(284,220)]
+```
+
+### Zadanie 16
+
+$dcp(n) = \frac{1}{n^2}|\{(k,l)\in\{1,...,n\}^2 : gcd(k, l) = 1\}|$ 
+
+```haskell
+dcp :: Int -> Double
+dcp n = fromIntegral (length ([(k, l) | k <- [1..n], l <- [1..n], gcd k l == 1])) / fromIntegral n^2
+
+coprime :: Int -> Int -> Int
+coprime 1 1 = 1
+coprime 2 1 = 3
+coprime n 1 = 2 + coprime (n-1) (n-2)
+coprime n k = 
+    if gcd n k == 1 then 2 + coprime n (k-1)
+    else coprime n (k-1)
+
+dcprec :: Int -> Double
+dcprec n = fromIntegral (coprime n n) / fromIntegral n ^2
+```
+$lim_{n\rightarrow \infty} dcp(n) \approx 0.608$
+
+## Listy - część I
+
+### Zadanie 17
+
+```haskell
+nub' [] = []
+nub' (x:xs) = x:filter (\y -> y /= x) (nub' xs)
+```
+
+### Zadanie 18
+
+```haskell
+inits' [] = [[]]
+inits' (x:xs) = []:map (x:) (inits' xs)
+```
+
+### Zadanie 19
+
+```haskell 
+tails' [] = [[]]
+tails' (x:xs) = tails' xs ++ [(x:xs)]
+```
+
+### Zadanie 20
+
+```haskell
+splits' :: [a] -> [([a], [a])]
+splits' [] = [([], [])]
+splits' (x:xs) = ([], (x:xs)):map (\(y, z) -> (x:y, z)) (splits' xs)
+```
+
+### Zadanie 21
+
+```haskell
+partition :: (a -> Bool) -> [a] -> ([a], [a])
+partition _ [] = ([], [])
+partition p (x:xs) = 
+    if p x then (x:l, r)
+    else (l, x:r)
+    where (l,r) = partition p xs
+```
+
+### Zadanie 22
+
+```haskell
+splits' [] = [([], [])]
+splits' (x:xs) = ([], (x:xs)):map (\(y, z) -> (x:y, z)) (splits' xs)
+
+permutations' :: [a] -> [[a]]
+permutations' [] = [[]]
+permutations' (x:xs) = [y ++ x:z| (y,z) <- concat (map (splits') (permutations' xs))]
+```
+
+### Zadanie 24
+
+```haskell
+zeros n 
+    | n == 0 = 1
+    | n < 5 = 0
+    | otherwise = div n 5 + zeros (div n 5)
+```
+
+### Zadanie 25
+
+```haskell
+
+```
