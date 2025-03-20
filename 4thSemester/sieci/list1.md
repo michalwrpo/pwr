@@ -24,35 +24,25 @@ Celem ćwiczenia było przetestowanie działania programów sieciowych `ping` i 
 
 Wywołanie: `ping -c [liczba prób] -t [TTL] -s [rozmiar] [adres]`.
 
-Czas i liczba node'ów mierzone dla pakietów 84 bajty (56 bajtów danych). MTU - Maximum Transfer Unit.
-| Adres | Skoki do | TTL zwrotny | Skoki od | Czas (ms) | MTU | Lokacja serwera |
-| :--- | :--: | :-----: | :--: | :-----: | :--: | :----: |
-| cs.pwr.edu.pl  | 4  | 61  | 3  | 5.3  | 1500  | Wrocław |
-| pwr.edu.pl     | 5  | 59  | 5  | 5.1  | 1500  | Wrocław |
-| olx.pl         | 11 | 249 | 5  | 17.8 | 1500  | Warszawa |
-| whitehouse.gov | 14 | 51  | 13 | 24.2 | 65535 | USA (prawdopodobnie Waszyngton) |
-| rust-lang.org  | 17 | 244 | 11 | 34.9 | 1500  | Prawdopodobnie USA |
-| spbti.ru       | 17 | 49  | 15 | 81.3 | 1500  | Rosja |
-| uom.lk         | 26 | 41  | 23 | 221  | 1024  | Indie |
-| lands.gov.sb   | 33 | 46  | 18 | 335  | 65535 | Wyspy Solomona |
-
-Czas w ms (t) oraz TTL (do/od) w zależności od wielkości pakietu. Czas mierzony jako średnia z 10 prób.
-| Adres          | 84 B (t) | 228 B (t) | 1024 B (t) | 84 B (TTL) | 228 B (TTL) | 1024 B (TTL) |
-| :----          | :--: | :---: | :----: | :---: | :---: | :---: |
-| olx.pl         | 17.8 | 24.5  | 27.5   | 11/5  | 11/5  | 11/5  |
-| whitehouse.gov | 31.7 | 57.4  | 81.1   | 8/8   | 8/8   | 8/8   |
-| rust-lang.org  | 21.7 | 24.8  | 26.6   | 11/6  | 11/6  | 11/6  |
-| spbti.ru       | 72.4 | 71.8  | 79.1   | 12/12 | 12/12 | 12/12 |
-| uom.lk         | 230  | 209   | 228    | 14/13 | 14/13 | 14/13 |
-| lands.gov.sb   | 375  | 467   | 356    | 19/14 | 19/14 | 19/14 |
+Czas w ms (t) oraz liczba węzłów (n) (do/od) w zależności od wielkości pakietu. Czas mierzony jako średnia z 10 prób.
+| Adres          | 84 B (t) | 228 B (t) | 1024 B (t) | 84 B (n) | 228 B (n) | 1024 B (n) | MTU | Lokalizacja serwera |
+| :----          | :--: | :--: | :--: | :---: | :---: | :---: | :---: | :------------: |
+| cs.pwr.edu.pl  | 6.03 | 6.67 | 6.16 | 4/3   | 4/3   | 4/3   | 1500  | Wrocław        |
+| pwr.edu.pl     | 5.47 | 6.07 | 6.32 | 5/5   | 5/5   | 5/5   | 1500  | Wrocław        |
+| olx.pl         | 13.0 | 12.1 | 12.0 | 17/11 | 17/11 | 17/11 | 1500  | Warszawa       |
+| rust-lang.org  | 13.3 | 13.0 | 13.7 | 18/11 | 18/11 | 18/11 | 1500  | Francja        |
+| whitehouse.gov | 25.1 | 29.9 | 25.9 | 14/13 | 14/13 | 14/13 | 65535 | USA            |
+| spbti.ru       | 63.7 | 63.4 | 89.7 | 16/15 | 16/15 | 16/15 | 1500  | Rosja          |
+| uom.lk         | 258  | 259  | 272  | 24/23 | 24/23 | 24/23 | 1024  | Indie          |
+| lands.gov.sb   | 457  | 461  | 461  | 33/18 | 33/18 | 33/18 | 65535 | Wyspy Solomona |
 
 Na podstawie przeprowadzonych testów zaobserwowano następujące zależności:  
 
 - **Liczba węzłów i trasy powrotne**  
-Trasy tam i z powrotem często różnią się liczbą węzłów (np. cs.pwr.edu.pl – 4 skoki do serwera, ale tylko 3 skoki z powrotem). Jest to efekt asymetrycznych tras w sieci IP.  
+Trasy tam i z powrotem często różnią się liczbą węzłów (np. cs.pwr.edu.pl – 4 skoki do serwera, ale tylko 3 skoki z powrotem). Jest to efekt asymetrycznych tras w sieci IP. Wielkość pakietów, które możemy przesłać bez fragmentacji nie wpływa na długość trasy.
 
 - **Wpływ wielkości pakietu**  
-Dla adresów takich jak olx.pl, whitehouse.gov czy lands.gov.sb zauważono, że większe pakiety istotnie wpływają na wzrost czasu odpowiedzi. W przypadku bliskich serwerów wzrost był niewielki, ale dla odległych (np. Wyspy Salomona) różnice sięgały nawet 100 ms.  
+Dla adresów takich jak pwr.edu.pl czy uom.lk zauważono, że większe pakiety istotnie wpływają na wzrost czasu odpowiedzi. W przypadku bliskich serwerów wzrost był niewielki, ale dla odległych (np. Wyspy Salomona) różnice sięgały nawet 100 ms.  
 
 - **Fragmentacja pakietów**  
 Fragmentacja występowała dla wartości pakietu przekraczających MTU. Dla niektórych serwerów największy niefragmentowany pakiet mieścił się w granicy 1500 bajtów (standardowe MTU dla Ethernetu), ale dla serwerów z USA czy egzotycznych lokalizacji pakiety powyżej 1024 bajtów były już dzielone, co znacząco zwiększało opóźnienia.  
