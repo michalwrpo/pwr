@@ -482,6 +482,22 @@ permutations' [] = [[]]
 permutations' (x:xs) = [y ++ x:z| (y,z) <- concat (map (splits') (permutations' xs))]
 ```
 
+### Zadanie 23
+
+```haskell
+import Data.List (permutations)
+
+f perm = length ([(i,j)| i<-[0..7], j<-[0..7], abs ((-) i j) /= abs ( (-) (perm !! i) (perm !! j) )])
+possible = [y| y<-permutations [1..8], f y == 56]
+
+unique [] = []
+unique (x:xs) = 
+    if reverse x `elem` xs then unique xs
+    else if (map (\x -> 9 - x) x) `elem` xs then unique xs
+    else if reverse (map (\x -> 9 - x) x) `elem` xs then unique xs
+    else x:unique xs
+```
+
 ### Zadanie 24
 
 ```haskell
@@ -493,6 +509,74 @@ zeros n
 
 ### Zadanie 25
 
-```haskell
+TBD
 
+### Zadanie 26
+
+```haskell
+isSorted:: (Ord a) => [a] -> Bool
+isSorted [] = True
+isSorted [a] = True
+isSorted (x:xs) =
+    if x <= head xs then isSorted xs
+    else False
+```
+
+### Zadanie 27
+
+```haskell
+isSorted:: (Ord a) => [a] -> Bool
+isSorted [] = True
+isSorted [a] = True
+isSorted (x:xs) =
+    if x <= head xs then isSorted xs
+    else False
+
+bubbleLoop [] = []
+bubbleLoop [a] = [a]
+bubbleLoop (x:y:xs) =
+    if x <= y then x:bubbleLoop (y:xs) 
+    else y:bubbleLoop (x:xs)
+
+bubbleSort [] = []
+bubbleSort [a] = [a]
+bubbleSort x =
+    if isSorted x then x
+    else bubbleSort (bubbleLoop x)
+```
+
+### Zadanie 28
+
+```haskell
+rev :: [a] -> [a]
+rev [] = []
+rev (x:xs) = (rev xs) ++[x]
+```
+
+Złożoność obliczeniowa:
+
+$T(0) = \Theta(1)$<br>
+$T(n) = T(n-1) + O(n) = \sum_{i=1}^n O(i) = O\left( \sum_{i=1}^n i \right) = O\left( \frac{n(n+1)}{2} \right) = O(n^2)$
+
+### Zadanie 29
+
+```haskell
+filter' p = concat . map box
+    where box x = 
+            if p x then [x]
+            else []
+```
+
+### Zadanie 30
+
+```haskell
+takeWhile' f [] = []
+takeWhile' f (x:xs) =
+    if f x then x:takeWhile' f xs
+    else [] 
+
+dropWhile' f [] = []
+dropWhile' f (x:xs) =
+    if f x then dropWhile' f xs
+    else (x:xs)
 ```
