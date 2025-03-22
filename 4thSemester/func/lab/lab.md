@@ -548,6 +548,21 @@ bubbleSort x =
 ### Zadanie 28
 
 ```haskell
+import Data.List (partition)
+
+inSort []     = []
+inSort (x:xs) = l ++ [x] ++ r
+                where (l, r) = partition (<x) (inSort xs)
+
+qS [] = []
+qS (x:xs) = 
+    if length xs > 10 then qS [t| t <- xs, t<=x] ++ x:qS [t|t <- xs, t>x]
+    else inSort (x:xs)
+```
+
+### Zadanie 29
+
+```haskell
 rev :: [a] -> [a]
 rev [] = []
 rev (x:xs) = (rev xs) ++[x]
@@ -558,7 +573,7 @@ Złożoność obliczeniowa:
 $T(0) = \Theta(1)$<br>
 $T(n) = T(n-1) + O(n) = \sum_{i=1}^n O(i) = O\left( \sum_{i=1}^n i \right) = O\left( \frac{n(n+1)}{2} \right) = O(n^2)$
 
-### Zadanie 29
+### Zadanie 30
 
 ```haskell
 filter' p = concat . map box
@@ -567,7 +582,7 @@ filter' p = concat . map box
             else []
 ```
 
-### Zadanie 30
+### Zadanie 31
 
 ```haskell
 takeWhile' f [] = []
@@ -579,4 +594,34 @@ dropWhile' f [] = []
 dropWhile' f (x:xs) =
     if f x then dropWhile' f xs
     else (x:xs)
+```
+
+### Zadanie 32
+
+```haskell
+import Data.List (transpose)
+
+alleq [] = True
+alleq [a] = True
+alleq (x:xs) =
+    if x == head xs then alleq xs
+    else False
+
+prefixT [] = []
+prefixT (x:xs) =
+    if alleq x then head x:prefixT xs 
+    else []
+
+prefix x = prefixT (transpose x)
+```
+
+### Zadanie 33
+
+```haskell
+subCard :: Int -> [a] -> [[a]]
+subCard 0 _ = [[]]
+subCard _ [] = []
+subCard n (x:xs) =
+    if n - 1 > length xs then []
+    else map (x:) (subCard (n-1) xs) ++ subCard n xs  
 ```
