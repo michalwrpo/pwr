@@ -198,6 +198,25 @@ code {
         width: 100vw;
     }
 
+    #aboutdiv {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #aboutdiv>h1 {
+        width: 100%;
+    }
+
+    #aboutdiv>section {
+        width: 50%;
+    }
+
+    #mephoto {
+        width: 40%;
+        margin: 2em;
+    }
+
     .navlink {
         font-size: 36px;
     }
