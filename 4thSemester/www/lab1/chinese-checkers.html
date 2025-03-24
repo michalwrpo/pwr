@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Chinese Checkers - Michał Waluś</title>
+        <link href="styles.css" rel="stylesheet" />
+        <meta charset="utf-8">
+        <meta description="Michał Waluś's simpe web page.">
+    </head>
+    <body>
+        <nav>
+            <details>
+                <summary>
+                    ☰
+                </summary>
+                <div class="navdiv">
+                    <a href="about.html" class="navlink">About Me</a>
+                </div>
+                <div class="navdiv">
+                    <a href="projects.html" class="navlink">Projects</a>
+                </div>
+            </details>
+        </nav>
+        <main>
+            <div class="content">
+                <section class="projectdiv">
+                    <h1>Chinese Checkers</h1>
+                    <img src="chinese-checkers.png" class="projectimg" />
+                    <p class="imgdesc">Classic variant for 6 players</p>
+                </section>
+                <section class="projectdetails">
+                    <p>Implementation of <a href="https://en.wikipedia.org/wiki/Chinese_checkers">Chinese Checkers</a> written in Go.</p>
+                    <p>Game has versions for 2, 3, 4 and 6 players and two variants: Classic with players stating in their corners and Chaos where all players start in the center. Implementation also has the option to add bots making random moves.</p>
+                    <p>Backend is made in Go, while the front end mostly consists of TypeScript. The game is fully adapted to online play upon hosting the backend.</p>
+                    <p>Here is a recursive function checking all possible jumps available to a bot:</p>
+                    <code>
+                        func (b *Bot) jumpCheck(point1 Point, x, y int) {<br>
+                            pawns := b.board.GetPawns()<br>
+                        <br>
+                            point2 := Point{x: x, y: y}<br>
+                            if slices.Contains(b.moves, [2]Point{point1, point2}) {<br>
+                                return<br>
+                            }<br>
+                        <br>
+                            b.moves = append(b.moves, [2]Point{point1, point2})<br>
+                        <br>
+                            if pawns.Check(x-2, y) != 0 && pawns.Check(x-4, y) == 0 && b.board.Check(x-4, y) >= 0 {<br>
+                                b.jumpCheck(point1, x-4, y)<br>
+                            }<br>
+                        <br>
+                            if pawns.Check(x+2, y) != 0 && pawns.Check(x+4, y) == 0 && b.board.Check(x+4, y) >= 0 {<br>
+                                b.jumpCheck(point1, x+4, y)<br>
+                            }<br>
+                        <br>
+                            if pawns.Check(x-1, y-1) != 0 && pawns.Check(x-2, y-2) == 0 && b.board.Check(x-2, y-2) >= 0 {<br>
+                                b.jumpCheck(point1, x-2, y-2)<br>
+                            }<br>
+                        <br>
+                            if pawns.Check(x-1, y+1) != 0 && pawns.Check(x-2, y+2) == 0 && b.board.Check(x-2, y+2) >= 0 {<br>
+                                b.jumpCheck(point1, x-2, y+2)<br>
+                            }<br>
+                        <br>
+                            if pawns.Check(x+1, y-1) != 0 && pawns.Check(x+2, y-2) == 0 && b.board.Check(x+2, y-2) >= 0 {<br>
+                                b.jumpCheck(point1, x+2, y-2)<br>
+                            }<br>
+                        <br>
+                            if pawns.Check(x+1, y+1) != 0 && pawns.Check(x+2, y+2) == 0 && b.board.Check(x+2, y+2) >= 0 {<br>
+                                b.jumpCheck(point1, x+2, y+2)<br>
+                            }<br>
+                        }<br>
+                    </code>
+                </section>
+            </div>
+            <footer>
+                Contact me: michal.p.walus@gmail.com
+            </footer>
+        </main>
+    </body>
+</html>
