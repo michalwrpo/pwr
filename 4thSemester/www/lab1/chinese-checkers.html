@@ -2,32 +2,38 @@
 <html lang="en">
     <head>
         <title>Chinese Checkers - Michał Waluś</title>
-        <link href="styles.css" rel="stylesheet" />
+        <link href="styles.css" rel="stylesheet">
         <meta charset="utf-8">
-        <meta description="Michał Waluś's simpe web page.">
+        <meta name="description" content="Michał Waluś's simpe web page.">
+        <meta name="author" content="Michał Waluś">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <nav>
+            <div class="navdivbig">
+                <a href="about.html" class="navlink">About Me</a>
+            </div>
+            <div class="navdivbig">
+                <a href="projects.html" class="navlink">Projects</a>
+            </div>
             <details>
                 <summary>
                     ☰
                 </summary>
-                <div class="navdiv">
+                <div class="navdivsmall">
                     <a href="about.html" class="navlink">About Me</a>
                 </div>
-                <div class="navdiv">
+                <div class="navdivsmall">
                     <a href="projects.html" class="navlink">Projects</a>
                 </div>
             </details>
         </nav>
         <main>
             <div class="content">
-                <section class="projectdiv">
-                    <h1>Chinese Checkers</h1>
-                    <img src="chinese-checkers.png" class="projectimg" />
-                    <p class="imgdesc">Classic variant for 6 players</p>
-                </section>
                 <section class="projectdetails">
+                    <h1>Chinese Checkers</h1>
+                    <img src="chinese-checkers.png" class="projectimg" alt="Chinese checkers board">
+                    <p class="imgdesc">Classic variant for 6 players</p>
                     <p>Implementation of <a href="https://en.wikipedia.org/wiki/Chinese_checkers">Chinese Checkers</a> written in Go.</p>
                     <p>Game has versions for 2, 3, 4 and 6 players and two variants: Classic with players stating in their corners and Chaos where all players start in the center. Implementation also has the option to add bots making random moves.</p>
                     <p>Backend is made in Go, while the front end mostly consists of TypeScript. The game is fully adapted to online play upon hosting the backend.</p>

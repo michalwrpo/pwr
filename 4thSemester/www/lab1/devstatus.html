@@ -2,31 +2,37 @@
 <html lang="en">
     <head>
         <title>Device Status - Michał Waluś</title>
-        <link href="styles.css" rel="stylesheet" />
+        <link href="styles.css" rel="stylesheet">
         <meta charset="utf-8">
-        <meta description="Michał Waluś's simpe web page.">
+        <meta name="description" content="Michał Waluś's simpe web page.">
+        <meta name="author" content="Michał Waluś">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <nav>
+            <div class="navdivbig">
+                <a href="about.html" class="navlink">About Me</a>
+            </div>
+            <div class="navdivbig">
+                <a href="projects.html" class="navlink">Projects</a>
+            </div>
             <details>
                 <summary>
                     ☰
                 </summary>
-                <div class="navdiv">
+                <div class="navdivsmall">
                     <a href="about.html" class="navlink">About Me</a>
                 </div>
-                <div class="navdiv">
+                <div class="navdivsmall">
                     <a href="projects.html" class="navlink">Projects</a>
                 </div>
             </details>
         </nav>
         <main>
             <div class="content">
-                <section class="projectdiv">
-                    <h1>Device Status</h1>
-                    <img src="devstatus.png" class="projectimg" />
-                </section>
                 <section class="projectdetails">
+                    <h1>Device Status</h1>
+                    <img src="devstatus.png" class="projectimg" alt="Terminal showing device status">
                     <p>Bash script showing current status of the device and netgraphs.</p>
                     <p>It shows the current usage of internet (along network graphs), CPU's cores and RAM, while also showing uptime and battery.</p>
                     <p>Here is a fragment of the code responsible for generating the graph of download and upload during last 10s:</p>

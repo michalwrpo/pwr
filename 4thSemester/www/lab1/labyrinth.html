@@ -2,31 +2,37 @@
 <html lang="en">
     <head>
         <title>Labyrinth in Bash - Michał Waluś</title>
-        <link href="styles.css" rel="stylesheet" />
+        <link href="styles.css" rel="stylesheet">
         <meta charset="utf-8">
-        <meta description="Michał Waluś's simpe web page.">
+        <meta name="description" content="Michał Waluś's simpe web page.">
+        <meta name="author" content="Michał Waluś">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <nav>
+            <div class="navdivbig">
+                <a href="about.html" class="navlink">About Me</a>
+            </div>
+            <div class="navdivbig">
+                <a href="projects.html" class="navlink">Projects</a>
+            </div>
             <details>
                 <summary>
                     ☰
                 </summary>
-                <div class="navdiv">
+                <div class="navdivsmall">
                     <a href="about.html" class="navlink">About Me</a>
                 </div>
-                <div class="navdiv">
+                <div class="navdivsmall">
                     <a href="projects.html" class="navlink">Projects</a>
                 </div>
             </details>
         </nav>
         <main>
             <div class="content">
-                <section class="projectdiv">
-                    <h1>Labyrinth in Bash</h1>
-                    <img src="labyrinth.png" class="projectimg" />
-                </section>
                 <section class="projectdetails">
+                    <h1>Labyrinth in Bash</h1>
+                    <img src="labyrinth.png" class="projectimg" alt="Labyrinth in terminal">
                     <p>A simple labyrinth game in terminal, written in Bash.</p>
                     <p>The labyrinth is randomly generated based on a modified Prim's algorythm. Its size is based on the size of the terminal.</p>
                     <p>Here is a fragment of the code responsible for labyrinth's generation (we start with all walls and then remove them):</p>
