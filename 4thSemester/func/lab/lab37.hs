@@ -1,0 +1,1 @@
+countEven xs = foldr ((+).(\x -> if (even x) then 1 else 0)) 0 xs

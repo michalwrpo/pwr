@@ -16,3 +16,10 @@ bubbleSort [a] = [a]
 bubbleSort x =
     if isSorted x then x
     else bubbleSort (bubbleLoop x)
+
+bub :: Ord a => [a] -> [a]
+bub [] = []
+bub [x] = [x]
+bub (x:y:xs)
+    | x <= y = x:bub (y:xs)
+    | otherwise = bub(y:bub(x:xs))

@@ -1,0 +1,1 @@
+approx n = foldl (+) 0 (map (\m -> 1 / foldr (*) 1.0 [1..m]) [0..n])

@@ -1,0 +1,1 @@
+altsum xs = (-1)^(length xs + 1) * foldl (\x y -> -x + y) 0 xs

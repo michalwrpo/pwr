@@ -502,14 +502,21 @@ unique (x:xs) =
 
 ```haskell
 zeros n 
-    | n == 0 = 1
     | n < 5 = 0
     | otherwise = div n 5 + zeros (div n 5)
 ```
 
 ### Zadanie 25
 
-TBD
+```haskell
+qs :: (Ord a) => [a] -> [a]
+qs xs = quicksort xs []
+    where
+        quicksort [] acc = acc
+        quicksort (x:xs) acc = quicksort lesser (x:quicksort greater acc)
+            where
+                (lesser, greater) = partition (<= x) xs
+```
 
 ### Zadanie 26
 
@@ -544,6 +551,16 @@ bubbleSort x =
     if isSorted x then x
     else bubbleSort (bubbleLoop x)
 ```
+Lepszy:
+```haskell
+bub :: Ord a => [a] -> [a]
+bub [] = []
+bub [x] = [x]
+bub (x:y:xs)
+    | x <= y = x:bub (y:xs)
+    | otherwise = bub(y:bub(x:xs))
+```
+
 
 ### Zadanie 28
 
@@ -624,4 +641,145 @@ subCard _ [] = []
 subCard n (x:xs) =
     if n - 1 > length xs then []
     else map (x:) (subCard (n-1) xs) ++ subCard n xs  
+```
+
+## Foldy - część II
+
+### Zadanie 34
+
+```
+ghci> :t sum
+sum :: (Foldable t, Num a) => t a -> a
+ghci> :t product
+product :: (Foldable t, Num a) => t a -> a
+ghci> :t all
+all :: Foldable t => (a -> Bool) -> t a -> Bool
+ghci> :t any
+any :: Foldable t => (a -> Bool) -> t a -> Bool
+```
+
+`sum` - suma listy<br>
+`product` - iloczyn listy<br>
+`all` - czy wszystkie elementy listy spełniają warunek (funkcję)<br>
+`any` - czy jakikolwiek element listy spełnia warunek (funkcję)
+
+### Zadanie 35
+
+```
+ghci> foldl (+) 0 [1..10^7]
+50000005000000
+(7.88 secs, 1,612,375,936 bytes)
+ghci> foldr (+) 0 [1..10^7]
+50000005000000
+(0.74 secs, 1,615,377,312 bytes)
+ghci> foldl1 (+) [1..10^7]
+50000005000000
+(0.94 secs, 1,612,375,840 bytes)
+ghci> foldr1 (+) [1..10^7]
+50000005000000
+(0.76 secs, 1,695,377,200 bytes)
+ghci> sum [1..10^7]
+50000005000000
+(1.01 secs, 880,075,632 bytes)
+ghci> foldl' (+) 0 [1..10^7]
+50000005000000
+(0.16 secs, 880,075,656 bytes)
+```
+
+funkcja `foldr'` nie istnieje w `Data.List`
+
+### Zadanie 36
+
+```haskell
+reverse' xs = foldl (flip (:)) [] xs
+```
+
+```
+ghci> take 10 (reverse' [1..10^6])
+[1000000,999999,999998,999997,999996,999995,999994,999993,999992,999991]
+(0.03 secs, 112,121,184 bytes)
+ghci> take 10 (reverse' [1..10^8])
+[100000000,99999999,99999998,99999997,99999996,99999995,99999994,99999993,99999992,99999991]
+(7.37 secs, 11,200,136,536 bytes)
+ghci> take 10 (rev [1..10^6])
+[1000000,999999,999998,999997,999996,999995,999994,999993,999992,999991]
+(1.31 secs, 1,109,621,440 bytes)
+ghci> take 10 (rev [1..10^7])
+[10000000,9999999,9999998,9999997,9999996,9999995,9999994,9999993,9999992,9999991]
+(13.10 secs, 11,095,717,408 bytes)
+```
+
+### Zadanie 37
+
+```haskell
+countEven xs = foldr ((+).(\x -> if (even x) then 1 else 0)) 0 xs
+```
+
+### Zadanie 38
+
+```haskell
+dec2Int xs = foldl (\x y -> 10*x + y) 0 xs
+```
+
+### Zadanie 39
+
+`foldl (-) e xs = e - sum xs` jest poprawne 
+
+foldl:
+
+```
+        *
+       / \
+      *  x4
+     / \
+    *  x3
+   / \
+  *  x2
+ / \
+e   x1
+```
+Co się przekłada na ((((e - x1) - x2) - x3) - x4) = e - x1 - x2 - x3 - x4 = e - (x1 + x2 + x3 + x4) 
+
+### Zadanie 40
+
+```haskell
+ addWhenSmaller xs n = xs ++ map (++[n]) (filter (\x -> if (x == []) then True else last x < n) xs)
+
+ longest [x] = x
+ longest (x:xs) = 
+    if (length x > length l) then x
+    else l
+    where l = longest xs
+
+ lmss (x:xs) = longest (foldl addWhenSmaller [[x]] xs)
+ ```
+
+### Zadanie 41
+
+```haskell
+remdupl :: (Foldable t, Eq a) => t a -> [a]
+remdupl = foldr (\x y -> if null y then [x] else if x == head y then y else x:y) []
+```
+
+### Zadanie 42
+
+```haskell
+approx n = foldl (+) 0 (map (\m -> 1 / foldr (*) 1.0 [1..m]) [0..n])
+```
+
+### Zadanie 43
+
+```haskell
+altsum xs = (-1)^(length xs + 1) * foldl (\x y -> -x + y) 0 xs
+```
+
+### Zadanie 44
+
+Używając foldl i sum:
+```haskell
+avgandvar :: Foldable t => t Double -> (Double, Double)
+avgandvar xs = (avg, 1/l * foldl (\x y -> x + (y - avg)^2) 0 xs)
+    where 
+        avg = 1/l * sum xs
+        l = fromIntegral (length xs)
 ```
