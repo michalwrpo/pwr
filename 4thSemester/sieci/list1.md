@@ -24,7 +24,7 @@ Celem ćwiczenia było przetestowanie działania programów sieciowych `ping` i 
 
 Wywołanie: `ping -c [liczba prób] -t [TTL] -s [rozmiar] [adres]`.
 
-Czas w ms (t) oraz liczba węzłów (n) (do/od) w zależności od wielkości pakietu. Czas mierzony jako średnia z 10 prób.
+<!-- Czas w ms (t) oraz liczba węzłów (n) (do/od) w zależności od wielkości pakietu. Czas mierzony jako średnia z 10 prób.
 | Adres          | 84 B (t) | 1024 B (t) | 10000 B (t) | 84 B (n) | 1024 B (n) | 10000 B (n) | 84 B t/n | 10000 B t/n | MTU | Lokalizacja serwera |
 | :----          | ---:  | ----: | ----: | :---: | :---: | :---: | ---: | ---: | ----: | :------------: |
 | cs.pwr.edu.pl  | 1.1   | 3.2   | 4.7   | 2/1   | 2/1   | 2/1   | 0.37 | 1.57 | 65158 | Wrocław        |
@@ -35,17 +35,30 @@ Czas w ms (t) oraz liczba węzłów (n) (do/od) w zależności od wielkości pak
 | whitehouse.gov | 25.1  | 25.9  | -     | 14/13 | 14/13 | -     | 0.93 | -    | 65535 | USA            |
 | spbti.ru       | 63.7  | 89.7  | 91.2  | 16/15 | 16/15 | 16/15 | 2.05 | 2.94 | 1500  | Rosja          |
 | uom.lk         | 258.0 | 272.0 | -     | 24/23 | 24/23 | -     | 5.49 | -    | 1024  | Indie          |
-| lands.gov.sb   | 324.0 | 341.0 | 397.0 | 26/17 | 26/17 | 26/17 | 7.90 | 9.23 | 65535 | Wyspy Solomona |
+| lands.gov.sb   | 324.0 | 341.0 | 397.0 | 26/17 | 26/17 | 26/17 | 7.90 | 9.23 | 65535 | Wyspy Solomona | -->
 
-| Adres         |       | Czas  |       |       |       | do    |    |    |    | od |    |    |    | t/n|   |   |Lokalizacja     |
-| :-----        | ----: | ----: | ----: | ----: | ----: | ----: |---:|---:|---:|---:|---:|---:|---:|---:|--:|--:|:-------------: |
-|               | 84    | 5k    | 10k   | 30k   | 84    | 5k    | 10k| 30k| 84 | 5k | 10k| 30k| 84 | 5k |10k|30k|                |
-| wroclaw.pl    | 22.9  | 31.4  | 35.1  | 44.9  | 7     | 7     | 7  | 7  | 6  | 6  | 6  | 6  |    |    |   |   | Wrocław        |
-| inpost.pl     | 22.1  | 30.3  | 39.1  | 50.6  | 7     | 7     | 7  | 7  | 6  | 6  | 6  | 6  |    |    |   |   | Warszawa       |
-| telefonica.de | 43.4  | 58.1  | 62.8  | 72,7  | 11    | 11    | 11 | 11 | 10 | 10 | 10 | 10 |    |    |   |   | Niemcy         |
-| britishmuseum.org | 24.5 | 28.7 | 38.7 | 48.4 | 7     | 7     | 7  | 7  | 6  | 6  | 6  | 6  |    |    |   |   | UK             |
-| stanford.edu  | 214,7 | 213,2 | 222.5 | 248.4 | 13    | 13    | 13 | 13 | 14 | 14 | 14 | 14 |    |    |   |   | USA            | 
-| lands.gov.sb  | 347.0 | 365.3 | 356.9 | 396.9 | 19    | 19    | 19 | 19 | 14 | 14 | 14 | 14 |    |    |   |   | Wyspy Solomona |
+<!-- | Adres         |Czas | (ms)  |         |       |Skoki|do |    |     |Skoki| od |    |    |$\frac{\text{Czas}}{\text{Skoki}}$|    |    |    | Max |Lokalizacja     |
+| :-----        | ----: | ----: | ----: | ----: |----:|---:|---:|---:|---:|---:|---:|---:|---:|---:|--: |--: | --: |:-------------: |
+|               | 84    | 5k    | 10k   | 30k   |84   |5k  | 10k| 30k| 84 | 5k | 10k| 30k| 84 | 5k |10k |30k |     |                |
+| wroclaw.pl    | 22.9  | 31.4  | 35.1  | 44.9  |7    |7   | 7  | 7  | 6  | 6  | 6  | 6  |1.76|2.42|2.70|3.45|31571| Wrocław        |
+| inpost.pl     | 22.1  | 30.3  | 39.1  | 50.6  |7    |7   | 7  | 7  | 6  | 6  | 6  | 6  |1.70|2.33|3.01|3.89|31571| Warszawa       |
+| telefonica.de | 43.4  | 58.1  | 62.8  | 72.7  |11   |11  | 11 | 11 | 10 | 10 | 10 | 10 |2.07|2.77|2.99|3.46|65535| Niemcy         |
+| britishmuseum.org | 24.5 | 28.7 | 38.7 | 48.4 |7    |7   | 7  | 7  | 6  | 6  | 6  | 6  |1.88|2.21|2.98|3.72|32983| UK             |
+| stanford.edu  | 214.7 | 213.2 | 222.5 | 248.4 |13   |13  | 13 | 13 | 14 | 14 | 14 | 14 |7.95|7.90|8.24|9.20|55028| USA            |
+| lands.gov.sb  | 347.0 | 365.3 | 356.9 | 396.9 |19   |19  | 19 | 19 | 14| 14| 14| 14|10.52|11.07|10.82|12.03|65535| Wyspy Solomona | -->
+
+
+| Adres               | Czas  | (ms)  |       |       | Skoki | do  |    |     | Skoki | od  |    |    | $\frac{\text{Czas}}{\text{Skoki}}$ |    |    |    | Max   | Lokalizacja     |
+| :------------------ | ----: | ----: | ----: | ----: | ----: | ---:|---:|---: | ----: | ---:|---:|---:| ----: | ----: | ----: | ----: | ----: | :-------------: |
+|                    | $\texttt{84}$  | $\texttt{5k}$  | $\texttt{10k}$  | $\texttt{30k}$  | $\texttt{84}$  | $\texttt{5k}$ | $\texttt{10k}$ | $\texttt{30k}$ | $\texttt{84}$  | $\texttt{5k}$ | $\texttt{10k}$ | $\texttt{30k}$ | $\texttt{84}$  | $\texttt{5k}$  | $\texttt{10k}$  | $\texttt{30k}$  |       |                |
+| $\texttt{wroclaw.pl}$         | $\texttt{22.9}$  | $\texttt{31.4}$ | $\texttt{35.1}$ | $\texttt{44.9}$ | $\texttt{7}$  | $\texttt{7}$ | $\texttt{7}$ | $\texttt{7}$ | $\texttt{6}$  | $\texttt{6}$ | $\texttt{6}$ | $\texttt{6}$ | $\texttt{1.76}$ | $\texttt{2.42}$ | $\texttt{2.70}$ | $\texttt{3.45}$ | $\texttt{31571}$ | Wrocław        |
+| $\texttt{inpost.pl}$          | $\texttt{22.1}$  | $\texttt{30.3}$ | $\texttt{39.1}$ | $\texttt{50.6}$ | $\texttt{7}$  | $\texttt{7}$ | $\texttt{7}$ | $\texttt{7}$ | $\texttt{6}$  | $\texttt{6}$ | $\texttt{6}$ | $\texttt{6}$ | $\texttt{1.70}$ | $\texttt{2.33}$ | $\texttt{3.01}$ | $\texttt{3.89}$ | $\texttt{31571}$ | Warszawa       |
+| $\texttt{telefonica.de}$      | $\texttt{43.4}$  | $\texttt{58.1}$ | $\texttt{62.8}$ | $\texttt{72.7}$ | $\texttt{11}$  | $\texttt{11}$ | $\texttt{11}$ | $\texttt{11}$  | $\texttt{10}$  | $\texttt{10}$ | $\texttt{10}$ | $\texttt{10}$ | $\texttt{2.07}$ | $\texttt{2.77}$ | $\texttt{2.99}$ | $\texttt{3.46}$ | $\texttt{65535}$ | Niemcy         |
+| $\texttt{britishmuseum.org}$  | $\texttt{24.5}$  | $\texttt{28.7}$ | $\texttt{38.7}$ | $\texttt{48.4}$ | $\texttt{7}$  | $\texttt{7}$ | $\texttt{7}$ | $\texttt{7}$ | $\texttt{6}$  | $\texttt{6}$ | $\texttt{6}$ | $\texttt{6}$ | $\texttt{1.88}$ | $\texttt{2.21}$ | $\texttt{2.98}$ | $\texttt{3.72}$ | $\texttt{32983}$ | UK             |
+| $\texttt{stanford.edu}$       | $\texttt{214.7}$  | $\texttt{213.2}$ | $\texttt{222.5}$ | $\texttt{248.4}$ | $\texttt{13}$  | $\texttt{13}$ | $\texttt{13}$ | $\texttt{13}$  | $\texttt{14}$  | $\texttt{14}$ | $\texttt{14}$ | $\texttt{14}$ | $\texttt{7.95}$ | $\texttt{7.90}$ | $\texttt{8.24}$ | $\texttt{9.20}$ | $\texttt{55028}$ | USA            |
+| $\texttt{lands.gov.sb}$       | $\texttt{347.0}$  | $\texttt{365.3}$ | $\texttt{356.9}$ | $\texttt{396.9}$ | $\texttt{19}$  | $\texttt{19}$ | $\texttt{19}$ | $\texttt{19}$  | $\texttt{14}$  | $\texttt{14}$ | $\texttt{14}$ | $\texttt{14}$ | $\texttt{10.52}$ | $\texttt{11.07}$ | $\texttt{10.82}$ | $\texttt{12.03}$ | $\texttt{65535}$ | Wyspy Solomona |
+
+
 
 
 Na podstawie przeprowadzonych testów zaobserwowano następujące zależności:  
