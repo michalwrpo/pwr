@@ -37,6 +37,17 @@ Czas w ms (t) oraz liczba węzłów (n) (do/od) w zależności od wielkości pak
 | uom.lk         | 258.0 | 272.0 | -     | 24/23 | 24/23 | -     | 5.49 | -    | 1024  | Indie          |
 | lands.gov.sb   | 324.0 | 341.0 | 397.0 | 26/17 | 26/17 | 26/17 | 7.90 | 9.23 | 65535 | Wyspy Solomona |
 
+| Adres         |       | Czas  |       |       |       | do    |    |    |    | od |    |    |    | t/n|   |   |Lokalizacja     |
+| :-----        | ----: | ----: | ----: | ----: | ----: | ----: |---:|---:|---:|---:|---:|---:|---:|---:|--:|--:|:-------------: |
+|               | 84    | 5k    | 10k   | 30k   | 84    | 5k    | 10k| 30k| 84 | 5k | 10k| 30k| 84 | 5k |10k|30k|                |
+| wroclaw.pl    | 22.9  | 31.4  | 35.1  | 44.9  | 7     | 7     | 7  | 7  | 6  | 6  | 6  | 6  |    |    |   |   | Wrocław        |
+| inpost.pl     | 22.1  | 30.3  | 39.1  | 50.6  | 7     | 7     | 7  | 7  | 6  | 6  | 6  | 6  |    |    |   |   | Warszawa       |
+| telefonica.de | 43.4  | 58.1  | 62.8  | 72,7  | 11    | 11    | 11 | 11 | 10 | 10 | 10 | 10 |    |    |   |   | Niemcy         |
+| britishmuseum.org | 24.5 | 28.7 | 38.7 | 48.4 | 7     | 7     | 7  | 7  | 6  | 6  | 6  | 6  |    |    |   |   | UK             |
+| stanford.edu  | 214,7 | 213,2 | 222.5 | 248.4 | 13    | 13    | 13 | 13 | 14 | 14 | 14 | 14 |    |    |   |   | USA            | 
+| lands.gov.sb  | 347.0 | 365.3 | 356.9 | 396.9 | 19    | 19    | 19 | 19 | 14 | 14 | 14 | 14 |    |    |   |   | Wyspy Solomona |
+
+
 Na podstawie przeprowadzonych testów zaobserwowano następujące zależności:  
 
 - **Liczba węzłów i trasy powrotne**  
