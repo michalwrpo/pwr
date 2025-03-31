@@ -1,0 +1,261 @@
+    $text-color: rgb(209, 220, 238);
+    $bg-color: rgb(34, 38, 46);
+    $nav-height: 5vmax;
+    $font-stack: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    $font-size-fixed: 24px;
+
+html {
+    background-color: $bg-color;
+    color: $text-color;
+    font: {
+        family: $font-stack;
+        size: 2vmax;
+    }
+}
+
+body {
+    padding: 0;
+}
+
+@mixin flex-center() {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+main {
+    @include flex-center();
+    position: relative;
+    min-height: 100vh;
+    padding: $nav-height 0 3em;
+    margin: 0;
+}
+
+
+nav {
+    background-color: scale-color($color: $bg-color, $saturation: 20%, $lightness: -30%, $alpha: 0%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    margin: 0;
+    padding-bottom: 1vmax;
+}
+
+footer {
+    @include flex-center();
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    background-color: scale-color($color: $bg-color, $saturation: 20%, $lightness: -40%, $alpha: 0%);
+    color: scale-color($color: $text-color, $saturation: -80%, $lightness: -50%, $alpha: 0%);
+    min-height: 3em;
+}
+
+details {
+    user-select: none;
+}
+
+summary {
+    display: flex;
+    cursor: pointer;
+    font-size: $nav-height - 1vmax;
+    padding: 0 1.5vmax;
+    width: 100vw;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3vmax;
+}
+
+h2 {
+    font-size: 2.5vmax;
+}
+
+a {
+    color: $text-color;
+}
+
+code {
+    background-color: scale-color($color: $bg-color, $saturation: 0%, $lightness: -30%, $alpha: 0%);
+    width: 95%;
+    padding: 0.5em;
+    overflow-x: auto;
+    white-space: nowrap; 
+}
+
+.content {
+    background-color: scale-color($color: $bg-color, $saturation: 20%, $lightness: -20%, $alpha: 0%);
+    max-width: 1200px;
+    padding: 0;
+    padding-bottom: 1em;
+    width: 100%;
+}
+
+.navlink {
+    font-size: 2.5vmax;
+    text-decoration: none;
+}
+
+.navdivsmall {
+    padding: 0.5vmax 2vmax;
+    width: 100%;
+}
+
+.projectdiv {
+    @include flex-center();
+    flex-direction: column;
+    padding: 0em 2em;
+    
+    p {
+        text-wrap: wrap;
+    }
+}
+
+.projectdetails {
+    display: flex;
+    flex-direction: column; 
+    padding: 0em 1em 1em;
+}
+
+.projectimg {
+    width: 100%;
+    margin: 0;
+}
+
+.projectlink {
+    text-decoration: underline;
+}
+
+.imgdesc {
+    font-style: italic;
+    align-self: center;
+}
+
+#aboutdiv {
+    display: flex;
+    flex-direction: column;
+    padding: 0em 1em;
+    
+    img {
+        align-self: center;
+    }
+}
+
+#mephoto {
+    max-width: 90%;
+}
+
+@media only screen and (max-width: 1200px) {
+    nav {
+        min-height: $nav-height;
+    }
+
+    .navdivbig {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    html {
+        font-size: $font-size-fixed;
+    }
+    
+    h1 {
+        font-size: $font-size-fixed * 1.5;
+    }
+    
+    h2 {
+        font-size: $font-size-fixed * 4 / 3;
+    }
+
+    nav {
+        min-height: 3em;
+    }
+    
+    summary {
+        font-size: $font-size-fixed * 2;
+        padding: 0 20px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    %flex-wrap {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    main {
+        padding-top: 70px;
+    }
+
+    nav {
+        @include flex-center();
+        height: 40px;
+        flex-direction: row;
+        width: 100vw;
+    }
+
+    #aboutdiv {
+        @extend %flex-wrap;
+        
+        h1 {
+            width: 100%;
+        }
+    
+        section {
+            width: 50%;
+        }
+    }
+
+
+    #mephoto {
+        width: 40%;
+        margin: 2em;
+    }
+
+    .navlink {
+        font-size: 36px;
+    }
+
+    details {
+        display: none;
+    }
+
+    .navdivbig {
+        padding: 1em 2em;
+    }
+
+    .projectdiv {
+        width: 45%;
+        margin: 0;
+        padding: 0;
+        
+        p {
+            padding: 0 2em;
+        }
+        
+        .projectimg {
+            width: 70%;
+        }
+    }
+
+    .projectdetails {
+        .projectimg {
+            align-self: center;
+            width: 50%;
+        }
+    }
+
+    #projects {
+        @extend %flex-wrap;
+        @include flex-center();
+    }
+}

@@ -1,0 +1,243 @@
+html {
+  background-color: #22262e;
+  color: #d1dcee;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 2vmax;
+}
+
+body {
+  padding: 0;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+  padding: 5vmax 0 3em;
+  margin: 0;
+}
+
+nav {
+  background-color: #131925;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  margin: 0;
+  padding-bottom: 1vmax;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
+  background-color: #101520;
+  color: #656d7a;
+  min-height: 3em;
+}
+
+details {
+  user-select: none;
+}
+
+summary {
+  display: flex;
+  cursor: pointer;
+  font-size: 4vmax;
+  padding: 0 1.5vmax;
+  width: 100vw;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3vmax;
+}
+
+h2 {
+  font-size: 2.5vmax;
+}
+
+a {
+  color: #d1dcee;
+}
+
+code {
+  background-color: #181b20;
+  width: 95%;
+  padding: 0.5em;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.content {
+  background-color: #161d2a;
+  max-width: 1200px;
+  padding: 0;
+  padding-bottom: 1em;
+  width: 100%;
+}
+
+.navlink {
+  font-size: 2.5vmax;
+  text-decoration: none;
+}
+
+.navdivsmall {
+  padding: 0.5vmax 2vmax;
+  width: 100%;
+}
+
+.projectdiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0em 2em;
+}
+.projectdiv p {
+  text-wrap: wrap;
+}
+
+.projectdetails {
+  display: flex;
+  flex-direction: column;
+  padding: 0em 1em 1em;
+}
+
+.projectimg {
+  width: 100%;
+  margin: 0;
+}
+
+.projectlink {
+  text-decoration: underline;
+}
+
+.imgdesc {
+  font-style: italic;
+  align-self: center;
+}
+
+#aboutdiv {
+  display: flex;
+  flex-direction: column;
+  padding: 0em 1em;
+}
+#aboutdiv img {
+  align-self: center;
+}
+
+#mephoto {
+  max-width: 90%;
+}
+
+@media only screen and (max-width: 1200px) {
+  nav {
+    min-height: 5vmax;
+  }
+
+  .navdivbig {
+    display: none;
+  }
+}
+@media only screen and (min-width: 600px) {
+  html {
+    font-size: 24px;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  nav {
+    min-height: 3em;
+  }
+
+  summary {
+    font-size: 48px;
+    padding: 0 20px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  #aboutdiv, #projects {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  main {
+    padding-top: 70px;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    flex-direction: row;
+    width: 100vw;
+  }
+
+  #aboutdiv h1 {
+    width: 100%;
+  }
+  #aboutdiv section {
+    width: 50%;
+  }
+
+  #mephoto {
+    width: 40%;
+    margin: 2em;
+  }
+
+  .navlink {
+    font-size: 36px;
+  }
+
+  details {
+    display: none;
+  }
+
+  .navdivbig {
+    padding: 1em 2em;
+  }
+
+  .projectdiv {
+    width: 45%;
+    margin: 0;
+    padding: 0;
+  }
+  .projectdiv p {
+    padding: 0 2em;
+  }
+  .projectdiv .projectimg {
+    width: 70%;
+  }
+
+  .projectdetails .projectimg {
+    align-self: center;
+    width: 50%;
+  }
+
+  #projects {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/*# sourceMappingURL=dev.css.map */
