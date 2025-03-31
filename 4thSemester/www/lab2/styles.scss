@@ -63,10 +63,10 @@ summary {
     font-size: $nav-height - 1vmax;
     padding: 0 1.5vmax;
     width: 100vw;
-}
-
-summary::-webkit-details-marker {
-    display: none;
+    
+    &::-webkit-details-marker {
+        display: none;
+    }
 }
 
 h1 {
