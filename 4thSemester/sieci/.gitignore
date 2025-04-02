@@ -1,2 +1,4 @@
 *.cap
 wireshark
+*.pcap
+*.scapy
