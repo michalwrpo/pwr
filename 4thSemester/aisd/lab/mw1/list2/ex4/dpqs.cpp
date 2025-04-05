@@ -1,45 +1,96 @@
 #include <iostream>
 #include <vector>
 
-void swap(long* swaps, long* arr, long index, long value) {
-    arr[index] = value;
+void swap(long* swaps, long* arr, long index1, long index2) {
+    long temp = arr[index1];
+    arr[index1] = arr[index2];
+    arr[index2] = temp;
     (*swaps)++;
 }
 
 bool compare(long* comparisons, long value1, long value2) {
     (*comparisons)++;
-    return (value1 > value2);
+    return (value1 < value2);
 }
 
-void InsertionSort(long* arr, long len, long* swaps, long* comparisons) {
-    bool print = (len < 40);
-    if (print) {
-        std::cout << "Array after insertions: " << std::endl;
+long partition(long* arr, long low, long high, long* pl, long* swaps, long* comparisons, int depth, bool print) {
+    if (arr[low] > arr[high]) {
+        swap(swaps, arr, low, high);
     }
+    
+    // p - right pivot, q - left pivot
+    long p = arr[low], q = arr[high];
 
-    long i = 1, j, x;
-    while (i < len) {
-        j = i;
-        x = arr[j];
-        while (j > 0 && compare(comparisons, arr[j-1], x)) {
-            swap(swaps, arr, j, arr[j-1]);
-            j--;
-        }
-        swap(swaps, arr, j, x);
-        i++;
+    // s - # of smaller than p, l - # of larger than q
+    long s = 0, l = 0;
 
-        if (print) {
-            for (long i = 0; i < len; i++) {
-                long num = arr[i];
-                if (num < 10) {
-                    std::cout << "0" << num << " ";                
+    // i, j - final indexes of p and q, k - currently sorted number
+    long i = low + 1, j = high - 1, k = low + 1;
+
+    while (k <= j) {
+        if (l > s) {
+            if (compare(comparisons, q, arr[k])) {
+                swap(swaps, arr, k, j);
+                j--;
+            } else {
+                if (compare(comparisons, arr[k], p)) {
+                    swap(swaps, arr, k, i);
+                    i++;
+                }
+                k++;
+            }
+        } else {
+            if (compare(comparisons, arr[k], p)) {
+                swap(swaps, arr, k, i);
+                i++;
+                k++;
+            } else {
+                if (compare(comparisons, q, arr[k])) {
+                    swap(swaps, arr, k, j);
+                    j--;
                 } else {
-                    std::cout << num << " ";
+                    k++;
                 }
             }
-            std::cout << std::endl;
         }
     }
+    
+    i--;
+    j++;
+    swap(swaps, arr, low, i);
+    swap(swaps, arr, high, j);
+    
+    if (print) {
+        std::cout << depth << ". ";
+        for (long i = 0; i < low; i++) {
+            std::cout << "-- ";
+        }
+        for (long i = low; i < high + 1; i++) {
+            long num = arr[i];
+            if (num < 10) {
+                std::cout << "0" << num << " ";                
+            } else {
+                std::cout << num << " ";
+            }
+        }
+        std::cout << std::endl;
+    }    
+
+    *pl = i;
+    return j;
+}
+
+void DPQS(long* arr, long low, long high, long* swaps, long* comparisons, bool print, int depth) {
+    if (low >= high || low < 0) 
+        return;
+    
+    // pivot left and pivot right
+    long pl;
+    long pr = partition(arr, low, high, &pl, swaps, comparisons, depth, print);
+
+    DPQS(arr, low, pl - 1, swaps, comparisons, print, depth + 1);
+    DPQS(arr, pl + 1, pr - 1, swaps, comparisons, print, depth + 1);
+    DPQS(arr, pr + 1, high, swaps, comparisons, print, depth + 1);
 }
 
 int main() {    
@@ -78,7 +129,13 @@ int main() {
         std::cout << std::endl;
     }
 
-    InsertionSort(arr, len, &comp, &swaps);
+    bool print = (len < 40);
+    if (print) 
+        std::cout << "Array after partitions: " << std::endl;
+
+    DPQS(arr, 0, len - 1, &swaps, &comp, print, 1);
+
+    std::cout << std::endl;
 
     if (len < 40) {
         std::cout << "Original array:" << std::endl;

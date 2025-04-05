@@ -8,38 +8,45 @@ void swap(long* swaps, long* arr, long index, long value) {
 
 bool compare(long* comparisons, long value1, long value2) {
     (*comparisons)++;
-    return (value1 > value2);
+    return (value1 <= value2);
+}
+void ArrayCopy(long* arr1, long* arr2, long len) {
+    for (long i = 0; i < len; i++) {
+        arr2[i] = arr1[i];
+    }
 }
 
-void InsertionSort(long* arr, long len, long* swaps, long* comparisons) {
-    bool print = (len < 40);
-    if (print) {
-        std::cout << "Array after insertions: " << std::endl;
-    }
+void Merge(long* arr1, long* arr2, long start, long middle, long end, long* swaps, long* comparisons) {
+    long i = start, j = middle;
 
-    long i = 1, j, x;
-    while (i < len) {
-        j = i;
-        x = arr[j];
-        while (j > 0 && compare(comparisons, arr[j-1], x)) {
-            swap(swaps, arr, j, arr[j-1]);
-            j--;
-        }
-        swap(swaps, arr, j, x);
-        i++;
-
-        if (print) {
-            for (long i = 0; i < len; i++) {
-                long num = arr[i];
-                if (num < 10) {
-                    std::cout << "0" << num << " ";                
-                } else {
-                    std::cout << num << " ";
-                }
-            }
-            std::cout << std::endl;
+    for (long k = start; k < end; k++) {
+        if (i < middle && (j >= end || compare(comparisons, arr1[i], arr1[j]))) {
+            swap(swaps, arr2, k, arr1[i]);
+            i++;
+        } else {
+            swap(swaps, arr2, k, arr1[j]);
+            j++;
         }
     }
+}
+
+void Split(long* arr1, long* arr2, long start, long end, long* swaps, long* comparisons) {
+    if (end - start < 2) {
+        return;
+    }
+    
+    long middle = (start + end) / 2;
+
+    Split(arr2, arr1, start, middle, swaps, comparisons);
+    Split(arr2, arr1, middle, end, swaps, comparisons);
+
+    Merge(arr1, arr2, start, middle, end, swaps, comparisons);
+    
+}
+
+void MergeSort(long* arr, long* result, long len, long* swaps, long* comparisons) {
+    ArrayCopy(arr, result, len);
+    Split(arr, result, 0, len, swaps, comparisons);
 }
 
 int main() {    
@@ -78,7 +85,9 @@ int main() {
         std::cout << std::endl;
     }
 
-    InsertionSort(arr, len, &comp, &swaps);
+    long result[len];
+
+    MergeSort(arr, result, len, &comp, &swaps);
 
     if (len < 40) {
         std::cout << "Original array:" << std::endl;
@@ -98,7 +107,7 @@ int main() {
         std::cout << "Sorted array:" << std::endl;
 
         for (long i = 0; i < len; i++) {
-            long num = arr[i];
+            long num = result[i];
             if (num < 10) {
                 std::cout << "0" << num << " ";                
             } else {
@@ -113,7 +122,7 @@ int main() {
     // check if the sort worked
     for (long i = 0; i < len; i++) {
         for (std::vector<long>::iterator it = start.begin(); it != start.end();) {
-            if (arr[i] == *it) {
+            if (result[i] == *it) {
                 start.erase(it);
                 break;
             } else {
@@ -122,7 +131,7 @@ int main() {
         }
 
         if (i != 0) {
-            if (arr[i] < arr[i-1]) {
+            if (result[i] < result[i-1]) {
                 std::cerr << "Array not sorted properly; elements out of order." << std::endl;
                 return -2;
             }
