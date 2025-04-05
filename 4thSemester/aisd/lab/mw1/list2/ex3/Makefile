@@ -9,5 +9,9 @@ rand:
 merge:
 	$(CXX) $(CXX_WARN) mergesort.cpp -o mergesort.out
 
+mysort:
+	$(CXX) $(CXX_WARN) mysort.cpp -o mysort.out
+
+
 clean:
 	rm -f *.out

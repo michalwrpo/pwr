@@ -108,7 +108,7 @@ int main() {
         std::cout << std::endl;
     }
 
-    std::cout << "Comparisons: " << comp << "\nSwaps: " << swaps << std::endl;
+    std::cout << "Comparisons: " << comp << " Swaps: " << swaps << std::endl;
 
     // check if the sort worked
     for (long i = 0; i < len; i++) {

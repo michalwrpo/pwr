@@ -10,6 +10,7 @@ bool compare(long* comparisons, long value1, long value2) {
     (*comparisons)++;
     return (value1 <= value2);
 }
+
 void ArrayCopy(long* arr1, long* arr2, long len) {
     for (long i = 0; i < len; i++) {
         arr2[i] = arr1[i];

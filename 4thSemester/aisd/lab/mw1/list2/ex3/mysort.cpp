@@ -1,72 +1,82 @@
 #include <iostream>
 #include <vector>
 
-void swap(long* swaps, long* arr, long index1, long index2) {
-    long temp = arr[index1];
-    arr[index1] = arr[index2];
-    arr[index2] = temp;
+void swap(long* swaps, long* arr, long index, long value) {
+    arr[index] = value;
     (*swaps)++;
 }
 
 bool compare(long* comparisons, long value1, long value2) {
     (*comparisons)++;
-    return (value1 < value2);
+    return (value1 <= value2);
 }
 
-long partition(long* arr, long low, long high, long* pl, long* swaps, long* comparisons, int depth, bool print) {
-    if (arr[low] > arr[high]) {
-        swap(swaps, arr, low, high);
+void ArrayCopy(long* arr1, long* arr2, long len) {
+    for (long i = 0; i < len; i++) {
+        arr2[i] = arr1[i];
     }
-    
-    // p - right pivot, q - left pivot
-    long p = arr[low], q = arr[high];
+}
 
-    // s - # of smaller than p, l - # of larger than q
-    long s = 0, l = 0;
+void Merge(long* arr1, long* arr2, long start, long middle, long end, long* swaps, long* comparisons) {
+    long i = start, j = middle;
 
-    // i, j - final indexes of p and q, k - currently sorted number
-    long i = low + 1, j = high - 1, k = low + 1;
-
-    while (k <= j) {
-        if (l > s) {
-            if (compare(comparisons, q, arr[k])) {
-                swap(swaps, arr, k, j);
-                j--;
-            } else {
-                if (compare(comparisons, arr[k], p)) {
-                    swap(swaps, arr, k, i);
-                    i++;
-                }
-                k++;
-            }
+    for (long k = start; k < end; k++) {
+        if (i < middle && (j >= end || compare(comparisons, arr1[i], arr1[j]))) {
+            swap(swaps, arr2, k, arr1[i]);
+            i++;
         } else {
-            if (compare(comparisons, arr[k], p)) {
-                swap(swaps, arr, k, i);
-                i++;
-                k++;
-            } else {
-                if (compare(comparisons, q, arr[k])) {
-                    swap(swaps, arr, k, j);
-                    j--;
-                } else {
-                    k++;
-                }
-            }
+            swap(swaps, arr2, k, arr1[j]);
+            j++;
         }
     }
+}
+
+void Split(long* arr1, long* arr2, long start, long end, long* swaps, long* comparisons, bool print, int depth) {
+    if (end - start < 2) {
+        return;
+    }
     
-    i--;
-    j++;
-    swap(swaps, arr, low, i);
-    swap(swaps, arr, high, j);
+    long middle = (start + end) / 2;
+    long i = middle + 1;
+    while (i < end) {
+        if (compare(comparisons, arr2[i - 1], arr2[i])) {
+            i++;
+        } else {
+            break;
+        }
+    }
+
+    if (i == end) {
+
+        i = middle;
+
+        while (i > start) {
+            if (compare(comparisons, arr2[i-1], arr2[i])) {
+                i--;
+            } else {
+                break;
+            }
+        }
+        if (i == start) {
+            return;
+        } 
+        
+        Split(arr2, arr1, start, i, swaps, comparisons, print, depth + 1);
+    } else {
+        Split(arr2, arr1, start, i, swaps, comparisons, print, depth + 1);
+        Split(arr2, arr1, i, end, swaps, comparisons, print, depth + 1);
+
+    }
     
+    Merge(arr1, arr2, start, i, end, swaps, comparisons);
+
     if (print) {
         std::cout << depth << ". ";
-        for (long i = 0; i < low; i++) {
+        for (long i = 0; i < start; i++) {
             std::cout << "-- ";
         }
-        for (long i = low; i < high + 1; i++) {
-            long num = arr[i];
+        for (long i = start; i < end; i++) {
+            long num = arr2[i];
             if (num < 10) {
                 std::cout << "0" << num << " ";                
             } else {
@@ -76,21 +86,11 @@ long partition(long* arr, long low, long high, long* pl, long* swaps, long* comp
         std::cout << std::endl;
     }    
 
-    *pl = i;
-    return j;
 }
 
-void DPQS(long* arr, long low, long high, long* swaps, long* comparisons, bool print, int depth) {
-    if (low >= high || low < 0) 
-        return;
-    
-    // pivot left and pivot right
-    long pl;
-    long pr = partition(arr, low, high, &pl, swaps, comparisons, depth, print);
-
-    DPQS(arr, low, pl - 1, swaps, comparisons, print, depth + 1);
-    DPQS(arr, pl + 1, pr - 1, swaps, comparisons, print, depth + 1);
-    DPQS(arr, pr + 1, high, swaps, comparisons, print, depth + 1);
+void MySort(long* arr, long* result, long len, long* swaps, long* comparisons, bool print, int depth) {
+    ArrayCopy(arr, result, len);
+    Split(arr, result, 0, len, swaps, comparisons, print, depth);
 }
 
 int main() {    
@@ -115,7 +115,9 @@ int main() {
         return -1;
     }
 
-    if (len < 40) {
+    bool print = (len < 40);
+
+    if (print) {
         std::cout << "Initial array:" << std::endl;
 
         for (long i = 0; i < len; i++) {
@@ -129,17 +131,19 @@ int main() {
         std::cout << std::endl;
     }
 
-    bool print = (len < 40);
     if (print) 
-        std::cout << "Array after partitions: " << std::endl;
+        std::cout << "Array after merges: " << std::endl;
 
-    DPQS(arr, 0, len - 1, &swaps, &comp, print, 1);
+    long result[len];
+
+    MySort(arr, result, len, &swaps, &comp, print, 1);
 
     if (print) {
         std::cout << std::endl;
     }
+    
 
-    if (len < 40) {
+    if (print) {
         std::cout << "Original array:" << std::endl;
 
         for (long i = 0; i < len; i++) {
@@ -153,11 +157,12 @@ int main() {
         std::cout << std::endl;
     }
 
-    if (len < 40) {
+
+    if (print) {
         std::cout << "Sorted array:" << std::endl;
 
         for (long i = 0; i < len; i++) {
-            long num = arr[i];
+            long num = result[i];
             if (num < 10) {
                 std::cout << "0" << num << " ";                
             } else {
@@ -173,7 +178,7 @@ int main() {
     if (print) {
         for (long i = 0; i < len; i++) {
             for (std::vector<long>::iterator it = start.begin(); it != start.end();) {
-                if (arr[i] == *it) {
+                if (result[i] == *it) {
                     start.erase(it);
                     break;
                 } else {
@@ -182,7 +187,7 @@ int main() {
             }
     
             if (i != 0) {
-                if (arr[i] < arr[i-1]) {
+                if (result[i] < result[i-1]) {
                     std::cerr << "Array not sorted properly; elements out of order." << std::endl;
                     return -2;
                 }

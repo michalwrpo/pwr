@@ -98,7 +98,10 @@ int main() {
 
     QuickSort(arr, 0, len - 1, &swaps, &comp, print, 1);
 
-    std::cout << std::endl;
+    if (print) {
+        std::cout << std::endl;
+    }
+    
 
     if (len < 40) {
         std::cout << "Original array:" << std::endl;
@@ -128,31 +131,34 @@ int main() {
         std::cout << std::endl;
     }
 
-    std::cout << "Comparisons: " << comp << "\nSwaps: " << swaps << std::endl;
+    std::cout << "Comparisons: " << comp << " Swaps: " << swaps << std::endl;
 
     // check if the sort worked
-    for (long i = 0; i < len; i++) {
-        for (std::vector<long>::iterator it = start.begin(); it != start.end();) {
-            if (arr[i] == *it) {
-                start.erase(it);
-                break;
-            } else {
-                it++;
+    if (print) {
+        for (long i = 0; i < len; i++) {
+            for (std::vector<long>::iterator it = start.begin(); it != start.end();) {
+                if (arr[i] == *it) {
+                    start.erase(it);
+                    break;
+                } else {
+                    it++;
+                }
+            }
+    
+            if (i != 0) {
+                if (arr[i] < arr[i-1]) {
+                    std::cerr << "Array not sorted properly; elements out of order." << std::endl;
+                    return -2;
+                }
             }
         }
-
-        if (i != 0) {
-            if (arr[i] < arr[i-1]) {
-                std::cerr << "Array not sorted properly; elements out of order." << std::endl;
-                return -2;
-            }
+        
+        if (start.size() != 0) {
+            std::cerr << "Array not sorted properly; lost some elements." << std::endl;
+            return -2;
         }
     }
     
-    if (start.size() != 0) {
-        std::cerr << "Array not sorted properly; lost some elements." << std::endl;
-        return -2;
-    }
     
     return 0;
 }

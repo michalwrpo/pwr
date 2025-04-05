@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
 
 void swap(long* swaps, long* arr, long index1, long index2) {
     long temp = arr[index1];
@@ -50,7 +51,7 @@ void HybridSort(long* arr, long low, long high, long k, long* swaps, long* compa
     if (low >= high || low < 0) 
         return;
     
-    if (high - low > k) { // QuickSort
+    if (high - low + 1 > k) { // QuickSort
         long p = partition(arr, low, high, swaps, comparisons, depth, print);
     
         HybridSort(arr, low, p - 1, k, swaps, comparisons, print, depth + 1);
@@ -87,8 +88,16 @@ void HybridSort(long* arr, long low, long high, long k, long* swaps, long* compa
     
 }
 
-int main() {    
-    long len, input, i = 0, comp = 0, swaps = 0, k = 5;
+int main(int argc, char** argv) {    
+    long k, len, input, i = 0, comp = 0, swaps = 0;
+
+    if (argc == 1) {
+        std::cerr << "Usage: " << argv[0] << " <k>" << std::endl;
+        return -1;
+    }    
+
+    k = atoi(argv[1]);
+    
     std::cin >> len;
     long arr[len];
     std::vector<long> start;
@@ -129,7 +138,9 @@ int main() {
 
     HybridSort(arr, 0, len - 1, k, &swaps, &comp, print, 1);
 
-    std::cout << std::endl;
+    if (print) {
+        std::cout << std::endl;
+    }
 
     if (len < 40) {
         std::cout << "Original array:" << std::endl;
@@ -159,31 +170,35 @@ int main() {
         std::cout << std::endl;
     }
 
-    std::cout << "Comparisons: " << comp << "\nSwaps: " << swaps << std::endl;
+    std::cout << "Comparisons: " << comp << " Swaps: " << swaps << std::endl;
 
     // check if the sort worked
-    for (long i = 0; i < len; i++) {
-        for (std::vector<long>::iterator it = start.begin(); it != start.end();) {
-            if (arr[i] == *it) {
-                start.erase(it);
-                break;
-            } else {
-                it++;
+    // we only check for small length of table, because otherwise it takes an eternity and would make ex. 2 take too long
+    if (print) {
+        for (long i = 0; i < len; i++) {
+            for (std::vector<long>::iterator it = start.begin(); it != start.end();) {
+                if (arr[i] == *it) {
+                    start.erase(it);
+                    break;
+                } else {
+                    it++;
+                }
+            }
+    
+            if (i != 0) {
+                if (arr[i] < arr[i-1]) {
+                    std::cerr << "Array not sorted properly; elements out of order." << std::endl;
+                    return -2;
+                }
             }
         }
-
-        if (i != 0) {
-            if (arr[i] < arr[i-1]) {
-                std::cerr << "Array not sorted properly; elements out of order." << std::endl;
-                return -2;
-            }
+        
+        if (start.size() != 0) {
+            std::cerr << "Array not sorted properly; lost some elements." << std::endl;
+            return -2;
         }
     }
     
-    if (start.size() != 0) {
-        std::cerr << "Array not sorted properly; lost some elements." << std::endl;
-        return -2;
-    }
     
     return 0;
 }
