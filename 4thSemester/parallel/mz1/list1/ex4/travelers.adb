@@ -190,24 +190,23 @@ procedure  Travelers is
     Nr_of_Steps: Integer;
     Traces: Traces_Sequence_Type; 
     Deadlock: Boolean := False;
+    Direction: Integer;
 
     procedure Store_Trace is
     begin  
       Traces.Last := Traces.Last + 1;
       Traces.Trace_Array( Traces.Last ) := ( 
-         Time_Stamp => Time_Stamp,
-         Id => Traveler.Id,
-         Position => Traveler.Position,
-         Symbol => Traveler.Symbol
+          Time_Stamp => Time_Stamp,
+          Id => Traveler.Id,
+          Position => Traveler.Position,
+          Symbol => Traveler.Symbol
         );
     end Store_Trace;
     
     procedure Make_Step is
-      N : Integer;
       Success : Boolean := False;
     begin
-      N := Integer( Float'Floor(4.0 * Random(G)) );
-      case N is
+      case Direction is
         when 0 =>
           Move_Up(Traveler.Position, Success, Time_Stamp);
         when 1 =>
@@ -217,7 +216,7 @@ procedure  Travelers is
         when 3 =>
           Move_Right(Traveler.Position, Success, Time_Stamp);
         when others =>
-          Put_Line("Invalid move value: " & Integer'Image(N));
+          Put_Line("Invalid move value: " & Integer'Image(Direction));
       end case;
 
       if not Success then
@@ -232,52 +231,16 @@ procedure  Travelers is
       Reset(G, Seed); 
       Traveler.Id := Id;
       Traveler.Symbol := Symbol;
+      Traveler.Position := (X => posx(Id), Y => posy(Id));
+      Board(posx(Id), posy(Id)).Take;
 
-      declare
-      Try_Limit : constant Integer := 1000;
-      Try_Count : Integer := 0;
-      Init_X : posx;
-      Init_Y : posy;
+      Direction := 2 * (Id mod 2) + Integer( Float'Floor(2.0 * Random(G)) );
 
-      -- Random initial position:
-      begin
-        loop
-          -- Random position candidate
-          Init_X := posx(Float'Floor(Float(Board_Width) * Random(G)));
-          Init_Y := posy(Float'Floor(Float(Board_Height) * Random(G)));
-
-          -- Try to take the field
-          declare
-            Success : Boolean := False;
-          begin
-            select
-              Board(Init_X, Init_Y).Take;
-              Success := True;
-            or
-              delay 0.001;  -- quick retry delay
-            end select;
-
-            if Success then
-              Traveler.Position := (X => Init_X, Y => Init_Y);
-              exit;
-            else
-              Try_Count := Try_Count + 1;
-              exit when Try_Count >= Try_Limit;
-            end if;
-          end;
-        end loop;
-
-        if Try_Count >= Try_Limit then
-          Deadlock := True;
-        else
-         Store_Trace;  -- only store if acquired a position
-        end if;
-
-        -- Number of steps to be made by the traveler  
-        Nr_of_Steps := Min_Steps + Integer(Float(Max_Steps - Min_Steps) * Random(G));
-        -- Time_Stamp of initialization
-        Time_Stamp := To_Duration(Clock - Start_Time); -- reads global clock
-      end;
+      Store_Trace; -- store starting position
+      -- Number of steps to be made by the traveler  
+      Nr_of_Steps := Min_Steps + Integer( Float(Max_Steps - Min_Steps) * Random(G));
+      -- Time_Stamp of initialization
+      Time_Stamp := To_Duration ( Clock - Start_Time ); -- reads global clock
     end Init;
     
     -- wait for initialisations of the remaining tasks:

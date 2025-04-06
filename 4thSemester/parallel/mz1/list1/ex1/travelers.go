@@ -99,8 +99,8 @@ func (t *Traveler) MakeStep() {
 }
 
 // Traveler task
-func TravelerTask(id, seed int, symbol rune, StartTime time.Time, printer *Printer) {
-	G := rand.New(rand.NewSource(time.Now().UnixNano()))
+func TravelerTask(id int, seed int64, symbol rune, StartTime time.Time, printer *Printer) {
+	G := rand.New(rand.NewSource(seed))
 	traveler := Traveler{
 		ID:       id,
 		Symbol:   symbol,
@@ -122,7 +122,7 @@ func TravelerTask(id, seed int, symbol rune, StartTime time.Time, printer *Print
 	TimeStamp := time.Now().Sub(StartTime)
 
 	for range nrOfSteps {
-		time.Sleep(MinDelay + time.Duration((float64(MaxDelay)-float64(MinDelay))*G.Float64()))
+		time.Sleep(MinDelay + time.Duration(float64(MaxDelay-MinDelay)*G.Float64()))
 		traveler.MakeStep()
 
 		// Store trace after the step
@@ -133,7 +133,7 @@ func TravelerTask(id, seed int, symbol rune, StartTime time.Time, printer *Print
 			Position:  traveler.Position,
 			Symbol:    traveler.Symbol,
 		}
-		TimeStamp = time.Now().Sub(StartTime)
+		TimeStamp = time.Since(StartTime)
 	}
 
 	// Report traces after completing the steps
@@ -149,14 +149,13 @@ func main() {
 	printer := &Printer{}
 
 	// Initialize trace storage
-
 	fmt.Printf("-1 %d %d %d\n", NrOfTravelers, BoardWidth, BoardHeight)
 
 	// Start traveler tasks
 	var wg sync.WaitGroup
 	for i := range NrOfTravelers {
 		wg.Add(1)
-		go func(id int, seed int, symbol rune) {
+		go func(id int, seed int64, symbol rune) {
 			defer wg.Done()
 			TravelerTask(id, seed, symbol, StartTime, printer)
 		}(i, seeds[i], rune('A'+i))
