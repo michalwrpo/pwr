@@ -429,7 +429,7 @@ dcprec n = fromIntegral (coprime n n) / fromIntegral n ^2
 ```
 $lim_{n\rightarrow \infty} dcp(n) \approx 0.608$
 
-## Listy - część I
+## Listy - Część I
 
 ### Zadanie 17
 
@@ -643,7 +643,7 @@ subCard n (x:xs) =
     else map (x:) (subCard (n-1) xs) ++ subCard n xs  
 ```
 
-## Foldy - część II
+## Foldy - Część II
 
 ### Zadanie 34
 
@@ -783,3 +783,89 @@ avgandvar xs = (avg, 1/l * foldl (\x y -> x + (y - avg)^2) 0 xs)
         avg = 1/l * sum xs
         l = fromIntegral (length xs)
 ```
+
+### Zadanie 45
+
+```haskell
+f 0 0 = 1
+f 0 1 = 4
+f 1 1 = 2
+f 1 0 = 4
+f 2 0 = 2
+f 2 1 = 3
+f 3 0 = 3
+f 3 1 = 2
+```
+
+### Zadanie 47
+
+```haskell
+subsetlist:: Eq a => [a] -> [a] -> Bool
+subsetlist [] _ = True
+subsetlist (x:xs) ys =
+    (x `elem` ys) && subsetlist xs ys
+```
+
+### Zadanie 49
+
+```haskell
+dotprod :: (Num a) => [a] -> [a] -> a
+dotprod xs ys = sum (zipWith (*) xs ys)
+```
+
+### Zadanie 50 
+
+```haskell
+module Matrix (Matrix, addM, multM, intPowerM, dims) where
+import Data.List
+
+type Matrix a = [[a]]
+
+dims :: Num a => Matrix a -> (Int , Int)
+dims m = (length (head m), length m)
+
+addM :: Num a => Matrix a -> Matrix a -> Matrix a
+addM = zipWith (zipWith (+))
+
+multRow :: Num a => Matrix a -> Matrix a -> [a]
+multRow _ [] = []
+multRow m1 m2 = sum (zipWith (*) (head m1) (head m2)) : multRow m1 (tail m2)
+
+multM :: Num a => Matrix a -> Matrix a -> Matrix a
+multM [] _ = []
+multM m1 m2 = multRow m1 (transpose m2) : multM (tail m1) m2 
+
+intPowerM :: Num a => Matrix a -> Int -> Matrix a
+intPowerM m 1 = m
+intPowerM m k =
+    if even k then multM m1 m1
+    else multM m (multM m1 m1)
+    where m1 = intPowerM m (div k 2)```
+```
+
+### Elementy Teorii Kategorii - Część III
+
+### Zadanie 52
+
+Załóżmy, że $Id1_A$ i $Id2_A$ to identyczności, wtedy z własności identyczności:
+1. $Id1_A \circ Id2_A = Id1_A$ 
+2. $Id1_A \circ Id2_A = Id2_A$ 
+
+Zatem $Id1_A = Id2_A$. $\square$
+
+### Zadanie 53
+
+*Def.* Obiekt $c$ nazywamy końcowym w $\mathcal{C} \equiv (\forall X \in ob(\mathcal{C}))(\exist ! f)(f:X \rightarrow c)$
+
+Niech $c_1, c_2$ są elementami końcowymi.
+
+Zatem $(\exists ! f_1)(f: c_1 \rightarrow c_2)$ oraz $(\exists ! f_2)(f: c_2 \rightarrow c_1)$
+
+Wtedy $f_1 \circ f_2: c_2 \rightarrow c_2$, ale $Id_{c_2}: c_2 \rightarrow c_2$, więc $f_1 \circ f_2 = Id_{c_2}$
+
+Zatem $c_1 \cong c_2$
+
+### Zadanie 54
+
+- Końcowy: Grupa/Pierścień/Monoid trywialny
+- Początkowy: 

@@ -2,13 +2,12 @@ isSorted:: (Ord a) => [a] -> Bool
 isSorted [] = True
 isSorted [a] = True
 isSorted (x:xs) =
-    if x <= head xs then isSorted xs
-    else False
+    (x <= head xs) && isSorted xs
 
 bubbleLoop [] = []
 bubbleLoop [a] = [a]
 bubbleLoop (x:y:xs) =
-    if x <= y then x:bubbleLoop (y:xs) 
+    if x <= y then x:bubbleLoop (y:xs)
     else y:bubbleLoop (x:xs)
 
 bubbleSort [] = []
@@ -22,4 +21,4 @@ bub [] = []
 bub [x] = [x]
 bub (x:y:xs)
     | x <= y = x:bub (y:xs)
-    | otherwise = bub(y:bub(x:xs))
+    | otherwise = bub (y:bub (x:xs))
