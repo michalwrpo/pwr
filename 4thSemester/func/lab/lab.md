@@ -867,5 +867,33 @@ Zatem $c_1 \cong c_2$
 
 ### Zadanie 54
 
-- Końcowy: Grupa/Pierścień/Monoid trywialny
-- Początkowy: 
+- Początkowy i końcowy tak samo: 
+  - Grupy: Grupa trywialna - $(\{0\}, +)$
+  - Pierścienie $(\{0\}, +, \cdot)$
+  - Monoidy: $(\{0\}, +)$
+
+### Zadanie 55
+
+$F: \mathcal{C} \rightarrow \mathcal{D}$ - funktor
+
+$X, Y \in \mathcal{C}$ są izomorficzne, zatem istnieje $f: X \rightarrow Y$ oraz $g: Y \rightarrow X$, takie że $g \circ f = id_X$ oraz $f \circ g = id_Y$
+
+$F(f): F(X) \rightarrow F(Y)$
+$id_{F(X)} = F(id_X) = F(g \circ f) = F(g) \circ F(f) \\$
+$id_{F(Y)} = F(id_Y) = F(f \circ g) = F(f) \circ F(g) \\$
+
+Zatem $F(X)$ jest izomorficzne do $F(Y)$
+
+### Zadanie 56
+
+$F: \mathcal{C} \rightarrow \mathcal{D}$ oraz $G: \mathcal{D} \rightarrow \mathcal{E}\\$ 
+$H: \mathcal{C} \rightarrow \mathcal{E}$,
+$H(X) = G(F(X))$ i $H(f) = G(F(f))$
+
+1. Niech $X \in ob(\mathcal{C})$, wtedy $F(X) \in ob(\mathcal{D})$ oraz $G(F(X)) \in ob(\mathcal{E})$, zatem $H(X) \in ob(\mathcal{E}) \\$
+Niech $f: X \rightarrow Y \in morf(\mathcal{C})$. Wtedy $H(f) = G(F(f)) \in morf(\mathcal{E})$. <br>
+Zatem $H$ jest poprawnie zdefiniowane. 
+
+2. Niech $f: X \rightarrow Y, g: Y \rightarrow X$. <br>
+$H(id_X) = G(F(id_X)) = G(id_{F(X)}) = id_{G(F(X))} = id_{H(X)} \\$
+$H(g \circ f) = G(F(g \circ f)) = G(F(g) \circ F(f)) = G(F(g)) \circ G(F(f)) = H(g) \circ H(f)$
