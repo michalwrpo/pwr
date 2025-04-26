@@ -12,60 +12,68 @@ def generate_graph():
         (3,7), (4,8), (5,9), (6,10), (7,11), (8,12),
         (9,13), (10,14), (11,15), (12,16), (13,17), (14,18),
         (15,19), (4,0), (6,1), (8,2), (10,5), (12,7), (14,9),
-        (16,11), (17,13), (18,15), (19,16)
+        (16,11), (17,18), (18,15), (19,16)
     ]
     G.add_edges_from(edges)
     return G
 
 # --- Przypisanie przepustowości ---
-def assign_capacities(G, scale=1.0):
-    return {e: int(scale * random.randint(10000, 20000)) for e in G.edges()}
+def assign_capacities(G, m, flows, scale=1.0):
+    caps = {}
+    for e in G.edges():
+        r = int(scale * random.randint(10000, 20000))
+        while (r < m * flows[e]):
+            r += 10000
+        caps[e] = r
+    return caps
 
 # --- Losowa macierz N ---
-def generate_N(size, scale=1.0):
-    N = np.random.randint(1, 5, size=(size, size)) * scale
+def generate_N(size, scale=1):
+    N = np.random.randint(1, 50, size=(size, size)) * scale
     np.fill_diagonal(N, 0)
     return N
 
 # --- Przydziel przepływy losowo ---
-def assign_flows(G, N):
-    flows = {e: random.randint(100, 300) for e in G.edges()}
-    return flows
+def assign_flows(G, scale=1.0):
+    return {e: int(random.randint(100, 300) * scale) for e in G.edges()} 
 
 # --- Oblicz opóźnienie T ---
-def compute_T(G, flows, capacities, m):
-    total_packets = sum(flows.values())
+def compute_T(G, N, flows, capacities, m):
+    total_packets = sum(sum(N))
     T = 0
     for e in G.edges():
         a, c = flows[e], capacities[e]
-        if c > a:
+        if (c / m > a):
             T += a / (c / m - a)
+        else 
     return T / total_packets if total_packets else 0
 
 # --- Symulacja niezawodności ---
-def simulate_reliability(G, flows, capacities, m, T_max, p, trials=500):
+def simulate_reliability(G, N, flows, capacities, m, T_max, p, trials=500):
     success = 0
     for _ in range(trials):
         active_edges = [e for e in G.edges() if random.random() < p]
         subG = G.edge_subgraph(active_edges).copy()
         if nx.is_weakly_connected(subG):
-            T = compute_T(subG, flows, capacities, m)
+            T = compute_T(subG, N, flows, capacities, m)
             if T < T_max:
                 success += 1
     return success / trials
 
 def experiment_1():
     G = generate_graph()
-    capacities = assign_capacities(G)
-    m = 1000
-    T_max = 1.0
+    N = generate_N(len(G.nodes()))
+    T_max = 0.5
     p = 0.98
-    scales = np.linspace(0.5, 3.0, 10)
+    m = 1000
+    scales = np.linspace(1.0, 4.0, 10)
     results = []
+    base_flows = assign_flows(G)
+    capacities = assign_capacities(G, m, base_flows)
 
     for scale in scales:
-        flows = assign_flows(G, scale=scale)
-        reliability = simulate_reliability(G, flows, capacities, m, T_max, p)
+        flows = assign_flows(G, scale)
+        reliability = simulate_reliability(G, N, flows, capacities, m, T_max, p)
         results.append(reliability)
 
     plt.figure()
@@ -78,16 +86,17 @@ def experiment_1():
 
 def experiment_2():
     G = generate_graph()
-    base_flows = assign_flows(G, scale=1.5)
+    N = generate_N(len(G.nodes()))
+    flows = assign_flows(G, scale=1.5)
     m = 1000
-    T_max = 1.0
+    T_max = 0.5
     p = 0.98
     caps = np.arange(8000, 30000, 2000)
     results = []
 
-    for base in caps:
-        capacities = assign_capacities(G, base=base)
-        reliability = simulate_reliability(G, base_flows, capacities, m, T_max, p)
+    for scale in caps:
+        capacities = assign_capacities(G, m, flows, scale)
+        reliability = simulate_reliability(G, N, flows, capacities, m, T_max, p)
         results.append(reliability)
 
     plt.figure()
@@ -99,38 +108,30 @@ def experiment_2():
     plt.show()
 
 def experiment_3():
-    base_edges = [
-        (0,1), (0,3), (1,4), (1,5), (2,3), (2,6),
-        (3,7), (4,8), (5,9), (6,10), (7,11), (8,12),
-        (9,13), (10,14), (11,15), (12,16), (13,17), (14,18),
-        (15,19)
-    ]
-    G = nx.DiGraph()
-    G.add_nodes_from(range(20))
-    G.add_edges_from(base_edges)
+    G = generate_graph()
 
-    extra_edges = [(4,0), (6,1), (8,2), (10,5), (12,7), (14,9), (16,11), (17,13), (18,15), (19,16)]
-    m = 1000
-    T_max = 1.0
+    extra_edges = [(4,19), (6,11), (8,12), (10,15), (12,6), (14,19), (16,1), (17,3), (18,5), (19,6)]
+    T_max = 0.5
     p = 0.98
+    m = 1000
+    scale = 1.3
     results = []
-    step_graphs = []
-
-    base_flows = assign_flows(G, scale=1.3)
-    base_capacities = assign_capacities(G)
-    mean_cap = int(np.mean(list(base_capacities.values())))
+    flows = assign_flows(G, scale)
+    capacities = assign_capacities(G, m, flows)
+    mean_cap = int(np.mean(list(capacities.values())))
 
     for i in range(len(extra_edges) + 1):
-        Gi = nx.DiGraph()
-        Gi.add_nodes_from(G.nodes())
-        Gi.add_edges_from(base_edges + extra_edges[:i])
-        flows = assign_flows(Gi, scale=1.3)
-        capacities = {e: mean_cap for e in Gi.edges()}
-        reliability = simulate_reliability(Gi, flows, capacities, m, T_max, p)
+        if i > 0:
+            G.add_edge(extra_edges[i-1][0], extra_edges[i-1][1])
+
+        N = generate_N(len(G.nodes()))
+        flows[extra_edges[i-1]] = random.randint(100, 300)
+        capacities[extra_edges[i-1]] = mean_cap
+        reliability = simulate_reliability(G, N, flows, capacities, m, T_max, p)
         results.append(reliability)
 
     plt.figure()
-    plt.plot(range(len(results)), results, marker='^', color='orange')
+    plt.plot(range(len(results)), results, color='orange')
     plt.xlabel("Liczba dodatkowych krawędzi")
     plt.ylabel("Pr[T < T_max]")
     plt.title("Niezawodność vs Rozbudowa topologii")
