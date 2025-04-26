@@ -1,0 +1,147 @@
+body {
+    background-color:rgb(232, 232, 232);
+    padding: 0;
+    margin: 0;
+    font-family: "Shadows Into Light Two", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+header {
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+
+h1 {
+    margin: -1vh 0 0 0;
+    padding: 0;
+    color: rgb(34, 24, 0);
+    font-size: 75px;
+    justify-self: center;
+}
+
+#answer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+#gallows {
+    width: 300px;
+    height: 300px;
+    margin: 3em 5em;
+}
+
+.letterbox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 5em;
+    height: 5em;
+    margin: 8px;
+    border-bottom: 5px solid rgb(45, 45, 45);
+}
+
+.letter {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: 5em;
+}
+
+#keyboard {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.key {
+    font-size: 5vmax;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1em;
+    border: 0;
+    height: 1.2em;
+    margin: 8px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.key:hover {
+    background-color: #ccc;
+}
+
+#end {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 10;
+    position: absolute;
+    width: 30vmax;
+    max-width: 90vh;
+    height: 30vmax;
+    top: calc(50% - 15vmax);
+    left: calc(50% - 15vmax);
+    background-color: #dddddd;
+    border: 1px solid #999999;
+}
+
+#result {
+    top: 10px;
+    font-size: 5vmax;
+    margin: 3px;
+}
+
+.score {
+    font-size: 3vmax;
+    margin: 0;
+}
+
+#again {
+    font-family: "Shadows Into Light Two", cursive;
+    font-weight: bold;
+    width: 60%;
+    height: 6vmax;
+    background-color: #d7d7d7;
+    border: 3px solid #777777;
+    border-radius: 1vmax;
+    font-size: 3vmax;
+    cursor: pointer;
+}
+
+#result-separator {
+    height: 2vmax;
+}
+
+#ans {
+    font-size: 2.5vmax;
+    margin: -1vmax 0 0;
+    margin-left: 1vmax;
+    font-style: italic;
+}
