@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Device Status - Michał Waluś</title>
+        <link href="styles.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta name="description" content="Michał Waluś's simpe web page.">
+        <meta name="author" content="Michał Waluś">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="prism.css" rel="stylesheet" />
+    </head>
+    <body>
+        <nav>
+            <div class="navdivbig">
+                <a href="about.html" class="navlink">About Me</a>
+            </div>
+            <div class="navdivbig">
+                <a href="projects.html" class="navlink">Projects</a>
+            </div>
+            <details id="htmlmenu">
+                <summary>
+                    ☰
+                </summary>
+                <div class="navdivsmall">
+                    <a href="about.html" class="navlink">About Me</a>
+                </div>
+                <div class="navdivsmall">
+                    <a href="projects.html" class="navlink">Projects</a>
+                </div>
+            </details>
+        </nav>
+        <main>
+            <div class="content">
+                <section class="projectdetails">
+                    <h1>Device Status</h1>
+                    <img src="devstatus.png" class="projectimg" alt="Terminal showing device status">
+                    <p>Bash script showing current status of the device and netgraphs.</p>
+                    <p>It shows the current usage of internet (along network graphs), CPU's cores and RAM, while also showing uptime and battery.</p>
+                    <p>Here is a fragment of the code responsible for generating the graph of download and upload during last 10s:</p>
+                    <pre>
+                        <code class="language-bash">
+graph () {<br>
+    if [[ $dmax > 0 ]]; then<br>
+        for i in {0..9}; do<br>
+            dratio[$i]=$(( (10 * ${download[$i]} + ( $dmax >> 2 ) ) / $dmax * 10 ))<br>
+        done<br>
+    else<br>
+        dratio=(0 0 0 0 0 0 0 0 0 0)<br>
+    fi<br>
+<br>
+    if [[ $umax > 0 ]]; then<br>
+        for i in {0..9}; do<br>
+            uratio[$i]=$(( (10 * ${upload[$i]} + ( $umax >> 2 ) ) / $umax * 10 ))<br>
+        done<br>
+    else<br>
+        uratio=(0 0 0 0 0 0 0 0 0 0)<br>
+    fi<br>
+<br>
+    echo "Download graph" && tput cup 19 25 && echo "Upload graph"<br>
+    for i in {0..9}; do<br>
+        for j in {1..10}; do<br>
+            if [ ${dratio[$i]} -ge $(($j * 10)) ]; then<br>
+                tput cup $((30 - $j)) $((2 * $i)) && echo -e "\x1b[97;107m--\x1b[39;49m"<br>
+            fi<br>
+            if [ ${uratio[$i]} -ge $(($j * 10)) ]; then<br>
+                tput cup $((30 - $j)) $((25 + 2*$i)) && echo -e "\x1b[97;107m--\x1b[39;49m"<br>
+            fi<br>
+        done<br>
+    done<br>
+    tput cup 30 0<br>
+}<br>
+                        </code>
+                    </pre>
+                </section>
+            </div>
+            <footer>
+                Contact me: michal.p.walus@gmail.com
+            </footer>
+        </main>
+
+        <script src="main.js"></script>
+        <script src="prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Labyrinth in Bash - Michał Waluś</title>
+        <link href="styles.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta name="description" content="Michał Waluś's simpe web page.">
+        <meta name="author" content="Michał Waluś">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="prism.css" rel="stylesheet" />
+    </head>
+    <body>
+        <nav>
+            <div class="navdivbig">
+                <a href="about.html" class="navlink">About Me</a>
+            </div>
+            <div class="navdivbig">
+                <a href="projects.html" class="navlink">Projects</a>
+            </div>
+            <details id="htmlmenu">
+                <summary>
+                    ☰
+                </summary>
+                <div class="navdivsmall">
+                    <a href="about.html" class="navlink">About Me</a>
+                </div>
+                <div class="navdivsmall">
+                    <a href="projects.html" class="navlink">Projects</a>
+                </div>
+            </details>
+        </nav>
+        <main><script src="prism.js"></script>
+            <div class="content">
+                <section class="projectdetails">
+                    <h1>Labyrinth in Bash</h1>
+                    <img src="labyrinth.png" class="projectimg" alt="Labyrinth in terminal">
+                    <p>A simple labyrinth game in terminal, written in Bash.</p>
+                    <p>The labyrinth is randomly generated based on a modified Prim's algorythm. Its size is based on the size of the terminal.</p>
+                    <p>Here is a fragment of the code responsible for labyrinth's generation (we start with all walls and then remove them):</p>
+                    <pre>
+                        <code class="language-bash">
+check() {<br>
+    s=$1<br>
+    <br>
+    snext=$(( $s - 2 ))<br>
+    if [[ ${allowed[$snext]} = 2 && $snext -gt 0 ]]; then<br>
+        next=(${next[@]} $s $snext)<br>
+    fi<br>
+<br>
+    snext=$(( $s + 2 ))<br>
+    if [[ ${allowed[$snext]} = 2 && $snext -lt $total ]]; then<br>
+        next=(${next[@]} $s $snext)<br>
+    fi<br>
+<br>
+    snext=$(( $s - 2 * $cols ))<br>
+    if [[ ${allowed[$snext]} = 2 && $snext -gt 0 ]]; then<br>
+        next=(${next[@]} $s $snext)<br>
+    fi<br>
+<br>
+    snext=$(( $s + 2 * $cols ))<br>
+    if [[ ${allowed[$snext]} = 2 && $snext -lt $total ]]; then<br>
+        next=(${next[@]} $s $snext)<br>
+    fi<br>
+}<br>
+# while not empty<br>
+while [[ (! -z ${next[@]}) ]]; do<br>
+    # random pair<br>
+    id=$(( (2 * $RANDOM) % ${#next[@]} ))<br>
+<br>
+    s1=${next[$id]} # connected<br>
+    s2=${next[$(( $id + 1 ))]} # possibly disconnected<br>
+<br>
+    unset 'next[$id]'<br>
+    unset 'next[$(( $id + 1 ))]'<br>
+    # shift to avoid empty spaces<br>
+    next=(${next[@]})<br>
+<br>
+    if [[ ${allowed[$s2]} = 2 ]]; then<br>
+        check $s2<br>
+<br>
+        allowed[$s2]=1<br>
+        allowed[$(( ( $s1 + $s2 ) / 2 ))]=1<br>
+    fi<br>
+done
+                        </code>
+                    </pre>
+                </section>
+            </div>
+            <footer>
+                Contact me: michal.p.walus@gmail.com
+            </footer>
+        </main>
+
+        <script src="main.js"></script>
+        <script src="prism.js"></script>
+    </body>
+</html>

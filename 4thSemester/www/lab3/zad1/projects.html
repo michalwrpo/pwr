@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Projects - Michał Waluś</title>
+        <link href="styles.css" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta name="description" content="Michał Waluś's simpe web page.">
+        <meta name="author" content="Michał Waluś">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <nav>
+            <div class="navdivbig">
+                <a href="about.html" class="navlink">About Me</a>
+            </div>
+            <div class="navdivbig">
+                <a href="projects.html" class="navlink">Projects</a>
+            </div>
+            <details id="htmlmenu">
+                <summary>
+                    ☰
+                </summary>
+                <div class="navdivsmall">
+                    <a href="about.html" class="navlink">About Me</a>
+                </div>
+                <div class="navdivsmall">
+                    <a href="projects.html" class="navlink">Projects</a>
+                </div>
+            </details>
+        </nav>
+        <main>
+            <article class="content">
+                <h1>Projects</h1>
+                <div id="projects">
+                    <section class="projectdiv">
+                        <a href="labyrinth.html" class="projectlink">
+                            <h2>Labyrinth in Bash</h2>
+                        </a>
+                        <img src="labyrinth.png" class="projectimg" alt="Labyrinth in terminal">
+                        <p>A simple labyrinth game in terminal.</p>
+                    </section>
+                    <section class="projectdiv">
+                        <a href="chinese-checkers.html" class="projectlink">
+                            <h2>Chinese Checkers</h2>
+                        </a>
+                        <img src="chinese-checkers.png" class="projectimg" alt="Chinese checkers board">
+                        <p>Implementation of Chinese Checkers allowing for online play through web browser.</p>
+                    </section>
+                    <section class="projectdiv">
+                        <a href="devstatus.html" class="projectlink">
+                            <h2>Device Status</h2>
+                        </a>
+                        <img src="devstatus.png" class="projectimg" alt="Terminal showing device status">
+                        <p>Bash script showing current status of the device and net graphs.</p>
+                    </section>
+                    <section id="gallery" class="gallery"></section>
+                </div>
+            </article>
+            <footer>
+                Contact me: michal.p.walus@gmail.com
+            </footer>
+        </main>
+
+        <script src="main.js"></script>
+    </body>
+</html>
