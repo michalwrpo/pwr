@@ -61,7 +61,7 @@ h1 {
     text-align: center;
     margin: 0;
     padding: 0;
-    font-size: 5em;
+    font-size: 75px;
 }
 
 #keyboard {
@@ -143,4 +143,52 @@ h1 {
     margin: -1vmax 0 0;
     margin-left: 1vmax;
     font-style: italic;
+}
+
+@media only screen and (max-width: 600px) {
+    #gallows {
+        height: 70vmin;
+        width: 70vmin;
+    }    
+
+    .letterbox {
+        width: 25px;
+        height: 25px;
+        margin: 4px;
+        border-bottom: 2px solid rgb(45, 45, 45);
+    }
+
+    .letter {
+        font-size: 25px;
+    }
+
+    #keyboard {
+        margin-top: 20px;
+    }
+
+    .key {
+        font-size: 25px;
+    }
+}
+
+@media only screen and (max-width: 1200px) and (min-width: 600px) {
+    #gallows {
+        height: 70vmin;
+        width: 70vmin;
+    }    
+
+    .key {
+        font-size: 10vw;
+    }
+
+    .letter {
+        font-size: 7vw;
+    }
+
+    .letterbox {
+        width: 7vw;
+        height: 7vw;
+        margin: 6px;
+        border-bottom: 3.5px solid rgb(45, 45, 45);
+    }
 }

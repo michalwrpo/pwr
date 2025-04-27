@@ -33,6 +33,12 @@ rows.forEach(row => {
 
 function init() {
     word = words[Math.floor(Math.random() * words.length)]
+    if (localStorage.length > 0) {
+        word = localStorage.getItem("word");
+    } else {
+        localStorage.setItem("word", word);
+    }
+
     wordsplit = word.toUpperCase().split("");
     
     const answer = document.getElementById("answer");
@@ -65,15 +71,18 @@ function init() {
             button.style.color = "black";
             button.style.cursor = "pointer";
             button.disabled = false;
+            if (localStorage.getItem(letter)) {
+                guess(letter);
+            }
         });
     });
 }
 
 init();
 
-
 function guess(letter) {
     const key = document.getElementById('key-' + letter);
+    localStorage.setItem(letter, true);
     // weird blue required for the assignment 
     // key.style.backgroundColor = "blue";
     // key.style.color = "blue";
@@ -167,6 +176,8 @@ function draw() {
 }
 
 function end() {
+    localStorage.clear();
+
     rows.forEach(row => {
         row.forEach(letter => {
             const button = document.getElementById("key-" + letter);
@@ -195,5 +206,7 @@ function lose() {
 }
 
 function win() {
+    const resultField = document.getElementById("result");
+    resultField.textContent = "You win!";
     end();
 }
