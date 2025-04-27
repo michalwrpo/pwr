@@ -145,6 +145,22 @@ h1 {
     font-style: italic;
 }
 
+#giveup {
+    font-family: "Shadows Into Light Two", cursive;
+    font-size: 25px;
+    font-style: italic;
+    z-index: 1;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    border: 0;
+    cursor: pointer;
+}
+
+#giveup:hover {
+    background-color: rgb(232, 232, 232);
+}
+
 @media only screen and (max-width: 600px) {
     #gallows {
         height: 70vmin;

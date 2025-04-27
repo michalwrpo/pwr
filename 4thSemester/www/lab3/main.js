@@ -211,3 +211,8 @@ function win() {
     resultField.textContent = "You win!";
     end();
 }
+
+function giveUp() {
+    localStorage.clear();
+    init();
+}
