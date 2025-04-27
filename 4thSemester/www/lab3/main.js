@@ -32,11 +32,12 @@ rows.forEach(row => {
 });
 
 function init() {
-    word = words[Math.floor(Math.random() * words.length)]
+    let wordid = Math.floor(Math.random() * words.length);
+    word = words[wordid];
     if (localStorage.length > 0) {
-        word = localStorage.getItem("word");
+        word = words[localStorage.getItem("word")];
     } else {
-        localStorage.setItem("word", word);
+        localStorage.setItem("word", wordid);
     }
 
     wordsplit = word.toUpperCase().split("");
