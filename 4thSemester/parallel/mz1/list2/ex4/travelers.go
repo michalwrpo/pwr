@@ -10,7 +10,8 @@ import (
 
 const (
 	NrOfTravelers = 15
-	MaxOccupants  = 10
+	MaxOccupants  = 25
+	MaxTraps      = 100
 	MinSteps      = 10
 	MaxSteps      = 100
 	MinDelay      = 10 * time.Millisecond
@@ -50,6 +51,7 @@ type Field struct {
 	traces     TraceSequence
 	startTime  time.Time
 	Pos        Position
+	ID         int
 }
 
 func (f *Field) RecordTrace() {
@@ -57,7 +59,7 @@ func (f *Field) RecordTrace() {
 	f.traces.Last++
 	f.traces.TraceArray[f.traces.Last] = Trace{
 		TimeStamp: now,
-		ID:        0,
+		ID:        f.ID,
 		Position:  Position{f.Pos.X, f.Pos.Y},
 		Symbol:    '#',
 	}
@@ -108,25 +110,49 @@ func (O *OccupantIDType) Get() int {
 	return id
 }
 
+type TrapIDType struct {
+	ID int
+	mu sync.Mutex
+}
+
+func (t *TrapIDType) Get() int {
+	t.mu.Lock()
+	id := -1
+	if t.ID < NrOfTravelers+MaxOccupants+MaxTraps {
+		id = t.ID
+		t.ID += 1
+	}
+	t.mu.Unlock()
+	return id
+}
+
 var OccupantID OccupantIDType = OccupantIDType{
 	ID: NrOfTravelers,
+}
+
+var TrapID TrapIDType = TrapIDType{
+	ID: NrOfTravelers + MaxOccupants,
 }
 
 func FieldTask(x, y int, startTime time.Time, printer *Printer) {
 	g := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	r := rand.Intn(20)
+	r := rand.Intn(10)
 
 	if r == 0 {
-		Board[x][y].trapped = true
-		Board[x][y].RecordTrace()
+		id := TrapID.Get()
+		if id > 0 {
+			Board[x][y].ID = id
+			Board[x][y].trapped = true
+			Board[x][y].RecordTrace()
+		}
 		return
 	}
 
 	for {
 		select {
 		case <-time.After(time.Duration(g.Intn(100)) * time.Millisecond):
-			if g.Intn(100) == 0 {
+			if g.Intn(30) == 0 {
 				field := Board[x][y]
 				if field.TryTake(false, 10*time.Millisecond) {
 					id := OccupantID.Get()
@@ -200,6 +226,7 @@ func (O *Occupant) Run(startTime time.Time, printer *Printer) {
 
 					field := Board[O.Position.X][O.Position.Y]
 					if field.trapped {
+						time.Sleep(time.Duration(5) * time.Millisecond)
 						O.Symbol = '*'
 						recordTrace()
 						time.Sleep(time.Duration(100) * time.Millisecond)
@@ -239,7 +266,11 @@ func MoveTraveler(position *Position, dx, dy int) bool {
 }
 
 func (p *Printer) PrintTrace(trace Trace) {
-	fmt.Printf("%f  %d  %d  %d  %c\n", float64(trace.TimeStamp.Microseconds())/1e6, trace.ID, trace.Position.X, trace.Position.Y, trace.Symbol)
+	Symbol := string(trace.Symbol)
+	if trace.Symbol == '*' {
+		Symbol = "\\*"
+	}
+	fmt.Printf("%f  %d  %d  %d  %s\n", float64(trace.TimeStamp.Microseconds())/1e6, trace.ID, trace.Position.X, trace.Position.Y, Symbol)
 }
 
 func (p *Printer) PrintTraces(traces TraceSequence) {
@@ -337,7 +368,7 @@ func main() {
 	printer := &Printer{}
 
 	// Initialize trace storage
-	fmt.Printf("-1 %d %d %d\n", NrOfTravelers+MaxOccupants, BoardWidth, BoardHeight)
+	fmt.Printf("-1 %d %d %d\n", NrOfTravelers+MaxOccupants+MaxTraps, BoardWidth, BoardHeight)
 
 	for x := range BoardWidth {
 		for y := range BoardHeight {

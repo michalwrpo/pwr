@@ -3,11 +3,13 @@ with Ada.Numerics.Float_Random; use Ada.Numerics.Float_Random;
 with Random_Seeds; use Random_Seeds;
 with Ada.Real_Time; use Ada.Real_Time;
 with Ada.Characters.Handling; use Ada.Characters.Handling;
+with System;
 
 procedure  Travelers is
    -- Travelers moving on the board
    Nr_Of_Travelers : constant Integer := 15;
-   Max_Occupants : constant Integer := 10;
+   Max_Occupants : constant Integer := 25;
+   Max_Traps : constant Integer := 100;
 
    Min_Steps : constant Integer := 10 ;
    Max_Steps : constant Integer := 100 ;
@@ -29,6 +31,7 @@ procedure  Travelers is
    -- Random seeds for the tasks' random number generators
 
    Seeds : Seed_Array_Type(1 .. Board_Height * Board_Width) := Make_Seeds(Board_Height * Board_Width);
+
 
    -- Types, procedures and functions
 
@@ -105,12 +108,15 @@ procedure  Travelers is
    procedure Print_Trace( Trace : Trace_Type ) is
       Symbol : String := ( ' ', Trace.Symbol );
    begin
+      if Trace.Symbol = '*' then
+         Symbol := "\*";
+      end if;
       Put_Line(
          Duration'Image( Trace.Time_Stamp ) & " " &
          Integer'Image( Trace.Id ) & " " &
          posx'Image( Trace.Position.X ) & " " &
          posy'Image( Trace.Position.Y ) & " " &
-         ( ' ', Trace.Symbol ) -- print as string to avoid: '
+         Symbol
       );
    end Print_Trace;
 
@@ -142,7 +148,6 @@ procedure  Travelers is
 
    -- occupants
 
-   --  Occupant_ID: Integer := Nr_Of_Travelers;
    protected Occupant_ID is
       entry Get(OID: out Integer);
    private
@@ -164,6 +169,28 @@ procedure  Travelers is
          Free := True;
       end Get;
    end Occupant_ID;
+
+   protected Trap_ID is
+      entry Get(TID: out Integer);
+   private
+      ID : Integer := Nr_Of_Travelers + Max_Occupants;
+      Free : Boolean := True;
+   end Trap_ID;
+
+   protected body Trap_ID is
+      entry Get(TID: out Integer)
+         when Free is
+      begin
+         Free := False;
+         if ID < Nr_Of_Travelers + Max_Occupants + Max_Traps then
+            TID := ID;
+            ID := ID + 1;
+         else
+            TID := -1;
+         end if;
+         Free := True;
+      end Get;
+   end Trap_ID;
 
    type Occupant_Type is record
       Id: Integer;
@@ -321,6 +348,7 @@ procedure  Travelers is
       Pos: Position_Type;
       Rand: Integer;
       OID: Integer;
+      TID: Integer;
       Occupied: Boolean := False;
       Lifespan: Integer;
       Time_Limit: Time;
@@ -334,7 +362,7 @@ procedure  Travelers is
          Traces.Last := Traces.Last + 1;
          Traces.Trace_Array( Traces.Last ) := ( 
             Time_Stamp => Time_Stamp,
-            Id => 0,
+            Id => TID,
             Position => Pos,
             Symbol => '#'
          );
@@ -344,12 +372,15 @@ procedure  Travelers is
       accept Init(Position: Position_Type; Seed: Integer) do
          Pos := Position;
          Reset(G, Seed);
-         Rand := Integer( Float'Floor( 20.0 * Random(G) ) );
+         Rand := Integer( Float'Floor( 10.0 * Random(G) ) );
          if Rand = 0 then
-            Trapped := True;
-            Time_Stamp := To_Duration(Clock - Start_Time);
-            Store_Trace;
-            Board(Pos.X, Pos.Y).Trap;
+            Trap_ID.Get(TID);
+            if TID > 0 then
+               Trapped := True;
+               Time_Stamp := To_Duration(Clock - Start_Time);
+               Store_Trace;
+               Board(Pos.X, Pos.Y).Trap;
+            end if;
          end if;
       end Init;
 
@@ -359,7 +390,7 @@ procedure  Travelers is
                exit;
             end if;
 
-            Rand := Integer( Float'Floor( 100.0 * Random(G) ) );
+            Rand := Integer( Float'Floor( 20.0 * Random(G) ) );
 
             select
                accept Occupy(Until_Time: Time) do
@@ -665,7 +696,7 @@ procedure  Travelers is
 begin
    -- Print the line with the parameters needed for display script:
    Put_Line(
-      "-1 " & Integer'Image( Nr_Of_Travelers + Max_Occupants ) 
+      "-1 " & Integer'Image( Nr_Of_Travelers + Max_Occupants + Max_Traps ) 
       & " " & Integer'Image( Board_Width ) 
       & " " & Integer'Image( Board_Height )      
       );
