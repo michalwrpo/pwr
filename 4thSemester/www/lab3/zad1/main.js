@@ -64,21 +64,36 @@ function loadImage(url) {
     return new Promise(function (resolve, reject) {
         const img = new Image();
         img.src = url;
+        img.alt = url;
         img.onload = () => resolve(img);
         img.onerror = () => reject(
-            new Error(`Nie udało się załadować obrazka: ${url}`)
+            img.alt
+            // new Error(`Nie udało się załadować obrazka: ${url}`)
         );
     });
 }
 
 // Ładowanie wszystkich obrazów równolegle
-Promise.all(imageUrls.map(loadImage)).then(function (images) {
-    images.forEach(function (img) {
-        gallery.appendChild(img);
+Promise.allSettled(imageUrls.map(loadImage))
+    .then(results => {
+        results.forEach(result => {
+            if (result.status === "fulfilled") {
+                gallery.appendChild(result.value);
+            } else {
+                gallery.innerHTML += result.reason;
+                console.error("Nie udało się załadować obrazka:", result.reason);
+            }
+        });
     });
-}).catch(function (error) {
-    console.error("Wystąpił błąd przy ładowaniu galerii:", error);
-    gallery.innerHTML = `
-    <p>Nie udało się załadować zdjęć. Spróbuj ponownie później.</p>
-    `;
-});
+
+
+// Promise.all(imageUrls.map(loadImage)).then(function (images) {
+//     images.forEach(function (img) {
+//         gallery.appendChild(img);
+//     });
+// }).catch(function (error) {
+//     console.error("Wystąpił błąd przy ładowaniu galerii:", error);
+//     gallery.innerHTML = `
+//     <p>Nie udało się załadować zdjęć. Spróbuj ponownie później.</p>
+//     `;
+// });
