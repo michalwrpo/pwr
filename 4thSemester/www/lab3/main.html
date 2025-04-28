@@ -13,25 +13,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet"></head>
 
 <body>
-        <header>
-            <h1>HANGMAN</h1>
-        </header>
-        <main>
-            <canvas id="gallows" width="300" height="300"></canvas>
-            <div id="answer">
-                <!-- Here JS will insert places for letters -->
-            </div>
-            <div id="keyboard"></div>
-        </main>
-        <div id="end">
-            <h2 id="result"></h2>
-            <p id="ans"></p>
-            <div id="result-separator"></div>
-            <p id="correct" class="score"></p>
-            <p id="misses" class="score"></p>
-            <button id="again" onclick="init()">Play Again</button>
+    <header>
+        <h1>HANGMAN</h1>
+    </header>
+    <main>
+        <canvas id="gallows" width="300" height="300"></canvas>
+        <div id="answer">
+            <!-- Here JS will insert places for letters -->
         </div>
-        <button id="giveup" onclick="giveUp()">Give up?</button>
+        <div id="keyboard"></div>
+    </main>
+    <div id="end">
+        <h2 id="result"></h2>
+        <p id="ans"></p>
+        <div id="result-separator"></div>
+        <p id="correct" class="score"></p>
+        <p id="misses" class="score"></p>
+        <button id="again" onclick="init()">Play Again</button>
+    </div>
+    <button id="giveup" onclick="giveUp()">Give up?</button>
     <script src="main.js"></script>
 </body>
 </html>
