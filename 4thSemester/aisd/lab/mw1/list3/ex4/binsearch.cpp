@@ -17,9 +17,9 @@ bool compareEqual(long* comparisons, long value1, long value2) {
 long binarySearch(long* arr, long low, long high, long value, long* comparisons) {
     if (high - low < 1) {
         if (compareEqual(comparisons, arr[low], value)) {
-            return low;
+            return 1;
         }
-        return -1;
+        return 0;
     }
 
     long mid = (low + high + 1) / 2;
