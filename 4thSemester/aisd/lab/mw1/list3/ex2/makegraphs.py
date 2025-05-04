@@ -10,7 +10,7 @@ def makegraph(fileName: str, n: List[int], A: List[float], B: List[float], C: Li
     plt.clf()
     plt.grid(True)
     plt.margins(0, 0)
-    plt.ylim(bottom=(0.95*min(A + B + C + D + E)), top=(1.05*max(A + B + C + D + E)))
+    plt.ylim(bottom=(0.95*min(A + B + C + D + E + F)), top=(1.05*max(A + B + C + D + E + F)))
     plt.plot(n, A, c='r', label=aname)
     plt.plot(n, B, c='g', label=bname)
     plt.plot(n, C, c='b', label=cname)
@@ -42,9 +42,6 @@ if __name__ == "__main__":
         rsel.append(list(map(float, data[1 + i].split())))
         sel.append(list(map(float, data[7 + i].split())))
 
-
-        
-    # small n
     makegraph(
         "selects_comps.png", 
         n, 
