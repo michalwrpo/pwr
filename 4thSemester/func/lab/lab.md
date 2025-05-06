@@ -897,3 +897,83 @@ Zatem $H$ jest poprawnie zdefiniowane.
 2. Niech $f: X \rightarrow Y, g: Y \rightarrow X$. <br>
 $H(id_X) = G(F(id_X)) = G(id_{F(X)}) = id_{G(F(X))} = id_{H(X)} \\$
 $H(g \circ f) = G(F(g \circ f)) = G(F(g) \circ F(f)) = G(F(g)) \circ G(F(f)) = H(g) \circ H(f)$
+
+### Zadanie 63
+
+$PS_1, PS_2 : ob(Set) \rightarrow ob(Set) \\$
+$PS_1(X) = PS_2(X) = \{Y : Y \subseteq X \}$
+
+1. $f: X \rightarrow Y \\$
+    $PS_1(f)(A) = f[A] \\$
+    $PS_1(X) = \mathcal{P}(X) \\$
+    $PS_1(f)(X) = f[X] \in \mathcal{P}(Y) \\$
+
+    Zatem $PS_1(X) \xrightarrow{PS_1(f)} PS_1(Y) \\ \\$
+
+    $g: W \rightarrow X \\$
+    Niech $A \in W \\$
+    $PS_1(f \circ g)(A) = PS_1(f(g))(A) = f(g)[A] = f[g[A]] = PS_1(f)(g[A]) = PS_1(f)(PS_1(g)(A)) = (PS_1(f) \circ PS_1(g))(A) \\$
+
+    Niech $A \in X \\$
+    $PS_1(id_X)(A) = id_X[A] = A = id_{\mathcal{P}(X)}(A) = id_{PS_1(X)}(A)$
+
+    Zatem $PS_1$ jest funktorem.
+
+2. $f: X \rightarrow Y \\$
+    $PS_2(f)(A) = f[A] \cup (Y \backslash f[X]) \in \mathcal{P}(Y) \\$
+
+    $g: W \rightarrow X \\$
+    Niech $A \in W \\$
+    $(PS_2(f) \circ PS_2(g))(A) = PS_2(f)(g[A] \cup (X \backslash g[W])) = f[g[A] \cup (X \backslash g[W])] \cup (Y \backslash f[X]) = f[g[A]] \cup f[X \cap (g[W])^C] \cup (Y \cap (f[X])^C) = f[g[A]] \cup (((f[X \cap (g[W])^C]) \cup Y) \cap ((f[X \cap (g[W])^C]) \cup (f[X])^C)) = f[g[A]] \cup (Y \cap (Y \backslash f[g[W]])) = f[g[A]] \cup (Y \backslash f[g[W]]) = PS_2(f(g))(A) = PS_2(f \circ g)(A)$
+
+    Niech $A \in X \\$
+    $PS_2(id_X)(A) = id_X[A] \cup (X \backslash id_X[X]) = id_X[A] = id_{\mathcal{P}(X)}(A) = id_{PS_2(X)}(A)$
+
+### Zadanie 64
+
+$xs = [x_1, x_2, ..., x_n] \\$
+$ys = [y_1, y_2, ..., y_m]$
+
+map f (xs ++ ys) = $[f(x_1), f(x_2), ..., f(x_n), f(y_1), f(y_2), ..., f(y_m)]$
+
+map f xs = $[f(x_1), f(x_2), ..., f(x_n)]$
+
+map f ys = $[f(y_1), f(y_2), ..., f(y_m)]$
+
+(map f xs) ++ (map f ys) = $[f(x_1), f(x_2), ..., f(x_n), f(y_1), f(y_2), ..., f(y_m)]$
+
+(map f) . concat - działa na liście list, składa jest w jedną listę i nakłada na nie f
+
+concat . map (map f) - działa na liście list, na każdą listę nakłada map f - na każdy element tej listy nakłada f i składa w jedną listę
+
+### Zadanie 65
+
+```haskell
+f x = x ++ x
+
+h: a -> a
+f xs = map h xs
+```
+
+1. $xs = [x_1, ..., x_n]\\$
+    f xs $= [x_1, ..., x_n, x_1, ..., x_n]$, długość $= 2n \\$
+    map h xs $= [h(x_1), ..., h(x_n)]$, długość $= n$
+
+2. $f[x_1, ..., x_n] = [[x_1], [x_1, x_2], ..., [x_1, ..., x_n]]$
+   Jesli istnieje takie h, że f xs = map h xs, to wted h działa na każdym elemencie xs. Zatem $h(x_1) = [x_1]$ i $h(x_2) = [x_1, x_2]$. Rozważmy ys = $[x_2, x_1, x_3, x_4, ..., x_n]$, wtedy f ys = $[[x_2], [x_2, x_1], ...]$, ale map h ys = $[[x_1, x_2], [x_1], ...]$. Zatem takie h nie istnieje.
+
+### Zadanie 66
+
+```haskell
+data T1 a = T1 ( Int => a )
+data T2 a = T2 ( a => Int )
+data T3 a = T3 ( a => a )
+data T4 a = T4 ( ( Int => a ) => Int )
+data T5 a = T5 ( ( a => Int ) => Int )
+```
+
+T3 to identyczność
+
+### Zadanie 68
+
+$id = (id_A)_{A \in ob(Set)}$, $id: Id \dot\rightarrow Id$
