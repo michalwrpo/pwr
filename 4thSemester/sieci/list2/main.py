@@ -23,6 +23,12 @@ def generate_N(size, scale=1):
     np.fill_diagonal(N, 0)
     return N
 
+def scale_N(N, scale):
+    for i in range(len(N)):
+        for j in range(len(N[i])):
+            N[i][j] *= scale
+    return N
+
 # --- Przydziel przepływy losowo ---
 def assign_flows(G, N, scale=1):
     a = {e: 0 for e in G.edges()}
@@ -41,7 +47,7 @@ def assign_flows(G, N, scale=1):
 def assign_capacities(m, a, scale=1.0):
     c = {e: 0 for e in G.edges()}
     for e in G.edges():
-        c[e] = int(m * a[e] * (1.05 + random.random() / 2) * scale)
+        c[e] = int(m * a[e] * (2 + random.random() / 2) * scale)
     return c
 
 # --- Oblicz opóźnienie T ---
@@ -55,29 +61,36 @@ def compute_T(G, N, flows, capacities, m):
     return T / total_packets if total_packets else 0
 
 # --- Symulacja niezawodności ---
-def simulate_reliability(G, N, scale, capacities, m, T_max, p, trials=500):
+def simulate_reliability(G, N, capacities, m, T_max, p, trials=500):
     success = 0
     for _ in range(trials):
+        failed = False
         active_edges = [e for e in G.edges() if random.random() < p]
         subG = G.edge_subgraph(active_edges).copy()
         if nx.is_connected(subG) and subG.nodes == G.nodes:
-            flows = assign_flows(subG, N, scale)
-            T = compute_T(subG, N, flows, capacities, m)
-            if T < T_max:
-                success += 1
+            flows = assign_flows(subG, N)
+            for e in subG.edges:
+                if capacities[e] <= m * flows[e]:
+                    failed = True
+                    break
+            if not failed:
+                T = compute_T(subG, N, flows, capacities, m)
+                if T < T_max:
+                    success += 1
     return success / trials
 
 def experiment_1(G, N):
-    T_max = 0.15
-    p = 0.98
+    T_max = 0.05
+    p = random.randint(960, 1000)/1000
     m = 1000
     scales = np.linspace(1.0, 4.0, 10)
     results = []
     base_flows = assign_flows(G, N)
     capacities = assign_capacities(m, base_flows)
 
-    for scale in scales:
-        reliability = simulate_reliability(G, N, scale, capacities, m, T_max, p)
+    for _ in range(10):
+        N = scale_N(N, 1.05)
+        reliability = simulate_reliability(G, N, capacities, m, T_max, p)
         results.append(reliability)
 
     plt.figure()
@@ -86,22 +99,21 @@ def experiment_1(G, N):
     plt.ylabel("Pr[T < T_max]")
     plt.title("Niezawodność vs Natężenie strumienia")
     plt.grid(True)
+    plt.savefig("experiment1.png")
     plt.show()
 
 def experiment_2(G, N):
     flows = assign_flows(G, N, scale=1.5)
     m = 1000
-    T_max = 0.15
-    p = 0.98
+    T_max = 0.05
+    p = random.randint(960, 1000)/1000
     scales = np.linspace(1.0, 4.0, 10)
     results = []
 
     for scale in scales:
         capacities = assign_capacities(m, flows, scale)
-        reliability = simulate_reliability(G, N, scale, capacities, m, T_max, p)
+        reliability = simulate_reliability(G, N, capacities, m, T_max, p)
         results.append(reliability)
-
-    print(results)
 
     plt.figure()
     plt.plot(scales, results, marker='s', color='green')
@@ -109,12 +121,14 @@ def experiment_2(G, N):
     plt.ylabel("Pr[T < T_max]")
     plt.title("Niezawodność vs Przepustowość")
     plt.grid(True)
+    plt.savefig("experiment2.png")
     plt.show()
 
 def experiment_3(G, N):
-    extra_edges = [(4,19), (6,11), (8,12), (10,15), (12,6), (14,19), (16,1), (17,3), (18,5), (19,6)]
-    T_max = 0.15
-    p = 0.98
+    extra_edges = [(4,19), (6,11), (8,12), (10,15), (6,12), (14,19), (1,16), (3,17), (5,18), (6,19)]
+    N = scale_N(N, 0.9)
+    T_max = 0.05
+    p = random.randint(960, 1000)/1000
     m = 1000
     scale = 1.3
     results = []
@@ -127,9 +141,8 @@ def experiment_3(G, N):
             G.add_edge(extra_edges[i-1][0], extra_edges[i-1][1])
 
         N = generate_N(len(G.nodes()))
-        flows[extra_edges[i-1]] = random.randint(100, 300)
         capacities[extra_edges[i-1]] = mean_cap
-        reliability = simulate_reliability(G, N, scale, capacities, m, T_max, p)
+        reliability = simulate_reliability(G, N, capacities, m, T_max, p)
         results.append(reliability)
 
     plt.figure()
@@ -138,6 +151,7 @@ def experiment_3(G, N):
     plt.ylabel("Pr[T < T_max]")
     plt.title("Niezawodność vs Rozbudowa topologii")
     plt.grid(True)
+    plt.savefig("experiment3.png")
     plt.show()
 
 if __name__ == "__main__":
