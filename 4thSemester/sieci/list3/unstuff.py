@@ -53,29 +53,51 @@ def extract_frame(data):
 
 
 if __name__ == '__main__':
+    FLAG = '01111110'
     input_file = 'W.txt'
     output_file = 'Z_odtworzony.txt'
     generator = '10001000000100001'  # CRC-16-CCITT
+    correct = 0
+    correct_data = []
 
     # 1. Wczytaj zawartość pliku W
     with open(input_file, 'r') as f:
-        raw_frame = f.read().strip()
+        raw = f.read().strip()
 
     try:
-        # 2. Usuń flagi
-        stuffed_data = extract_frame(raw_frame)
+        start = -1
+        i = 0
+        while i < len(raw):
+            if raw[i:i+8] == FLAG:
+                if start == -1 or i - start == 8:
+                    start = i
+                else:
+                    raw_frame = raw[start:i+8]
 
-        # 3. Wykonaj de-stuffing
-        unstuffed_data = bit_unstuff(stuffed_data)
+                    # 2. Usuń flagi
+                    stuffed_data = extract_frame(raw_frame)
 
-        # 4. Sprawdź poprawność CRC
-        if verify_crc(unstuffed_data, generator):
-            # 5. Usuń CRC i zapisz dane
-            original_data = unstuffed_data[:-len(generator)+1]
-            with open(output_file, 'w') as out:
+                    # 3. Wykonaj de-stuffing
+                    unstuffed_data = bit_unstuff(stuffed_data)
+
+                    # 4. Sprawdź poprawność CRC
+                    if verify_crc(unstuffed_data, generator):
+                        # 5. Usuń CRC i zapisz dane
+                        original_data = unstuffed_data[:-len(generator)+1]
+                        correct += 1
+                        correct_data.append(original_data)
+                        start = -1
+                    else:
+                        start = i
+                i += 8
+            else:
+                i += 1
+
+
+        with open(output_file, 'w') as out:
+            for original_data in correct_data:
                 out.write(original_data)
-            print("Dane poprawne, zapisano do:", output_file)
-        else:
-            print("Błąd CRC: dane uszkodzone.")
+
+        print(f"Ramki poprawne: {correct}")    
     except ValueError as ve:
         print("Błąd:", ve)

@@ -71,39 +71,71 @@ def verify_crc(data_with_crc, generator='10001000000100001'):
     return mod2div(data_with_crc, generator) == '0'*(len(generator)-1)
 
 
-def write_framed_to_file(output_filename, bitstream):
-    FLAG = '01111110'
+def write_frames_to_file(output_filename, bitstream):
     with open(output_filename, 'w') as f:
-        f.write(FLAG + bitstream + FLAG)
+        for frame in bitstream:
+            f.write(frame)
 
+def add_flags(frame):
+    FLAG = '01111110'
+    return FLAG + frame + FLAG    
+
+def to_frames(bits, size, generator):
+    frames = []
+    while len(bits) > size:
+        frame = bits[:size]
+        
+        # CRC
+        frame = encode_data(frame, generator)
+
+        # bit stuffing
+        frame = bit_stuff(frame)
+
+        # add flags
+        frame = add_flags(frame)
+
+        frames.append(frame)
+        bits = bits[size:]
+    frame = encode_data(bits)
+    frame = bit_stuff(frame)
+    frame = add_flags(frame)
+    frames.append(frame)
+    
+    return frames
 
 if __name__ == '__main__':
     input_file = 'Z.txt'
     output_file = 'W.txt'
     generator = '10001000000100001'  # CRC-16-CCITT
+    size = 100
 
-    # 1. Wczytaj dane
+    # load data
     bits = read_bits_from_file(input_file)
 
-    # 2. Zakoduj CRC
-    bits_with_crc = encode_data(bits, generator)
+    frames = to_frames(bits, size, generator)
 
-    # 3. Rozpychanie bitów
-    stuffed_bits = bit_stuff(bits_with_crc)
-
-    # 4. Dodaj flagi i zapisz do pliku
-    write_framed_to_file(output_file, stuffed_bits)
+    write_frames_to_file(output_file, frames)
 
     print("Dane zostały sformatowane i zapisane do pliku:", output_file)
 
     # (Opcjonalnie) Odczytaj i sprawdź poprawność
     print("Sprawdzanie poprawności CRC z zapisanej ramki:")
+    correct, incorrect = 0, 0
     with open(output_file, 'r') as f:
         raw = f.read().strip()
         if raw.startswith('01111110') and raw.endswith('01111110'):
-            frame = raw[len('01111110'):-len('01111110')]
-            unstuffed = bit_unstuff(frame)
-            is_valid = verify_crc(unstuffed, generator)
-            print("CRC poprawne." if is_valid else "Błąd CRC!")
+            raw = raw.split("01111110")
+            for bits in raw:
+                if len(bits) == 0:
+                    raw.remove(bits)
+
+            for frame in raw:
+                unstuffed = bit_unstuff(frame)
+                is_valid = verify_crc(unstuffed, generator)
+                if is_valid:
+                    correct += 1
+                else:
+                    incorrect += 1
+            print(f"Ramki poprawne: {correct}\nRamki niepoprawne: {incorrect}")    
         else:
             print("Niepoprawny format ramki (brak flag).")
