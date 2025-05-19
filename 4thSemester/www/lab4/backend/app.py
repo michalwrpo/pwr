@@ -121,7 +121,7 @@ def register():
     conn.commit()
     cur.close()
 
-    return jsonify({'message': 'User registered successfully.'}), 200
+    return jsonify({'message': 'User registered successfully.'}), 201
 
 # Delete your account
 @app.route('/users/', methods=['DELETE'])
@@ -341,7 +341,7 @@ def products():
         cur.execute(f"INSERT INTO Products (name, description, price) VALUES ('{name}', '{description}', {price});")
         conn.commit()
         cur.close()
-        return jsonify({'message': "Added product."}), 200
+        return jsonify({'message': "Added product."}), 201
 
 @app.route('/products/<int:product_id>', methods=['PUT', 'DELETE'])
 def edit_product(product_id):

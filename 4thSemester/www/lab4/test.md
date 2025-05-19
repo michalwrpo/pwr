@@ -62,7 +62,7 @@ Output:
     "message": "User registered successfully."
 }
 ```
-Code: 200
+Code: 201
 
 #### Rejestracja (Użytkownik istnieje)
 
@@ -323,7 +323,7 @@ Output:
     "message": "User created successfully."
 }
 ```
-Code: 200
+Code: 201
 
 Authorization: Administrator <br>
 Typ: POST <br>
@@ -342,7 +342,7 @@ Output:
     "message": "User created successfully."
 }
 ```
-Code: 200
+Code: 201
 
 #### POST (niewłaściwy typ)
 
@@ -553,7 +553,7 @@ Output:
     "message": "Added product."
 }
 ```
-Code: 200
+Code: 201
 
 Authorization: Administrator <br>
 Typ: POST <br>
@@ -572,7 +572,7 @@ Output:
     "message": "Added product."
 }
 ```
-Code: 200
+Code: 201
 
 Authorization: Administrator <br>
 Typ: POST <br>
@@ -629,7 +629,7 @@ Output:
     "message": "Added product."
 }
 ```
-Code: 200
+Code: 201
 
 #### GET (z parametrami)
 
@@ -1122,7 +1122,7 @@ Output:
     "message": "Review added successfully"
 }
 ```
-Code: 200
+Code: 201
 
 Authorization: Użytkownik/Administrator <br>
 Typ: POST <br>
