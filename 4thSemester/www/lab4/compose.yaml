@@ -1,0 +1,44 @@
+services:
+  # PostgreSQL https://hub.docker.com/_/postgres
+  database:
+    container_name: wwwlab-database
+    image: postgres:17
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: superuser
+      POSTGRES_PASSWORD: superuser # ${POSTGRES_PASSWORD}
+      POSTGRES_DB: wwwlab
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - database-data:/var/lib/postgresql/data
+      - ./database/:/docker-entrypoint-initdb.d/
+    networks:
+      - wwwlab-internal
+  
+  # Python https://hub.docker.com/_/python/
+  backend:
+    container_name: wwwlab-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - 5000:5000
+    environment:
+      - DATABASE_URL=postgres://appuser:appuser@wwwlab-database:5432/wwwlab?sslmode=disable
+    depends_on:
+      - database
+    stop_grace_period: 1s
+    networks:
+      - wwwlab-internal
+
+networks:
+  wwwlab-internal:
+    driver: bridge
+
+volumes:
+  database-data:
+    driver: local
