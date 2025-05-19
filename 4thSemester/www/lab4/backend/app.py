@@ -45,12 +45,16 @@ def hash_password(password):
 def check_password_hash(password, potential_password):
     return password == hash_password(potential_password)
 
+@app.errorhandler(400)
+def bad_request(e):
+    return jsonify({'message': e.description}), 400
+
 @app.errorhandler(401)
 def unauthorized(e):
     return jsonify({'message': e.description}), 401
 
 @app.errorhandler(403)
-def unauthorized(e):
+def forbidden(e):
     return jsonify({'message': e.description}), 403
 
 # Login
@@ -236,14 +240,14 @@ def products():
         which = 0
 
         if less:
-            if not less.isnumeric():
+            if not str(less).isnumeric():
                 return jsonify({'message': "Less has to be a positive number."}), 400
             less = int(less)
             if less < 1:
                 return jsonify({'message': "Less has to be a positive number."}), 400
             which += 1
         if more:
-            if not more.isnumeric():
+            if not str(more).isnumeric():
                 return jsonify({'message': "More has to be a nonnegative number."}), 400
             more = int(more)
             if more < 0:
@@ -313,6 +317,17 @@ def products():
             description = request.form["description"]
             price = request.form["price"]
 
+        if len(name) < 4:
+            return jsonify({'message': "Name must be at least 4 characters long."}), 400
+
+        if len(description) < 5:
+            return jsonify({'message': "Description must be at least 5 characters long."}), 400
+
+        if not str(price).isnumeric():
+            return jsonify({'message': "Price must be a positive number."}), 400
+
+        price = int(price)
+
         if price < 1:
             cur.close()
             return jsonify({'message': "Price must be positive."}), 400
@@ -357,14 +372,18 @@ def edit_product(product_id):
         fields = []
 
         if name:
+            if len(name) < 4:
+                return jsonify({'message': "Name must be at least 4 characters long."}), 400
             fields.append(f"name = '{name}'")
         if description:
+            if len(description) < 5:
+                return jsonify({'message': "Description must be at least 5 characters long."}), 400
             fields.append(f"description = '{description}'")
         if price or price == 0:
-            try:
-                price = int(price)
-            except:
+            if not str(price).isnumeric():
                 return jsonify({'message': "Price must be a positive number."}), 400
+            price = int(price)
+
             if price < 1:
                 cur.close()
                 return jsonify({'message': "Price must be positive."}), 400
@@ -418,8 +437,16 @@ def handle_reviews(product_id):
     # POST: Add a review
     if request.method == 'POST':
         rating = data.get('rating')
-        if not rating:
+        if not rating and rating != 0:
             return jsonify({'message': 'Rating is required'}), 400
+        
+        if not str(rating).isnumeric():
+            return jsonify({'message': 'Rating has to be a number 1-10'}), 400
+        
+        rating = int(rating)
+
+        if rating < 1 or rating > 10:
+            return jsonify({'message': 'Rating has to be a number 1-10'}), 400
 
         # Check if review already exists
         cur.execute(f"SELECT id FROM Reviews WHERE user_id = {user_id} AND product_id = {product_id}")
@@ -437,8 +464,16 @@ def handle_reviews(product_id):
     # PUT: Edit existing review
     elif request.method == 'PUT':
         rating = data.get('rating')
-        if not rating:
+        if not rating and rating != 0:
             return jsonify({'message': 'Rating is required'}), 400
+        
+        if not str(rating).isnumeric():
+            return jsonify({'message': 'Rating has to be a number 1-10'}), 400
+        
+        rating = int(rating)
+
+        if rating < 1 or rating > 10:
+            return jsonify({'message': 'Rating has to be a number 1-10'}), 400
 
         cur.execute(f"UPDATE Reviews SET rating = {rating} WHERE user_id = {user_id} AND product_id = {product_id}")
 

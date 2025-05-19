@@ -15,6 +15,13 @@ Code:
 
 Testy robione za pomocą programu postman. Authorization - odnosi się do nagłówka o tej samej nazwie, jeśli wpisane użytkownik/administrator to znajduje się tam "Bearer (token)", gdzie token jest tokenem JWT dla odpowiedniego typu konta.
 
+Wygaśnięcie tokenu (po 1h):
+```json
+{
+    "message": "Token is invalid!"
+}
+```
+
 ### Użytkownicy
 
 #### Login (konto nie istnieje)
@@ -1134,6 +1141,57 @@ Output:
 ```
 Code: 400
 
+Authorization: Użytkownik/Administrator <br>
+Typ: POST <br>
+Link: http://localhost:5000/products/1/reviews <br>
+Body:
+```json
+{
+    "rating": 0
+}
+```
+Output:
+```json
+{
+    "message": "Rating has to be a number 1-10"
+}
+```
+Code: 400
+
+Authorization: Użytkownik/Administrator <br>
+Typ: POST <br>
+Link: http://localhost:5000/products/1/reviews <br>
+Body:
+```json
+{
+    "rating": "a"
+}
+```
+Output:
+```json
+{
+    "message": "Rating has to be a number 1-10"
+}
+```
+Code: 400
+
+Authorization: Użytkownik/Administrator <br>
+Typ: POST <br>
+Link: http://localhost:5000/products/1/reviews <br>
+Body:
+```json
+{
+    "rating": ""
+}
+```
+Output:
+```json
+{
+    "message": "Rating is required"
+}
+```
+Code: 400
+
 #### PUT
 
 Authorization: Użytkownik/Administrator <br>
@@ -1165,7 +1223,24 @@ Body:
 Output:
 ```json
 {
-    "message": "Rating is required"
+    "message": "Rating has to be a number 1-10"
+}
+```
+Code: 400
+
+Authorization: Użytkownik/Administrator <br>
+Typ: PUT <br>
+Link: http://localhost:5000/products/1/reviews <br>
+Body:
+```json
+{
+    "rating": "a"
+}
+```
+Output:
+```json
+{
+    "message": "Rating has to be a number 1-10"
 }
 ```
 Code: 400
