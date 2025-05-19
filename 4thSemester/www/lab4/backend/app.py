@@ -124,7 +124,7 @@ def register():
     return jsonify({'message': 'User registered successfully.'}), 201
 
 # Delete your account
-@app.route('/users/', methods=['DELETE'])
+@app.route('/users/me', methods=['DELETE'])
 def del_account():
     user_id = check_token(request)
 

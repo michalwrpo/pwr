@@ -1294,3 +1294,45 @@ Output:
 }
 ```
 Code: 200
+
+### Zmiany w tokenach
+
+#### Zmieniony expiration date ze starym podpisem
+
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZXhwIjoxNzQ3OTcyNjg3fQ.AcdVW_P4eJ4faBYhU_HUS3Sl_gk8qj9hae2BoPkYg6g <br>
+Authorization: jak wyżej <br>
+Typ: POST <br>
+Link: http://localhost:5000/products/1/reviews <br>
+Body:
+```json
+{
+    "rating": 8
+}
+```
+Output:
+```json
+{
+    "message": "Token is invalid!"
+}
+```
+Code: 403
+
+#### Algorithm none
+
+Token: eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpZCI6IjEiLCJleHAiOjE3NDc2NzQ4MzF9. <br>
+Authorization: jak wyżej <br>
+Typ: POST <br>
+Link: http://localhost:5000/products/1/reviews <br>
+Body:
+```json
+{
+    "rating": 8
+}
+```
+Output:
+```json
+{
+    "message": "Token is invalid!"
+}
+```
+Code: 403
