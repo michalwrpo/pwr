@@ -1,17 +1,5 @@
 # Test dla list 4
 ## Michał Waluś
-Authorization: <br>
-Typ: <br>
-Link: http://localhost:5000/ <br>
-Body:
-```json
-
-```
-Output:
-```json
-
-```
-Code:
 
 Testy robione za pomocą programu postman. Authorization - odnosi się do nagłówka o tej samej nazwie, jeśli wpisane użytkownik/administrator to znajduje się tam "Bearer (token)", gdzie token jest tokenem JWT dla odpowiedniego typu konta.
 
