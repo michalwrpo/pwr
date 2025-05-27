@@ -54,6 +54,10 @@ struct BST_Node* BST_insert(struct BST_Node* node, long value) {
     }
 }
 
+// deletes values from a tree
+// returns -1 if the value isn't present
+// 0 if delete was successful
+// and 1 if the entire tree was deleted
 int BST_delete(struct BST_Node* node, long value) {
     if (node == NULL) 
         return -1;
@@ -62,41 +66,55 @@ int BST_delete(struct BST_Node* node, long value) {
         // no children
         if (node->left == NULL && node->right == NULL) {
             if (node->parent != NULL) {
-                if (node->parent->left->value == value) {
-                    node->parent->left = NULL;
+                if (node->parent->left != NULL) {
+                    if (node->parent->left->value == value) {
+                        node->parent->left = NULL;
+                    } else {
+                        node->parent->right = NULL;
+                    }
                 } else {
                     node->parent->right = NULL;
                 }
+                free(node);
+                return 0;
             }
             free(node);
-            return 0;
+            return 1;
         }
         
         // only right child
         if (node->left == NULL) {
-            if (node->parent != NULL) {
-                if (node->parent->left->value == value) {
-                    node->parent->left = node->right;
-                } else {
-                    node->parent->right = node->right;
-                }
-            }
-            node->right->parent = node->parent;
-            free(node);
+            struct BST_Node* temp = node->right;
+
+            node->value = node->right->value;
+
+            if (node->right->right != NULL) 
+                node->right->right->parent = node;
+            if (node->right->left != NULL)
+                node->right->left->parent = node;
+
+            node->left = node->right->left;
+            node->right = node->right->right;
+
+            free(temp);
             return 0;
         }
         
         // only left child
         if (node->right == NULL) {
-            if (node->parent != NULL) {
-                if (node->parent->left->value == value) {
-                    node->parent->left = node->left;
-                } else {
-                    node->parent->right = node->left;
-                }
-            }
-            node->left->parent = node->parent;
-            free(node);
+            struct BST_Node* temp = node->left;
+
+            node->value = node->left->value;
+
+            if (node->left->right != NULL) 
+                node->left->right->parent = node;
+            if (node->left->left != NULL)
+                node->left->left->parent = node;
+
+            node->right = node->left->right;
+            node->left = node->left->left;
+
+            free(temp);
             return 0;
         }
 
@@ -109,7 +127,7 @@ int BST_delete(struct BST_Node* node, long value) {
         }
 
         int new_value = next->value;
-        // delete next in O(1), due to how it was found, it has only one child
+        // delete next in O(1), due to how it was found, it has at most one child
         BST_delete(next, new_value); 
 
         node->value = new_value;
@@ -176,24 +194,3 @@ void BST_print(struct BST_Node* node) {
     free(lprefix);
     free(rprefix);
 }
-
-// int main() {
-//     struct BST_Node *bst = BST_insert(NULL, 10);
-//     BST_insert(bst, 8);
-//     BST_insert(bst, 3);
-//     BST_insert(bst, 5);
-//     BST_insert(bst, 9);
-//     BST_insert(bst, 14);
-//     BST_insert(bst, 17);
-//     BST_insert(bst, 12);
-//     BST_insert(bst, 20);
-//     BST_insert(bst, 1);
-//     BST_insert(bst, 15);
-
-//     BST_print(bst);
-
-//     BST_delete(bst, 14);
-//     BST_print(bst);
-
-//     return 0;
-// }

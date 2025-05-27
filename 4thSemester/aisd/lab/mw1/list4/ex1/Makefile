@@ -2,7 +2,7 @@ CXX := gcc
 CXX_WARN := -Wall -Wextra
 
 bst:
-	$(CXX) $(CXX_WARN) bst.c -o bst.out
+	$(CXX) $(CXX_WARN) main.c bst.c mtwister.c -o app.out
 
 clean:
 	rm -f *.out
