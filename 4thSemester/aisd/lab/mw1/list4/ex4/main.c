@@ -4,12 +4,12 @@
 #include <stdbool.h>
 
 #include "mtwister.h"
-#include "bst.h"
+#include "rbt.h"
 
 #define START 10000
 #define INCREASE 10000
 #define MAX 100000
-#define REPEATS 2
+#define REPEATS 20
 
 void stats(long* tot_c, long* tot_r, long* tot_w, long* tot_h, long* max_c, long* max_r, long* max_w, long *c, long *r, long *w, long h) {
     (*tot_c) += *c;
@@ -52,7 +52,7 @@ int main() {
     unsigned int left, index;
     long comps, r, w, max_c, max_r, max_w, max_h;
     long total_c, total_r, total_w, total_h;
-    struct BST_Node *root;
+    struct RBT_Node *root;
 
     // random inserts
     for (unsigned int n = START; n <= MAX; n += INCREASE) {
@@ -106,14 +106,13 @@ int main() {
                 left--;
             }
             
-            root = BST_insert(root, inserts[0], &comps, &r, &w, true);
-            stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, BST_height(root));
-            for (unsigned  int i = 1; i < n; i++) {
-                BST_insert(root, inserts[i], &comps, &r, &w, true);
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, BST_height(root));
+            root = NULL;
+            for (unsigned  int i = 0; i < n; i++) {
+                root = RBT_insert(root, inserts[i], &comps, &r, &w, true);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
             }
             
-            max_h = BST_height(root);
+            max_h = RBT_height(root);
             printf("rand insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
 
             max_c = 0;
@@ -126,9 +125,9 @@ int main() {
 
             for (unsigned int i = 0; i < n; i++) {        
                 // if whole tree has been deleted
-                if (BST_delete(root, deletes[i], &comps, &r, &w, true) == 1)
+                if (RBT_delete(root, deletes[i], &comps, &r, &w, true) == 1)
                     root = NULL;
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, BST_height(root));
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
             }
 
             printf("rand delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
@@ -136,7 +135,7 @@ int main() {
     }
 
     // inserts in order
-    for (unsigned int n = 40000; n <= 40000; n += INCREASE) {
+    for (unsigned int n = START; n <= MAX; n += INCREASE) {
         root = NULL;
 
         unsigned int inserts[n];
@@ -147,7 +146,7 @@ int main() {
             inserts[i] = i + 1;
         }
 
-        for (unsigned int k = 0; k < 1; k++) {
+        for (unsigned int k = 0; k < REPEATS; k++) {
             comps = 0;
             r = 0;
             w = 0;
@@ -178,11 +177,10 @@ int main() {
                 left--;
             }
             
-            root = BST_insert(root, inserts[0], &comps, &r, &w, false);
-            stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, 1);
-            for (unsigned  int i = 1; i < n; i++) {
-                BST_insert(root, inserts[i], &comps, &r, &w, false);
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, i + 1);
+            root = NULL;
+            for (unsigned  int i = 0; i < n; i++) {
+                root = RBT_insert(root, inserts[i], &comps, &r, &w, false);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
             }
             
             max_h = n;
@@ -198,9 +196,9 @@ int main() {
 
             for (unsigned int i = 0; i < n; i++) {                        
                 // if whole tree has been deleted
-                if (BST_delete(root, deletes[i], &comps, &r, &w, false) == 1)
+                if (RBT_delete(root, deletes[i], &comps, &r, &w, false) == 1)
                     root = NULL;
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, n - i - 1);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
             }
 
             printf("asc delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);

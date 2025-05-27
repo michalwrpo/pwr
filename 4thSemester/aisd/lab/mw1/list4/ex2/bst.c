@@ -102,7 +102,6 @@ struct BST_Node* BST_insert(struct BST_Node* node, long value, long* comps, long
     }
 
     if (compare(value, node->value, comps)) {
-        (*r)++;
         struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
 
         leaf->left = NULL;
@@ -119,7 +118,6 @@ struct BST_Node* BST_insert(struct BST_Node* node, long value, long* comps, long
 
         return NULL;
     } else {
-        (*r)++;
         struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
 
         leaf->left = NULL;
