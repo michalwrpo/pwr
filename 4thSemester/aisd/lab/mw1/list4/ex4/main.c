@@ -183,7 +183,7 @@ int main() {
                 stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
             }
             
-            max_h = n;
+            max_h = RBT_height(root);
             printf("asc insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
 
             max_c = 0;
