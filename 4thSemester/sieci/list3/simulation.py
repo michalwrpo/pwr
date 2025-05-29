@@ -2,9 +2,10 @@ import random
 
 # Konfiguracja
 MEDIUM_LENGTH = 80
-TICKS = 200000
+TICKS = 20000
 SIGNAL_SPEED = 1  # ile komórek pokonuje sygnał na tick
-MAX_ATTEMPTS = 32
+MAX_ATTEMPTS = 16
+INCREASES = 10
 
 class Node:
     def __init__(self, name, position, send_time):
@@ -44,9 +45,6 @@ def run_simulation(nodes):
 
     for tick in range(TICKS):
         time_log.append("")
-
-        if(tick % 10000 == 0):
-            print(tick)
         
         # Propagacja sygnałów
         signals = propagate_signal(medium, signals)
@@ -66,7 +64,8 @@ def run_simulation(nodes):
                 if medium[node.position] not in [node.name, None]:
                     node.state = "backoff"
                     if node.attempts < MAX_ATTEMPTS:
-                        node.backoff = 2 * MEDIUM_LENGTH * random.randint(0, 2 ** node.attempts)
+                        if node.attempts < INCREASES:
+                            node.backoff = 2 * MEDIUM_LENGTH * random.randint(0, 2 ** (node.attempts + 1) - 1)
                         node.send_time = tick + 2 * MEDIUM_LENGTH + 1 + node.backoff
                     node.attempts += 1
                     node.state = "jam"
@@ -77,7 +76,6 @@ def run_simulation(nodes):
                     if tick >= node.send_time + 2 * MEDIUM_LENGTH:
                         node.state = "idle"
                         success += 1
-                        print(node.name, len(nodes))
                         time_log[-1] += f"{node} SUKCES; "
                     else:
                         medium[node.position] = node.name
@@ -99,10 +97,9 @@ def run_simulation(nodes):
         medium = [None for _ in medium]
 
         if success == len(nodes):
-            print(success)
             break
 
-    print("\n=== Log symulacji ===")
+    print("=== Log symulacji ===")
     for i in range(len(time_log) - 1, 0, -1):
         if time_log[i] == "".join(["." for _ in range(MEDIUM_LENGTH)]) + " ":
             time_log.pop(i)
