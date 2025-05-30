@@ -41,220 +41,133 @@ void height_fixup(struct BST_Node* node, long* r) {
     }
 }
 
-struct BST_Node* BST_insert(struct BST_Node* node, long value, long* comps, long* r, long* w, bool calc_height) {
-    if (node == NULL) {
-        struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
+void BST_insert(struct BST* tree, long value, long* comps, long* r, long* w, bool calc_height) {
+    struct BST_Node* y = NULL;
 
-        leaf->left = NULL;
-        leaf->right = NULL;
-        leaf->parent = NULL;
-        *w += 3;
-        leaf->value = value;
-        leaf->height = 1;
+    struct BST_Node* x = tree->root; // read
+    (*r)++;
 
-        return leaf;
-    }
+    struct BST_Node* z = malloc(sizeof(struct BST_Node));
+    z->value = value;
+    z->height = 0;
+    z->left = NULL; // write
+    z->right = NULL; // write
     
-    while(node->left != NULL || node->right != NULL) {
-        if (compare(value, node->value, comps)) {
-            (*r)++;
-            if (node->left == NULL) {
-                struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
-
-                leaf->left = NULL;
-                leaf->right = NULL;
-                leaf->parent = node;
-                leaf->value = value;
-                leaf->height = 1;
-                
-                node->left = leaf;
-                (*w) += 4;
-
-                if (calc_height)
-                    height_fixup(leaf, r);
-
-                return NULL;
-            } else {
-                node = node->left;
-            }
+    while (x != NULL) {
+        y = x;
+        if (compare(value, x->value, comps)) {
+            x = x->left; // read
         } else {
-            (*r)++;
-            if (node->right == NULL) {
-                struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
-
-                leaf->left = NULL;
-                leaf->right = NULL;
-                leaf->parent = node;
-                leaf->value = value;
-                leaf->height = 1;
-                
-                node->right = leaf;
-                (*w) += 4;
-
-                if (calc_height)
-                    height_fixup(leaf, r);
-                
-                return NULL;
-            } else {
-                node = node->right;
-            }
+            x = x->right; // read
         }
+        (*r)++;
     }
 
-    if (compare(value, node->value, comps)) {
-        struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
-
-        leaf->left = NULL;
-        leaf->right = NULL;
-        leaf->parent = node;
-        leaf->value = value;
-        leaf->height = 1;
-        
-        node->left = leaf;
-        (*w) += 4;
-
-        if (calc_height)
-            height_fixup(leaf, r);
-
-        return NULL;
+    z->parent = y; // write
+    if (y == NULL) {
+        tree->root = z; // write
+    } else if (compare(value, y->value, comps)) {
+        y->left = z; // write
     } else {
-        struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
+        y->right = z; // write
+    }
 
-        leaf->left = NULL;
-        leaf->right = NULL;
-        leaf->parent = node;
-        leaf->value = value;
-        leaf->height = 1;
-        
-        node->right = leaf;
-        (*w) += 4;
+    (*w) += 4;
 
-        if (calc_height)
-            height_fixup(leaf, r);
-        
-        return NULL;
+    if (calc_height)
+        height_fixup(z, r);
+}
+
+struct BST_Node* BST_search(struct BST_Node* node, long value, long* comps, long *r) {
+    while (node != NULL && value != node->value) {
+        if (compare(value, node->value, comps)) {
+            node = node->left; // read
+        } else {
+            node = node->right; // read
+        }
+        (*r)++;
+    }
+    return node;
+}
+
+struct BST_Node* BST_min(struct BST_Node* node, long* r) {
+    (*r)++;
+    while (node->left != NULL) { // read
+        node = node->left; // read
+        (*r) += 2;
+    }
+    return node;
+}
+
+void transplant(struct BST* tree, struct BST_Node* u, struct BST_Node* v, long* r, long* w) {
+    (*r)++;
+    if (u->parent == NULL) { // read
+        tree->root = v; // write
+    } else if (u == u->parent->left) { // double read
+        (*r) += 3;
+        u->parent->left = v; // read and write
+    } else {
+        (*r) += 3;
+        u->parent->right = v; // read and write
+    }
+    (*w)++;
+    
+    if (v != NULL) {
+        v->height = u->height;
+        v->parent = u->parent; // write
+        (*w)++;
     }
 }
 
 // deletes values from a tree
 // returns -1 if the value isn't present
-// 0 if delete was successful
-// and 1 if the entire tree was deleted
-int BST_delete(struct BST_Node* node, long value, long* comps, long* r, long* w, bool calc_height) {
-    while(node != NULL) {
-        if (compare(value, node->value, comps)) {
-            node = node->left;
-        } else if (compare(node->value, value, comps)) {
-            node = node->right;
-        } else {
-            break;
-        }
-    }
-
+// or 0 if delete was successful
+int BST_delete(struct BST* tree, long value, long* comps, long* r, long* w, bool calc_height) {
+    (*r)++;
+    struct BST_Node* node = BST_search(tree->root, value, comps, r); // read
     if (node == NULL) 
         return -1;
-
-    // no children
+    
     (*r) += 2;
-    if (node->left == NULL && node->right == NULL) {
+    if (node->left == NULL) { // read
+        transplant(tree, node, node->right, r, w); // read
+        
+        if (calc_height)
+            height_fixup(node, r);
+    } else if (node->right == NULL) { // read
         (*r)++;
-        if (node->parent != NULL) {
-            (*r)++;
-            if (node->parent->left != NULL) {
-                if (compare_equal(node->parent->left->value, value, comps)) {
-                    node->parent->left = NULL;
-                } else {
-                    node->parent->right = NULL;
-                }
-            } else {
-                node->parent->right = NULL;
-            }
-            (*w)++;
+        transplant(tree, node, node->left, r, w); // read
 
-            if (calc_height)
-                height_fixup(node, r);
-
-            free(node);
-            return 0;
+        if (calc_height)
+            height_fixup(node, r);
+    } else {
+        struct BST_Node* y = BST_min(node->right, r); // read
+        if (y->parent != node) { // read
+            transplant(tree, y, y->right, r, w); // read
+            y->right = node->right; // read and write
+            y->right->parent = y; // read and write
         }
+        transplant(tree, node, y, r, w);
+        y->left = node->left; // read and write
+        y->left->parent = y; // read and write
 
-        free(node);
-        return 1;
-    }
-    
-    // only right child
-    (*r)++;
-    if (node->left == NULL) {
-        struct BST_Node* temp = node->right;
-
-        node->value = node->right->value;
-        node->height = node->right->height;
-
-        (*r) += 2;
-        if (node->right->right != NULL) 
-            node->right->right->parent = node;
-        if (node->right->left != NULL)
-            node->right->left->parent = node;
-            
-        node->left = node->right->left;
-        node->right = node->right->right;
-        (*w) += 3;
+        (*r) += 7;
+        (*w) += 4;
 
         if (calc_height)
-            height_fixup(temp, r);
-
-        free(temp);
-        return 0;
+            height_fixup(y, r);
     }
-    
-    // only left child
-    (*r)++;
-    if (node->right == NULL) {
-        struct BST_Node* temp = node->left;
-
-        node->value = node->left->value;
-        node->height = node->left->height;
-
-        (*r) += 2;
-        if (node->left->right != NULL) 
-            node->left->right->parent = node;
-        if (node->left->left != NULL)
-            node->left->left->parent = node;
-
-        node->right = node->left->right;
-        node->left = node->left->left;
-        (*w) += 3;
-
-        if (calc_height)
-            height_fixup(temp, r);
-
-        free(temp);
-        return 0;
-    }
-
-    // both children
-    // next is the successor of node in the subtree with node as root 
-    struct BST_Node* next = node->right;
-    
-    (*r)++;
-    while (next->left != NULL) {
-        next = next->left;
-    }
-
-    int new_value = next->value;
-    // delete next in O(1), due to how it was found, it has at most one child
-    BST_delete(next, new_value, comps, r, w, calc_height); 
-
-    node->value = new_value;
+    free(node);
     return 0;
 }
 
-unsigned int BST_height(struct BST_Node* node) {
-    if (node == NULL)
+
+// deletes values from a tree
+unsigned int BST_height(struct BST_Node* root) {
+    if (root == NULL)
         return 0;
     
-    // return 1 + max(BST_height(node->left), BST_height(node->right));
-    return node->height;
+    return root->height;
 }
 
 void BST_print1(struct BST_Node* node, int depth, char prefix[4], char* lprefix, char* rprefix) {
@@ -264,7 +177,7 @@ void BST_print1(struct BST_Node* node, int depth, char prefix[4], char* lprefix,
     BST_print1(node->right, depth + 1, "⌈", lprefix, rprefix);
     
     if (prefix == NULL) {
-        printf("%ld\n", node->value);
+        printf("%ld%ld\n", node->value, node->height);
     } else {
         if (strcmp(prefix, "⌈") == 0) 
             lprefix[depth - 1] = '|';
@@ -279,7 +192,7 @@ void BST_print1(struct BST_Node* node, int depth, char prefix[4], char* lprefix,
             }
         }
 
-        printf("%s%ld\n", prefix, node->value);
+        printf("%s%ld%ld\n", prefix, node->value, node->height);
     }
 
     lprefix[depth] = ' ';
@@ -288,8 +201,12 @@ void BST_print1(struct BST_Node* node, int depth, char prefix[4], char* lprefix,
 
 }
 
-void BST_print(struct BST_Node* node) {
-    unsigned int h = BST_height(node);
+void BST_print(struct BST* tree) {
+    if (tree == NULL) {
+        return;
+    }
+    
+    unsigned int h = BST_height(tree->root);
 
     char* lprefix = malloc(sizeof(char) * h);
     char* rprefix = malloc(sizeof(char) * h);
@@ -299,7 +216,7 @@ void BST_print(struct BST_Node* node) {
         rprefix[i] = ' ';
     }
     
-    BST_print1(node, 0, NULL, lprefix, rprefix);
+    BST_print1(tree->root, 0, NULL, lprefix, rprefix);
 
     free(lprefix);
     free(rprefix);

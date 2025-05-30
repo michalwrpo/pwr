@@ -94,11 +94,11 @@ int BST_delete(struct BST* tree, long value) {
     return 0;
 }
 
-int BST_height(struct BST_Node* node) {
-    if (node == NULL)
+int BST_height(struct BST_Node* root) {
+    if (root == NULL)
         return 0;
     
-    return 1 + max(BST_height(node->left), BST_height(node->right));
+    return 1 + max(BST_height(root->left), BST_height(root->right));
 }
 
 void BST_print1(struct BST_Node* node, int depth, char prefix[4], char* lprefix, char* rprefix) {
