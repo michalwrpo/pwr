@@ -8,12 +8,16 @@ struct BST_Node {
     struct BST_Node* right;
 };
 
-struct BST_Node* BST_insert(struct BST_Node* node, long value);
+struct BST {
+    struct BST_Node* root;
+};
 
-int BST_delete(struct BST_Node* node, long value);
+void BST_insert(struct BST* tree, long value);
 
-int BST_height(struct BST_Node* node);
+int BST_delete(struct BST* tree, long value);
 
-void BST_print(struct BST_Node* node);
+int BST_height(struct BST_Node* root);
+
+void BST_print(struct BST* tree);
 
 #endif

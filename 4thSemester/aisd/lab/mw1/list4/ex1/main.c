@@ -16,6 +16,9 @@ int main() {
     int left = RANDOM_OPERATIONS;
     int index;
 
+    struct BST tree;
+    tree.root = NULL;
+
     // inserts in order
     // clear the arrays
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
@@ -47,23 +50,16 @@ int main() {
     }
     printf("\n");
 
-    struct BST_Node *root = NULL;
-    printf("\ninsert %d\n", inserts[0]);
-    root = BST_insert(root, inserts[0]);
-    BST_print(root);
-    for (int i = 1; i < RANDOM_OPERATIONS; i++) {
+    for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ninsert %d\n", inserts[i]);
-        BST_insert(root, inserts[i]);
-        BST_print(root);
+        BST_insert(&tree, inserts[i]);
+        BST_print(&tree);
     }
     
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ndelete %d\n", deletes[i]);
-
-        // whole tree has been deleted
-        if (BST_delete(root, deletes[i]) == 1)
-            root = NULL;
-        BST_print(root);
+        BST_delete(&tree, deletes[i]);
+        BST_print(&tree);
     }
 
     // random inserts
@@ -112,23 +108,16 @@ int main() {
     }
     printf("\n");
 
-    root = NULL;
-    printf("\ninsert %d\n", inserts[0]);
-    root = BST_insert(root, inserts[0]);
-    BST_print(root);
-    for (int i = 1; i < RANDOM_OPERATIONS; i++) {
+    for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ninsert %d\n", inserts[i]);
-        BST_insert(root, inserts[i]);
-        BST_print(root);
+        BST_insert(&tree, inserts[i]);
+        BST_print(&tree);
     }
     
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ndelete %d\n", deletes[i]);
-
-        // whole tree has been deleted
-        if (BST_delete(root, deletes[i]) == 1)
-            root = NULL;
-        BST_print(root);
+        BST_delete(&tree, deletes[i]);
+        BST_print(&tree);
     }
 
     return 0;

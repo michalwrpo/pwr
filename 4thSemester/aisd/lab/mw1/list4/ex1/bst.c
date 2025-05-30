@@ -8,136 +8,90 @@ int max(int num1, int num2) {
     return num1 > num2 ? num1 : num2;
 }
 
-struct BST_Node* BST_insert(struct BST_Node* node, long value) {
-    if (node == NULL) {
-        struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
+void BST_insert(struct BST* tree, long value) {
+    struct BST_Node* y = NULL;
+    struct BST_Node* x = tree->root;
 
-        leaf->left = NULL;
-        leaf->right = NULL;
-        leaf->parent = NULL;
-        leaf->value = value;
-
-        return leaf;
-    }
+    struct BST_Node* z = malloc(sizeof(struct BST_Node));
+    z->value = value;
+    z->left = NULL;
+    z->right = NULL;
     
-
-    if (value < node->value) {
-        if (node->left == NULL) {
-            struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
-
-            leaf->left = NULL;
-            leaf->right = NULL;
-            leaf->parent = node;
-            leaf->value = value;
-
-            node->left = leaf;
-            
-            return NULL;
+    while (x != NULL) {
+        y = x;
+        if (value < x->value) {
+            x = x->left;
         } else {
-            return BST_insert(node->left, value);
+            x = x->right;
         }
+    }
+
+    z->parent = y;
+    if (y == NULL) {
+        tree->root = z;
+    } else if (value < y->value) {
+        y->left = z;
     } else {
-        if (node->right == NULL) {
-            struct BST_Node* leaf = malloc(sizeof(struct BST_Node));
+        y->right = z;
+    }
+}
 
-            leaf->left = NULL;
-            leaf->right = NULL;
-            leaf->parent = node;
-            leaf->value = value;
-
-            node->right = leaf;
-            
-            return NULL;
+struct BST_Node* BST_search(struct BST_Node* node, long value) {
+    while (node != NULL && value != node->value) {
+        if (value < node->value) {
+            node = node->left;
         } else {
-            return BST_insert(node->right, value);
+            node = node->right;
         }
+    }
+    return node;
+}
+
+struct BST_Node* BST_min(struct BST_Node* node) {
+    while (node->left != NULL) 
+        node = node->left;
+    return node;
+}
+
+void transplant(struct BST* tree, struct BST_Node* u, struct BST_Node* v) {
+    if (u->parent == NULL) {
+        tree->root = v;
+    } else if (u == u->parent->left) {
+        u->parent->left = v;
+    } else {
+        u->parent->right = v;
+    }
+
+    if (v != NULL) {
+        v->parent = u->parent;
     }
 }
 
 // deletes values from a tree
 // returns -1 if the value isn't present
-// 0 if delete was successful
-// and 1 if the entire tree was deleted
-int BST_delete(struct BST_Node* node, long value) {
+// or 0 if delete was successful
+int BST_delete(struct BST* tree, long value) {
+    struct BST_Node* node = BST_search(tree->root, value);
     if (node == NULL) 
         return -1;
     
-    if (value == node->value) {
-        // no children
-        if (node->left == NULL && node->right == NULL) {
-            if (node->parent != NULL) {
-                if (node->parent->left != NULL) {
-                    if (node->parent->left->value == value) {
-                        node->parent->left = NULL;
-                    } else {
-                        node->parent->right = NULL;
-                    }
-                } else {
-                    node->parent->right = NULL;
-                }
-                free(node);
-                return 0;
-            }
-            free(node);
-            return 1;
+    if (node->left == NULL) {
+        transplant(tree, node, node->right);
+    } else if (node->right == NULL) {
+        transplant(tree, node, node->left);
+    } else {
+        struct BST_Node* y = BST_min(node->right);
+        if (y->parent != node) {
+            transplant(tree, y, y->right);
+            y->right = node->right;
+            y->right->parent = y;
         }
-        
-        // only right child
-        if (node->left == NULL) {
-            struct BST_Node* temp = node->right;
-
-            node->value = node->right->value;
-
-            if (node->right->right != NULL) 
-                node->right->right->parent = node;
-            if (node->right->left != NULL)
-                node->right->left->parent = node;
-
-            node->left = node->right->left;
-            node->right = node->right->right;
-
-            free(temp);
-            return 0;
-        }
-        
-        // only left child
-        if (node->right == NULL) {
-            struct BST_Node* temp = node->left;
-
-            node->value = node->left->value;
-
-            if (node->left->right != NULL) 
-                node->left->right->parent = node;
-            if (node->left->left != NULL)
-                node->left->left->parent = node;
-
-            node->right = node->left->right;
-            node->left = node->left->left;
-
-            free(temp);
-            return 0;
-        }
-
-        // both children
-        // next is the successor of node in the subtree with node as root 
-        struct BST_Node* next = node->right;
-        
-        while (next->left != NULL) {
-            next = next->left;
-        }
-
-        int new_value = next->value;
-        // delete next in O(1), due to how it was found, it has at most one child
-        BST_delete(next, new_value); 
-
-        node->value = new_value;
-        return 0;
+        transplant(tree, node, y);
+        y->left = node->left;
+        y->left->parent = y;
     }
-    
-    if (value < node->value) {
-        return BST_delete(node->left, value);
-    }
-    return BST_delete(node->right, value);
+    free(node);
+    return 0;
 }
 
 int BST_height(struct BST_Node* node) {
@@ -178,8 +132,12 @@ void BST_print1(struct BST_Node* node, int depth, char prefix[4], char* lprefix,
 
 }
 
-void BST_print(struct BST_Node* node) {
-    int h = BST_height(node);
+void BST_print(struct BST* tree) {
+    if (tree == NULL) {
+        return;
+    }
+    
+    int h = BST_height(tree->root);
 
     char* lprefix = malloc(sizeof(char) * h);
     char* rprefix = malloc(sizeof(char) * h);
@@ -189,7 +147,7 @@ void BST_print(struct BST_Node* node) {
         rprefix[i] = ' ';
     }
     
-    BST_print1(node, 0, NULL, lprefix, rprefix);
+    BST_print1(tree->root, 0, NULL, lprefix, rprefix);
 
     free(lprefix);
     free(rprefix);
