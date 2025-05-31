@@ -22,22 +22,24 @@ bool compare_equal(int v1, int v2, long* comps) {
 // fixes height of every node above the given one
 void height_fixup(struct BST_Node* node, long* r) {
     (*r)++;
-    while (node->parent != NULL) {
-        node = node->parent;
-        (*r)++;        
-        if (node->left == NULL && node->right == NULL) {
+    while (node->parent != NULL) { // read
+        node = node->parent; // read
+        if (node->left == NULL && node->right == NULL) { // double read
             node->height = 1;
-        } else if (node->left == NULL) {
-            node->height = 1 + node->right->height;
-        } else if (node->right == NULL) {
-            (*r)++;        
-            node->height = 1 + node->left->height;
+        } else if (node->left == NULL) { // read
+            node->height = 1 + node->right->height; // read
+            (*r) += 2;
+        } else if (node->right == NULL) { // read
+            node->height = 1 + node->left->height; // read
+            (*r) += 3;        
         } else {
-            (*r)++;        
-            if (node->height == 1 + max(node->left->height, node->right->height))
+            unsigned long h = 1 + max(node->left->height, node->right->height); // double read
+            if (node->height == h)
                 break;
-            node->height = 1 + max(node->left->height, node->right->height);
+            node->height = h;
+            (*r) += 4;
         }
+        (*r) += 3;
     }
 }
 

@@ -18,6 +18,17 @@ int main() {
     int left = RANDOM_OPERATIONS;
     unsigned int index;
 
+    struct RBT tree;
+    struct RBT_Node nil;
+    nil.red = false;
+    nil.height = 0;
+    nil.left = &nil;
+    nil.right = &nil;
+    nil.parent = &nil;
+
+    tree.nil = &nil;
+    tree.root = &nil;
+
     // inserts in order
     // clear the arrays
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
@@ -49,23 +60,16 @@ int main() {
     }
     printf("\n");
 
-    struct RBT_Node *root = NULL;
-    printf("\ninsert %d\n", inserts[0]);
-    root = RBT_insert(root, inserts[0], &comps, &r, &w, true);
-    RBT_print(root);
-    for (int i = 1; i < RANDOM_OPERATIONS; i++) {
+    for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ninsert %d\n", inserts[i]);
-        root = RBT_insert(root, inserts[i], &comps, &r, &w, true);
-        RBT_print(root);
+        RBT_insert(&tree, inserts[i], &comps, &r, &w, true);
+        RBT_print(&tree);
     }
     
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ndelete %d\n", deletes[i]);
-
-        // whole tree has been deleted
-        if (RBT_delete(root, deletes[i], &comps, &r, &w, true) == 1)
-            root = NULL;
-        RBT_print(root);
+        RBT_delete(&tree, deletes[i], &comps, &r, &w, true);
+        RBT_print(&tree);
     }
 
     // random inserts
@@ -114,20 +118,16 @@ int main() {
     }
     printf("\n");
 
-    root = NULL;
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ninsert %d\n", inserts[i]);
-        RBT_insert(root, inserts[i], &comps, &r, &w, true);
-        RBT_print(root);
+        RBT_insert(&tree, inserts[i], &comps, &r, &w, true);
+        RBT_print(&tree);
     }
     
     for (int i = 0; i < RANDOM_OPERATIONS; i++) {
         printf("\ndelete %d\n", deletes[i]);
-
-        // whole tree has been deleted
-        if (RBT_delete(root, deletes[i], &comps, &r, &w, true) == 1)
-            root = NULL;
-        RBT_print(root);
+        RBT_delete(&tree, deletes[i], &comps, &r, &w, true);
+        RBT_print(&tree);
     }
 
     return 0;
