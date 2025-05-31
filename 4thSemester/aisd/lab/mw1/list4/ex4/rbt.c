@@ -19,402 +19,362 @@ bool compare_equal(int v1, int v2, long* comps) {
     return v1 == v2;
 }
 
-// fixes height of the given node and every above it
-void height_fixup(struct RBT_Node* node, long* r) {
-    while (node != NULL) {
-        (*r) += 2;        
-        if (node->left == NULL && node->right == NULL) {
-            node->height = 1;
-        } else if (node->left == NULL) {
-            (*r)++;
-            node->height = 1 + node->right->height;
-        } else if (node->right == NULL) {
-            (*r) += 2;        
-            node->height = 1 + node->left->height;
-        } else {
-            (*r) += 2;        
-            node->height = 1 + max(node->left->height, node->right->height);
-        }
-        node = node->parent;
+// fixes height of every node above the given one
+void height_fixup(struct RBT* tree, struct RBT_Node* node, long* r) {
+    tree->nil->height = 0; // read
+    while (node != tree->nil) { // read
+        node->height = 1 + max(node->left->height, node->right->height); // double read
+        node = node->parent; // read
+        (*r) += 4;
     }
+    (*r) += 2;
 }
 
-void left_rotate(struct RBT_Node* node, long* r, long* w, bool calc_height) {
-    if (node == NULL) {
-        return;
-    }
-    struct RBT_Node* y = node->right;
-    (*r)++;
-    if (y == NULL) {
-        return;
-    }
-    node->right = y->left;
-    (*r)++;
-    if (y->left != NULL) {
-        (*w)++;
-        y->left->parent = node;
-    }
-    y->parent = node->parent;
-    (*r)++;
-    if (node->parent != NULL) {
-        (*r)++;
-        if (node == node->parent->left) {
-            node->parent->left = y;
-        } else {
-            node->parent->right = y;
-        }
-    }
-
-    y->left = node;
-    node->parent = y;
-    (*w) += 5;
-
-    if (calc_height) {
-        height_fixup(node, r);
-    }
-}
-
-void right_rotate(struct RBT_Node* node, long* r, long* w, bool calc_height) {
-    if (node == NULL) {
-        return;
-    }
-    struct RBT_Node* y = node->left;
-    (*r)++;
-    if (y == NULL) {
-        return;
-    }
-    node->left = y->right;
-    (*r)++;
-    if (y->right != NULL) {
-        (*w)++;
-        y->right->parent = node;
-    }
-    y->parent = node->parent;
-    (*r)++;
-    if (node->parent != NULL) {
-        (*r)++;
-        if (node == node->parent->left) {
-            node->parent->left = y;
-        } else {
-            node->parent->right = y;
-        }
-    }
-
-    y->right = node;
-    node->parent = y;
-    (*w) += 5;
-
-    if (calc_height) {
-        height_fixup(node, r);
-    }
-}
-
-void RBT_insert_fixup(struct RBT_Node* node, long* r, long* w, bool calc_height) {
-    if (node == NULL) {
-        return;
-    }
+void left_rotate(struct RBT* tree, struct RBT_Node* node, long* r, long* w, bool calc_height) {
+    struct RBT_Node* y = node->right; // read
+    node->right = y->left; // read and write
     
-    (*r)++;
-    if (node->parent == NULL) {
-        return;
+    if (y->left != tree->nil) { // double read
+        y->left->parent = node; // read and write
+        (*w)++;
+        (*r)++;
     }
 
-    struct RBT_Node* y;
-    (*r)++;
-    while (node->parent->red) {
-        (*r) += 2;
-        if (node->parent->parent == NULL) {
-            break;
-        }
-        (*r) += 2;
-        if (node->parent == node->parent->parent->left) {
-            y = node->parent->parent->right;
-            (*r)++;
-            if (y == NULL) {
-                (*r)++;
-                if (node == node->parent->right) {
-                    node = node->parent;
-                    left_rotate(node, r, w, calc_height);
-                } else {
-                    node->parent->red = false;
-                    node->parent->parent->red = true;
-                    (*r)++;
-                    if (node->parent->parent->parent != NULL) {
-                        right_rotate(node->parent->parent, r, w, calc_height);
-                    } else {
-                        break;
-                    }   
-                }
-                continue;
-            }
-            
-            (*r)++;
+    y->parent = node->parent; // read and write
+
+    if (node->parent == tree->nil) { // read
+        tree->root = y; // write
+        (*w)++;
+    } else if (node == node->parent->left) { // double read
+        node->parent->left = y; // read and write
+        (*r) += 3;
+    } else {
+        node->parent->right = y; // read and write
+        (*r) += 3;
+    }
+
+    y->left = node; // write
+    node->parent = y; // write
+
+    (*w) += 5;
+    (*r) += 6;
+
+    if (calc_height) {
+        height_fixup(tree, node, r);
+    }
+}
+
+void right_rotate(struct RBT* tree, struct RBT_Node* node, long* r, long* w, bool calc_height) {
+    struct RBT_Node* y = node->left; // read
+    node->left = y->right; // read and write
+    
+    if (y->right != tree->nil) { // double read
+        y->right->parent = node; // read and write
+        (*w)++;
+        (*r)++;
+    }
+
+    y->parent = node->parent; // read and write
+
+    if (node->parent == tree->nil) { // read
+        tree->root = y; // write
+        (*w)++;
+    } else if (node == node->parent->left) { // double read
+        node->parent->left = y; // read and write
+        (*r) += 3;
+    } else {
+        node->parent->right = y; // read and write
+        (*r) += 3;
+    }
+
+    y->right = node; // write
+    node->parent = y; // write
+
+    (*w) += 5;
+    (*r) += 6;
+
+    if (calc_height) {
+        height_fixup(tree, node, r);
+    }
+}
+
+void RBT_insert_fixup(struct RBT* tree, struct RBT_Node* node, long* r, long* w, bool calc_height) {
+    while (node->parent->red) { // read
+        struct RBT_Node* y;
+        if (node->parent == node->parent->parent->left) { // quadruple read
+            y = node->parent->parent->right; // triple read
             if (y->red) {
                 node->parent->red = false;
                 y->red = false;
-                node->parent->parent->red = true;
-                
-                (*r)++;
-                if (node->parent->parent->parent != NULL) {
-                    node = node->parent->parent;
-                } else {
-                    break;
-                }
-            } else if (node == node->parent->right) {
-                (*r)++;
-                node = node->parent;
-                left_rotate(node, r, w, calc_height);
+                node->parent->parent->red = true; // double read
+                node = node->parent->parent; // double read
+                (*r) += 4;
             } else {
-                (*r)++;
-                node->parent->red = false;
-                node->parent->parent->red = true;
-                (*r)++;
-                if (node->parent->parent->parent != NULL) {
-                    right_rotate(node->parent->parent, r, w, calc_height);
-                } else {
-                    break;
-                }   
-            }
-        } else {
-            y = node->parent->parent->left;
-            (*r)++;
-            if (y == NULL) {
-                (*r)++;
-                if (node == node->parent->left) {
-                    node = node->parent;
-                    right_rotate(node, r, w, calc_height);
-                } else {
-                    node->parent->red = false;
-                    node->parent->parent->red = true;
+                if (node == node->parent->right) { // double read
+                    node = node->parent; // read
+                    left_rotate(tree, node, r, w, calc_height);
                     (*r)++;
-                    left_rotate(node->parent->parent, r, w, calc_height);
                 }
-                continue;
+                node->parent->red = false; // read
+                node->parent->parent->red = true; //double read
+                right_rotate(tree, node->parent->parent, r, w, calc_height); // double read
+                (*r) += 7;
             }
-            
-            (*r)++;
+            (*r) += 3;
+        } else {
+            y = node->parent->parent->left; // triple read
             if (y->red) {
                 node->parent->red = false;
                 y->red = false;
-                node->parent->parent->red = true;
-                
-                (*r)++;
-                if (node->parent->parent->parent != NULL) {
-                    node = node->parent->parent;
-                } else {
-                    break;
-                }
-            } else if (node == node->parent->left) {
-                (*r)++;
-                node = node->parent;
-                right_rotate(node, r, w, calc_height);
+                node->parent->parent->red = true; // double read
+                node = node->parent->parent; // double read
+                (*r) += 4;
             } else {
-                (*r)++;
-                node->parent->red = false;
-                node->parent->parent->red = true;
-                (*r)++;
-                left_rotate(node->parent->parent, r, w, calc_height);
+                if (node == node->parent->left) { // double read
+                    node = node->parent; // read
+                    right_rotate(tree, node, r, w, calc_height);
+                    (*r)++;
+                }
+                node->parent->red = false; // read
+                node->parent->parent->red = true; //double read
+                left_rotate(tree, node->parent->parent, r, w, calc_height); // double read
+                (*r) += 7;
             }
+            (*r) += 3;
         }
+        (*r) += 5;
     }
-
-    if (node == NULL) {
-        return;
-    }
-        
-    (*r)++;
-    while (node->parent != NULL) {
-        node = node->parent;
-    }
-    node->red = false;
+    tree->root->red = false; // read
+    (*r) += 2;
 }
 
-struct RBT_Node* RBT_insert(struct RBT_Node* node, long value, long* comps, long* r, long* w, bool calc_height) {
-    struct RBT_Node* root = node;
-    struct RBT_Node* leaf = malloc(sizeof(struct RBT_Node));
+void RBT_insert(struct RBT* tree, long value, long* comps, long* r, long* w, bool calc_height) {
+    struct RBT_Node* y = tree->nil; // read
+    struct RBT_Node* x = tree->root; // read
+
+    struct RBT_Node* z = malloc(sizeof(struct RBT_Node));
+    z->value = value;
+    z->height = 0;
+    z->red = true;
+    z->left = tree->nil; // read and write
+    z->right = tree->nil; // read and write
     
-    leaf->left = NULL;
-    leaf->right = NULL;
-    leaf->red = true;
-    *w += 2;
-    leaf->value = value;
-    leaf->height = 1;
-    
-    if (node == NULL) {
-        leaf->parent = NULL;
-        leaf->red = false;
-        (*w)++;
-        return leaf;
+    while (x != tree->nil) { // read
+        y = x;
+        if (compare(value, x->value, comps)) {
+            x = x->left; // read
+        } else {
+            x = x->right; // read
+        }
+        (*r) += 2;
     }
 
-    struct RBT_Node* y = node->parent;
-    
-    while(node != NULL) {
-        y = node;
+    z->parent = y; // write
+    if (y == tree->nil) { // read
+        tree->root = z; // write
+    } else if (compare(value, y->value, comps)) {
+        y->left = z; // write
+    } else {
+        y->right = z; // write
+    }
+
+    (*w) += 4;
+    (*r) += 6;
+
+    if (calc_height)
+        height_fixup(tree, z, r);
+
+    RBT_insert_fixup(tree, z, r, w, calc_height);
+}
+
+struct RBT_Node* RBT_search(struct RBT* tree, struct RBT_Node* node, long value, long* comps, long *r) {
+    while (node != tree->nil && value != node->value) {
         if (compare(value, node->value, comps)) {
-            node = node->left;
+            node = node->left; // read
         } else {
-            node = node->right;
+            node = node->right; // read
         }
+        (*r)++;
     }
+    return node;
+}
 
-    (*w)++;
-    leaf->parent = y;
-
-    (*r)++;
-    if (y != NULL) {
-        (*w)++;
-        if (compare(value, y->value, comps)) {
-            y->left = leaf;
-        } else {
-            y->right = leaf;
-        }
+struct RBT_Node* RBT_min(struct RBT* tree, struct RBT_Node* node, long* r) {
+    while (node->left != tree->nil) { // double read
+        node = node->left; // read
+        (*r) += 3;
     }
+    (*r) += 2;
+    return node;
+}
+
+void transplant(struct RBT* tree, struct RBT_Node* u, struct RBT_Node* v, long* r, long* w, bool calc_height) {
+    if (u->parent == tree->nil) { // read
+        tree->root = v; // write
+    } else if (u == u->parent->left) { // double read
+        u->parent->left = v; // read and write
+        (*r) += 3;
+    } else {
+        u->parent->right = v; // read and write
+        (*r) += 3;
+    }
+    
+    v->parent = u->parent; // write
 
     if (calc_height) {
-        height_fixup(leaf, r);
-    }
-
-    RBT_insert_fixup(leaf, r, w, calc_height);
-    
-    (*r)++;
-    while (root->parent != NULL) {
+        if (v == tree->nil) { // read
+            height_fixup(tree, v->parent, r); // read
+            (*r)++;
+        } else {
+            height_fixup(tree, v, r);
+        }
         (*r)++;
-        root = root->parent;
     }
 
-    return root;
+    (*r)++;
+    (*w) += 2;
+}
+
+void RBT_delete_fixup(struct RBT* tree, struct RBT_Node* node, long* r, long* w, bool calc_height) {
+    struct RBT_Node* z;
+
+    while (node != tree->root && !node->red) { // read
+        if (node == node->parent->left) { // double read
+            z = node->parent->right; // double read
+            if (z->red) {
+                z->red = false;
+                node->parent->red = true; // read
+                left_rotate(tree, node->parent, r, w, calc_height); // read
+                z = node->parent->right; // double read
+                (*r) += 4;
+            }
+
+            if (!z->left->red && !z->right->red) { // double read
+                z->red = true;
+                node = node->parent; // read
+                (*r)++;
+            } else {
+                if (!z->right->red) { // read
+                    z->left->red = false; // read
+                    z->red = true;
+                    right_rotate(tree, z, r, w, calc_height);
+                    z = node->parent->right; // double read
+                    (*r) += 3;
+                }
+                z->red = node->parent->red; // read
+                node->parent->red = false; // read
+                z->right->red = false; // read
+                left_rotate(tree, node->parent, r, w, calc_height); // read
+                node = tree->root; // read
+                (*r) += 6;
+            }
+        } else {
+            z = node->parent->left; // double read
+            if (z->red) {
+                z->red = false;
+                node->parent->red = true; // read
+                right_rotate(tree, node->parent, r, w, calc_height); // read
+                z = node->parent->left; // double read
+                (*r) += 4;
+            }
+
+            if (!z->left->red && !z->right->red) { // double read
+                z->red = true;
+                node = node->parent; // read
+                (*r)++;
+            } else {
+                if (!z->left->red) { // read
+                    z->right->red = false; // read
+                    z->red = true;
+                    left_rotate(tree, z, r, w, calc_height);
+                    z = node->parent->left; // double read
+                    (*r) += 3;
+                }
+                z->red = node->parent->red; // read
+                node->parent->red = false; // read
+                z->left->red = false; // read
+                right_rotate(tree, node->parent, r, w, calc_height); // read
+                node = tree->root; // read
+                (*r) += 6;
+            }
+        }
+        (*r) += 3;
+    }
+    (*r)++;
+    node->red = false;
 }
 
 // deletes values from a tree
 // returns -1 if the value isn't present
-// 0 if delete was successful
-// and 1 if the entire tree was deleted
-int RBT_delete(struct RBT_Node* node, long value, long* comps, long* r, long* w, bool calc_height) {
-    while(node != NULL) {
-        if (compare(value, node->value, comps)) {
-            node = node->left;
-        } else if (compare(node->value, value, comps)) {
-            node = node->right;
-        } else {
-            break;
-        }
-    }
-
-    if (node == NULL) 
+// or 0 if delete was successful
+int RBT_delete(struct RBT* tree, long value, long* comps, long* r, long* w, bool calc_height) {
+    struct RBT_Node* z = RBT_search(tree, tree->root, value, comps, r); // read
+    if (z == tree->nil) 
         return -1;
+    
+    struct RBT_Node* x;
+    struct RBT_Node* y = z;
+    bool y_org_color = y->red;
 
-    // no children
-    (*r) += 2;
-    if (node->left == NULL && node->right == NULL) {
-        (*r)++;
-        if (node->parent != NULL) {
-            (*r)++;
-            if (node->parent->left != NULL) {
-                if (compare_equal(node->parent->left->value, value, comps)) {
-                    node->parent->left = NULL;
-                } else {
-                    node->parent->right = NULL;
-                }
-            } else {
-                node->parent->right = NULL;
-            }
-            (*w)++;
+    if (z->left == tree->nil) { // double read
+        x = z->right; // read
+        transplant(tree, z, x, r, w, calc_height);
 
-            if (calc_height)
-                height_fixup(node, r);
+        (*r)++;        
+    } else if (z->right == tree->nil) { // double read
+        x = z->left; // read
+        transplant(tree, z, x, r, w, calc_height);
 
-            free(node);
-            return 0;
+        (*r) += 3;
+    } else {
+        y = RBT_min(tree, z->right, r); // read
+        y_org_color = y->red;
+
+        x = y->right; // read
+
+        if (y->parent == z) {
+            x->parent = y;
+        } else { // read
+            transplant(tree, y, x, r, w, calc_height); 
+            y->right = z->right; // read and write
+            y->right->parent = y; // read and write
+            (*r) += 2;
+            (*w) += 2;
         }
+        transplant(tree, z, y, r, w, calc_height);
+        y->left = z->left; // read and write
+        y->left->parent = y; // read and write
+        y->red = z->red;
 
-        free(node);
-        return 1;
-    }
-    
-    // only right child
-    (*r)++;
-    if (node->left == NULL) {
-        struct RBT_Node* temp = node->right;
-
-        node->value = node->right->value;
-        node->height = node->right->height;
-
-        (*r) += 2;
-        if (node->right->right != NULL) 
-            node->right->right->parent = node;
-        if (node->right->left != NULL)
-            node->right->left->parent = node;
-            
-        node->left = node->right->left;
-        node->right = node->right->right;
-        (*w) += 3;
-
-        if (calc_height)
-            height_fixup(temp, r);
-
-        free(temp);
-        return 0;
-    }
-    
-    // only left child
-    (*r)++;
-    if (node->right == NULL) {
-        struct RBT_Node* temp = node->left;
-
-        node->value = node->left->value;
-        node->height = node->left->height;
-
-        (*r) += 2;
-        if (node->left->right != NULL) 
-            node->left->right->parent = node;
-        if (node->left->left != NULL)
-            node->left->left->parent = node;
-
-        node->right = node->left->right;
-        node->left = node->left->left;
-        (*w) += 3;
-
-        if (calc_height)
-            height_fixup(temp, r);
-
-        free(temp);
-        return 0;
+        (*r) += 7;
+        (*w) += 2;
     }
 
-    // both children
-    // next is the successor of node in the subtree with node as root 
-    struct RBT_Node* next = node->right;
-    
-    (*r)++;
-    while (next->left != NULL) {
-        next = next->left;
+    free(z);
+
+    (*r) += 3;
+
+    if (!y_org_color) {
+        RBT_delete_fixup(tree, x, r, w, calc_height);
     }
 
-    int new_value = next->value;
-    // delete next in O(1), due to how it was found, it has at most one child
-    RBT_delete(next, new_value, comps, r, w, calc_height); 
-
-    node->value = new_value;
     return 0;
 }
 
-unsigned int RBT_height(struct RBT_Node* node) {
-    if (node == NULL)
-        return 0;
-    
-    // return 1 + max(BST_height(node->left), BST_height(node->right));
-    return node->height;
+
+// deletes values from a tree
+unsigned int RBT_height(struct RBT_Node* root) {
+    return root->height;
 }
 
-void BST_print1(struct RBT_Node* node, int depth, char prefix[4], char* lprefix, char* rprefix) {
-    if (node == NULL)
+void RBT_print1(struct RBT* tree, struct RBT_Node* node, int depth, char prefix[4], char* lprefix, char* rprefix) {
+    if (node == tree->nil)
         return;
     
-    BST_print1(node->right, depth + 1, "⌈", lprefix, rprefix);
+    RBT_print1(tree, node->right, depth + 1, "⌈", lprefix, rprefix);
     
     if (prefix == NULL) {
-        printf("%ld|%s\n", node->value, node->red ? "r" : "b");
+        printf("%ld|%s\n", node->value, (node->red ? "r" : "b"));
     } else {
         if (strcmp(prefix, "⌈") == 0) 
             lprefix[depth - 1] = '|';
@@ -429,17 +389,21 @@ void BST_print1(struct RBT_Node* node, int depth, char prefix[4], char* lprefix,
             }
         }
 
-        printf("%s%ld|%s\n", prefix, node->value, node->red ? "r" : "b");
+        printf("%s%ld|%s\n", prefix, node->value, (node->red ? "r" : "b"));
     }
 
     lprefix[depth] = ' ';
     rprefix[depth] = '|';
-    BST_print1(node->left, depth + 1, "⌊", lprefix, rprefix);
+    RBT_print1(tree, node->left, depth + 1, "⌊", lprefix, rprefix);
 
 }
 
-void RBT_print(struct RBT_Node* node) {
-    unsigned int h = RBT_height(node);
+void RBT_print(struct RBT* tree) {
+    if (tree == NULL) {
+        return;
+    }
+    
+    unsigned int h = RBT_height(tree->root);
 
     char* lprefix = malloc(sizeof(char) * h);
     char* rprefix = malloc(sizeof(char) * h);
@@ -449,7 +413,7 @@ void RBT_print(struct RBT_Node* node) {
         rprefix[i] = ' ';
     }
     
-    BST_print1(node, 0, NULL, lprefix, rprefix);
+    RBT_print1(tree, tree->root, 0, NULL, lprefix, rprefix);
 
     free(lprefix);
     free(rprefix);

@@ -21,12 +21,13 @@ bool compare_equal(int v1, int v2, long* comps) {
 
 // fixes height of every node above the given one
 void height_fixup(struct RBT* tree, struct RBT_Node* node, long* r) {
+    tree->nil->height = 0; // read
     while (node != tree->nil) { // read
         node->height = 1 + max(node->left->height, node->right->height); // double read
         node = node->parent; // read
         (*r) += 4;
     }
-    (*r) += 1;
+    (*r) += 2;
 }
 
 void left_rotate(struct RBT* tree, struct RBT_Node* node, long* r, long* w, bool calc_height) {
@@ -218,11 +219,17 @@ void transplant(struct RBT* tree, struct RBT_Node* u, struct RBT_Node* v, long* 
         (*r) += 3;
     }
     
-    v->height = u->height;
     v->parent = u->parent; // write
 
-    if (calc_height)
-        height_fixup(tree, v, r);
+    if (calc_height) {
+        if (v == tree->nil) { // read
+            height_fixup(tree, v->parent, r); // read
+            (*r)++;
+        } else {
+            height_fixup(tree, v, r);
+        }
+        (*r)++;
+    }
 
     (*r)++;
     (*w) += 2;

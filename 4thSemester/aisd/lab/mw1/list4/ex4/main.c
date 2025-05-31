@@ -52,12 +52,20 @@ int main() {
     unsigned int left, index;
     long comps, r, w, max_c, max_r, max_w, max_h;
     long total_c, total_r, total_w, total_h;
-    struct RBT_Node *root;
+    
+    struct RBT_Node nil;
+    nil.left = &nil;
+    nil.right = &nil;
+    nil.parent = &nil;
+    nil.red = false;
+    nil.height = 0;
+
+    struct RBT tree;
+    tree.nil = &nil;
+    tree.root = &nil;
 
     // random inserts
     for (unsigned int n = START; n <= MAX; n += INCREASE) {
-        root = NULL;
-
         unsigned int inserts[n];
         unsigned int deletes[n];
 
@@ -106,13 +114,12 @@ int main() {
                 left--;
             }
             
-            root = NULL;
             for (unsigned  int i = 0; i < n; i++) {
-                root = RBT_insert(root, inserts[i], &comps, &r, &w, true);
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
+                RBT_insert(&tree, inserts[i], &comps, &r, &w, true);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(tree.root));
             }
             
-            max_h = RBT_height(root);
+            max_h = RBT_height(tree.root);
             printf("rand insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
 
             max_c = 0;
@@ -124,10 +131,8 @@ int main() {
             total_h = 0;
 
             for (unsigned int i = 0; i < n; i++) {        
-                // if whole tree has been deleted
-                if (RBT_delete(root, deletes[i], &comps, &r, &w, true) == 1)
-                    root = NULL;
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
+                RBT_delete(&tree, deletes[i], &comps, &r, &w, true);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(tree.root));
             }
 
             printf("rand delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
@@ -136,8 +141,6 @@ int main() {
 
     // inserts in order
     for (unsigned int n = START; n <= MAX; n += INCREASE) {
-        root = NULL;
-
         unsigned int inserts[n];
         unsigned int deletes[n];
         
@@ -177,13 +180,12 @@ int main() {
                 left--;
             }
             
-            root = NULL;
             for (unsigned  int i = 0; i < n; i++) {
-                root = RBT_insert(root, inserts[i], &comps, &r, &w, false);
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
+                RBT_insert(&tree, inserts[i], &comps, &r, &w, true);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(tree.root));
             }
             
-            max_h = RBT_height(root);
+            max_h = RBT_height(tree.root);
             printf("asc insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
 
             max_c = 0;
@@ -194,11 +196,9 @@ int main() {
             total_w = 0;
             total_h = 0;
 
-            for (unsigned int i = 0; i < n; i++) {                        
-                // if whole tree has been deleted
-                if (RBT_delete(root, deletes[i], &comps, &r, &w, false) == 1)
-                    root = NULL;
-                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(root));
+            for (unsigned int i = 0; i < n; i++) {        
+                RBT_delete(&tree, deletes[i], &comps, &r, &w, true);
+                stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(tree.root));
             }
 
             printf("asc delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);

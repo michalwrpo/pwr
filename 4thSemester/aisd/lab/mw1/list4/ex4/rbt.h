@@ -12,14 +12,19 @@ struct RBT_Node {
     struct RBT_Node* right;
 };
 
-struct RBT_Node* RBT_insert(struct RBT_Node* node, long value, long* comps, long* r, long* w, bool calc_height);
+struct RBT {
+    struct RBT_Node* root;
+    struct RBT_Node* nil;
+};
 
-int RBT_delete(struct RBT_Node* node, long value, long* comps, long* r, long* w, bool calc_height);
+void RBT_insert(struct RBT* tree, long value, long* comps, long* r, long* w, bool calc_height);
+
+int RBT_delete(struct RBT* tree, long value, long* comps, long* r, long* w, bool calc_height);
 
 unsigned int RBT_height(struct RBT_Node* node);
 
 unsigned int max(unsigned int num1, unsigned int num2);
 
-void RBT_print(struct RBT_Node* node);
+void RBT_print(struct RBT* tree);
 
 #endif
