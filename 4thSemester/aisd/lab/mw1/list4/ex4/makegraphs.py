@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 if result[2*i + 2] > maxes[ind]:
                     maxes[ind] = result[2*i + 2]
             for j in range(10):
-                avg[j] = avg[j] / 20
+                avg[j] = avg[j] / (20 * n[j])
             if k < 2:
                 if i == 0:
                     r_c.append(avg.copy())

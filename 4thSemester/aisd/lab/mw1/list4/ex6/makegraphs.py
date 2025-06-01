@@ -27,6 +27,7 @@ def makegraph(fileName: str, n: List[int], y: List[List[float]], names: List[str
         plt.plot(n, y[i], c=colors[i % 7], label=names[i])
     plt.xlabel("n")
     plt.ylabel('Average value')
+    plt.yscale('log')
     plt.suptitle(title)
     plt.title(subtitle, fontsize=10)
     plt.legend()

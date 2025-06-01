@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 #include "mtwister.h"
-#include "bst.h"
+#include "splaytree.h"
 
-void stats(long* tot_c, long* tot_r, long* tot_w, long* tot_h, long* max_c, long* max_r, long* max_w, long *c, long *r, long *w, long h) {
+void stats(long* tot_c, long* tot_r, long* tot_w, long* tot_h, long* max_c, long* max_r, long* max_w, long* max_h, long *c, long *r, long *w, long h) {
     (*tot_c) += *c;
     (*tot_r) += *r;
     (*tot_w) += *w;
@@ -15,6 +15,7 @@ void stats(long* tot_c, long* tot_r, long* tot_w, long* tot_h, long* max_c, long
     *max_c = (*c > (*max_c) ? *c : *max_c);
     *max_r = (*r > (*max_r) ? *r : *max_r);
     *max_w = (*w > (*max_w) ? *w : *max_w);
+    *max_h = (h > (*max_h) ? h : *max_h);
 
     *c = 0;
     *r = 0;
@@ -39,16 +40,14 @@ int main(int argc, char* argv[]) {
     unsigned int left, index;
     long comps, r, w, max_c, max_r, max_w, max_h;
     long total_c, total_r, total_w, total_h;
-    struct BST tree;
+    struct Splay_Tree tree;
 
     tree.root = NULL;
     
     unsigned int inserts[n];
     unsigned int deletes[n];
     
-    // inserts in order        
-    tree.root = NULL;
-
+    // inserts in order
     comps = 0;
     r = 0;
     w = 0;
@@ -80,24 +79,25 @@ int main(int argc, char* argv[]) {
     }
     
     for (unsigned int i = 0; i < n; i++) {
-        BST_insert(&tree, i + 1, &comps, &r, &w, false);
-        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, i + 1);        
+        Splay_insert(&tree, i + 1, &comps, &r, &w, true);
+        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));        
     }
+
     
-    max_h = n;
     printf("asc insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
 
     max_c = 0;
     max_r = 0;
     max_w = 0;
+    max_h = 0;
     total_c = 0;
     total_r = 0;
     total_w = 0;
     total_h = 0;
 
     for (unsigned int i = 0; i < n; i++) {                        
-        BST_delete(&tree, deletes[i], &comps, &r, &w, false);
-        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, n - i - 1);                
+        Splay_delete(&tree, deletes[i], &comps, &r, &w, true);
+        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));
     }
 
     printf("asc delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
@@ -148,24 +148,24 @@ int main(int argc, char* argv[]) {
     }
     
     for (unsigned int i = 0; i < n; i++) {
-        BST_insert(&tree, inserts[i], &comps, &r, &w, true);
-        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, BST_height(tree.root));
+        Splay_insert(&tree, i + 1, &comps, &r, &w, true);
+        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));        
     }
     
-    max_h = BST_height(tree.root);
     printf("rand insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
 
     max_c = 0;
     max_r = 0;
     max_w = 0;
+    max_h = 0;
     total_c = 0;
     total_r = 0;
     total_w = 0;
     total_h = 0;
 
-    for (unsigned int i = 0; i < n; i++) {        
-        BST_delete(&tree, deletes[i], &comps, &r, &w, true);
-        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, BST_height(tree.root));
+    for (unsigned int i = 0; i < n; i++) {                        
+        Splay_delete(&tree, deletes[i], &comps, &r, &w, true);
+        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));
     }
 
     printf("rand delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);

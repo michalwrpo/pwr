@@ -6,7 +6,7 @@
 struct BST_Node {
     struct BST_Node* parent;
     long value;
-    long height;
+    unsigned long height;
     struct BST_Node* left;
     struct BST_Node* right;
 };

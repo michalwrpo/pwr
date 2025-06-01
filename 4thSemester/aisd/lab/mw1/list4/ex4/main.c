@@ -120,7 +120,7 @@ int main() {
             }
             
             max_h = RBT_height(tree.root);
-            printf("rand insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
+            printf("rand insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
 
             max_c = 0;
             max_r = 0;
@@ -135,7 +135,7 @@ int main() {
                 stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(tree.root));
             }
 
-            printf("rand delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
+            printf("rand delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
         }
     }
 
@@ -186,7 +186,7 @@ int main() {
             }
             
             max_h = RBT_height(tree.root);
-            printf("asc insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
+            printf("asc insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
 
             max_c = 0;
             max_r = 0;
@@ -201,7 +201,7 @@ int main() {
                 stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &comps, &r, &w, RBT_height(tree.root));
             }
 
-            printf("asc delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c/n, max_c, total_r/n, max_r, total_w/n, max_w, total_h/n, max_h);
+            printf("asc delete %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);
         }
     }
 

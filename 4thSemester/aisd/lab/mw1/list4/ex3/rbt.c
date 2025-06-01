@@ -19,7 +19,7 @@ bool compare_equal(int v1, int v2, long* comps) {
     return v1 == v2;
 }
 
-// fixes height of every node above the given one
+// fixes height of the given node and every node above it
 void height_fixup(struct RBT* tree, struct RBT_Node* node, long* r) {
     tree->nil->height = 0; // read
     while (node != tree->nil) { // read
