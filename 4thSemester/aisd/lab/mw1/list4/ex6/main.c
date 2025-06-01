@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     
     for (unsigned int i = 0; i < n; i++) {
         Splay_insert(&tree, i + 1, &comps, &r, &w, true);
-        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));        
+        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));
     }
 
     
@@ -148,8 +148,8 @@ int main(int argc, char* argv[]) {
     }
     
     for (unsigned int i = 0; i < n; i++) {
-        Splay_insert(&tree, i + 1, &comps, &r, &w, true);
-        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));        
+        Splay_insert(&tree, inserts[i], &comps, &r, &w, true);
+        stats(&total_c, &total_r, &total_w, &total_h, &max_c, &max_r, &max_w, &max_h, &comps, &r, &w, Splay_height(tree.root));    
     }
     
     printf("rand insert %d %ld %ld %ld %ld %ld %ld %ld %ld\n", n, total_c, max_c, total_r, max_r, total_w, max_w, total_h, max_h);

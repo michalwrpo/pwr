@@ -34,9 +34,7 @@ void height_fixup(struct Splay_Node* node, long* r) {
             node->height = 1 + node->left->height; // read
             (*r) += 3;        
         } else {
-            // printf("(%ld %ld %ld %ld %ld)", node->value, node->right->value, node->right->height, node->left->value, node->left->height);
-            unsigned long h = 1 + max(node->left->height, node->right->height); // double read
-            node->height = h;
+            node->height = 1 + max(node->left->height, node->right->height); // double read
             (*r) += 4;
         }
         node = node->parent; // read

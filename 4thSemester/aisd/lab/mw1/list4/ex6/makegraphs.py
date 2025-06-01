@@ -6,7 +6,7 @@ plt.rcParams.update({
     "font.family": "Helvetica"
 })
 
-def makegraph(fileName: str, n: List[int], y: List[List[float]], names: List[str], title: str, subtitle: str) -> None:
+def makegraph(fileName: str, n: List[int], y: List[List[float]], names: List[str], title: str, subtitle: str, log: bool) -> None:
     y_max, y_min = y[0][0], y[0][0]
     for values in y:
         for val in values:
@@ -22,12 +22,17 @@ def makegraph(fileName: str, n: List[int], y: List[List[float]], names: List[str
     plt.clf()
     plt.grid(True)
     plt.margins(0, 0)
-    plt.ylim(bottom=(0.95*y_min), top=(1.05*y_max))
+    if log:
+        plt.ylim(bottom=1, top=(1.05*y_max))
+    else:
+        plt.ylim(bottom=(0.95*y_min), top=(1.05*y_max))
     for i in range(len(y)):
         plt.plot(n, y[i], c=colors[i % 7], label=names[i])
     plt.xlabel("n")
     plt.ylabel('Average value')
-    plt.yscale('log')
+
+    if log:
+        plt.yscale('log')
     plt.suptitle(title)
     plt.title(subtitle, fontsize=10)
     plt.legend()
@@ -112,12 +117,12 @@ if __name__ == "__main__":
                     a_h.append(avg.copy())
                     a_h.append(maxes.copy())
 
-makegraph("random_comp.png", n, r_c, ["insert average", "insert max", "delete average", "delete max"], "Comparisons", "for random inserts")
-makegraph("random_reads.png", n, r_r, ["insert average", "insert max", "delete average", "delete max"], "Reads", "for random inserts")
-makegraph("random_writes.png", n, r_w, ["insert average", "insert max", "delete average", "delete max"], "Writes", "for random inserts")
-makegraph("random_height.png", n, r_h, ["insert average", "insert max", "delete average", "delete max"], "Height", "for random inserts")
+makegraph("random_comp.png", n, r_c, ["insert average", "insert max", "delete average", "delete max"], "Comparisons", "for random inserts", False)
+makegraph("random_reads.png", n, r_r, ["insert average", "insert max", "delete average", "delete max"], "Reads", "for random inserts", False)
+makegraph("random_writes.png", n, r_w, ["insert average", "insert max", "delete average", "delete max"], "Writes", "for random inserts", False)
+makegraph("random_height.png", n, r_h, ["insert average", "insert max", "delete average", "delete max"], "Height", "for random inserts", False)
 
-makegraph("ascending_comp.png", n, a_c, ["insert average", "insert max", "delete average", "delete max"], "Comparisons", "for ascending inserts")
-makegraph("ascending_reads.png", n, a_r, ["insert average", "insert max", "delete average", "delete max"], "Reads", "for ascending inserts")
-makegraph("ascending_writes.png", n, a_w, ["insert average", "insert max", "delete average", "delete max"], "Writes", "for ascending inserts")
-makegraph("ascending_height.png", n, a_h, ["insert average", "insert max", "delete average", "delete max"], "Height", "for ascending inserts")
+makegraph("ascending_comp.png", n, a_c, ["insert average", "insert max", "delete average", "delete max"], "Comparisons", "for ascending inserts", True)
+makegraph("ascending_reads.png", n, a_r, ["insert average", "insert max", "delete average", "delete max"], "Reads", "for ascending inserts", True)
+makegraph("ascending_writes.png", n, a_w, ["insert average", "insert max", "delete average", "delete max"], "Writes", "for ascending inserts", True)
+makegraph("ascending_height.png", n, a_h, ["insert average", "insert max", "delete average", "delete max"], "Height", "for ascending inserts", True)

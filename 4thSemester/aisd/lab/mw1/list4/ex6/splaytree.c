@@ -20,11 +20,12 @@ bool compare_equal(int v1, int v2, long* comps) {
 }
 
 // fixes height of the given node and every node above it
-void height_fixup(struct Splay_Node* node, long* r) {
+void height_fixup(struct Splay_Node* node, long* r, long howhigh) {
     if (node == NULL)
         return;
     
-    while (node != NULL) { 
+    long i = (howhigh == -1 ? -__LONG_LONG_MAX__ : 0);
+    while (node != NULL && i < howhigh) { 
         if (node->left == NULL && node->right == NULL) { // double read
             node->height = 1;
         } else if (node->left == NULL) { // read
@@ -34,13 +35,12 @@ void height_fixup(struct Splay_Node* node, long* r) {
             node->height = 1 + node->left->height; // read
             (*r) += 3;        
         } else {
-            // printf("(%ld %ld %ld %ld %ld)", node->value, node->right->value, node->right->height, node->left->value, node->left->height);
-            unsigned long h = 1 + max(node->left->height, node->right->height); // double read
-            node->height = h;
+            node->height = 1 + max(node->left->height, node->right->height); // double read
             (*r) += 4;
         }
         node = node->parent; // read
         (*r) += 3;
+        i++;
     }
 }
 
@@ -82,7 +82,7 @@ void left_rotate(struct Splay_Tree* tree, struct Splay_Node* node, long* r, long
     (*r) += 2;
 
     if (calc_height) {
-        height_fixup(node, r);
+        height_fixup(node, r, 2);
     }
 }
 
@@ -124,7 +124,7 @@ void right_rotate(struct Splay_Tree* tree, struct Splay_Node* node, long* r, lon
     (*r) += 2;
 
     if (calc_height) {
-        height_fixup(node, r);
+        height_fixup(node, r, 2);
     }
 }
 
@@ -198,7 +198,7 @@ void Splay_insert(struct Splay_Tree* tree, long value, long* comps, long* r, lon
     splay(tree, z, r, w, calc_height);
 
     if (calc_height)
-        height_fixup(z, r);
+        height_fixup(z, r, -1);
 
 }
 
@@ -248,9 +248,9 @@ void transplant(struct Splay_Tree* tree, struct Splay_Node* u, struct Splay_Node
 
     if (calc_height) {
         if (v == NULL) {
-            height_fixup(u->parent, r);
+            height_fixup(u->parent, r, -1);
         } else {
-            height_fixup(v, r);
+            height_fixup(v, r, -1);
         }
     }
 
