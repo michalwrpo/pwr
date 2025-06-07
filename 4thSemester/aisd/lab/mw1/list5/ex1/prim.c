@@ -27,10 +27,8 @@ int main(int argc, char** argv) {
         {
             rl.rlim_cur = kStackSize;
             result = setrlimit(RLIMIT_STACK, &rl);
-            if (result != 0)
-            {
+            if (result != 0) 
                 fprintf(stderr, "setrlimit returned result = %d\n", result);
-            }
         }
     }
     
@@ -42,13 +40,13 @@ int main(int argc, char** argv) {
 
     // for (int i = 0; i < len; i++) {
     //     printf("[");
-    //     for (long j = 0; j < len; j++) {
+    //     for (int j = 0; j < len; j++) {
     //         printf("%.2f, ", edges[i][j]);
     //     }
     //     printf("\b\b]\n");
     // }
 
-    long mst[len];
+    int mst[len];
 
     prim(len, edges, mst);
 
