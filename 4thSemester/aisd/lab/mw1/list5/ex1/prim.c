@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/resource.h>
+#include <time.h>
 
 #include "graph.h"
 
@@ -48,7 +49,11 @@ int main(int argc, char** argv) {
 
     int mst[len];
 
+    clock_t start = clock();
     prim(len, edges, mst);
+    clock_t end = clock();
+
+    printf("Prim %d %.6f\n", len, ((double) (end - start)) / CLOCKS_PER_SEC);
 
     // for (int i = 0; i < len; i++) {
     //     printf("(%ld -> %ld) ", mst[i], i);
