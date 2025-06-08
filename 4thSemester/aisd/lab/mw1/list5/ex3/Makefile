@@ -1,8 +1,11 @@
 CXX := gcc
 CXX_WARN := -Wall -Wextra -Wpedantic 
 
-binheap:
-	$(CXX) $(CXX_WARN) main.c binHeap.c mtwister.c -o app.out
+experiment:
+	$(CXX) $(CXX_WARN) experiment.c binHeap.c mtwister.c -o exp.out
+
+data:
+	$(CXX) $(CXX_WARN) data.c binHeap.c mtwister.c -o data.out
 
 clean:
 	rm -f *.out
