@@ -129,5 +129,6 @@ if __name__ == "__main__":
 
     for i in range(len(ans[0])):
         ans[0][i] /= n[i]
+        ans[0][i] /= 10
 
     makegraph("comparisons.png", n, ans, ["Average comparisons"], "Binary Heap", "Average comparisons per n", False)
