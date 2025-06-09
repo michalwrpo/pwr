@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     int ans = 0;
     order(mst, len, &ans);
 
-    printf("Rounds: %d\n", ans);
+    printf("%d %d\n", len, ans);
 
     return 0;
 }

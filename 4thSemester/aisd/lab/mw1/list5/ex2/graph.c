@@ -1,4 +1,4 @@
-#include <time.h>
+#include <sys/time.h>
 #include <stdbool.h>
 #include <float.h>
 #include <stdlib.h>
@@ -8,7 +8,9 @@
 #include "graph.h"
 
 void makeGraph(unsigned int vertexNum, double edges[vertexNum][vertexNum]) {
-    MTRand r = seedRand(time(NULL));
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    MTRand r = seedRand(now.tv_usec);
 
     for (unsigned int i = 0; i < vertexNum; i++) {
         for (unsigned int j = 0; j < i; j++) {
@@ -21,7 +23,9 @@ void makeGraph(unsigned int vertexNum, double edges[vertexNum][vertexNum]) {
 }
 
 void makeGraphList(unsigned int vertexNum, edge* edges[vertexNum * (vertexNum - 1) >> 1]) {
-    MTRand r = seedRand(time(NULL));
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    MTRand r = seedRand(now.tv_usec);
 
     int k = 0;
     for (unsigned int i = 1; i < vertexNum; i++) {
