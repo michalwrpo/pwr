@@ -11,16 +11,16 @@ typedef struct BinHeapNode {
 
 typedef struct BinHeap {
     BHNode* head;
-} BinaryHeap;
+} BinomialHeap;
 
-BinaryHeap* makeHeap();
+BinomialHeap* makeHeap();
 
 void heapLink(BHNode* root1, BHNode* root2);
-BHNode* heapMerge(BinaryHeap* H1, BinaryHeap* H2);
-void heapUnion(BinaryHeap* H, BinaryHeap* H1, long* comps);
+BHNode* heapMerge(BinomialHeap* H1, BinomialHeap* H2);
+void heapUnion(BinomialHeap* H, BinomialHeap* H1, long* comps);
 
-void heapInsert(BinaryHeap* H, int key, long* comps);
+void heapInsert(BinomialHeap* H, int key, long* comps);
 
-BHNode* heapExtractMin(BinaryHeap* H, long* comps);
+BHNode* heapExtractMin(BinomialHeap* H, long* comps);
 
 #endif

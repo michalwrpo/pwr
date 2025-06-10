@@ -75,19 +75,19 @@ def makegraphscatter(fileName: str, n: List[List[int]], y: List[List[float]], na
 if __name__ == "__main__":
     data = open("experiment.txt").read().strip().split("\n")
 
-    make = [[0]] * 10
+    make = [[0] for _ in range(10)]
     n_make = [1]
 
     h1 = [[0 for _ in range(500)] for _ in range(5)]
     n_h1 = [i for i in range(2, 502)]
 
-    h2 = [[0] * 500] * 5
+    h2 = [[0 for _ in range(500)] for _ in range(5)]
     n_h2 = [i for i in range(502, 1002)]
     
-    union = [[]] * 5
+    union = [[] for _ in range(5)]
     n_union = [1002]
 
-    extr = [[0] * 1000] * 5
+    extr = [[0 for _ in range(1000)] for _ in range(5)]
     n_extr = [i for i in range(1003, 2003)]
 
     result = []
@@ -108,12 +108,14 @@ if __name__ == "__main__":
         elif line[2] == "Extract":
             extr[k][i] = int(line[4])
 
+    print
+
     n = [n_make, n_h1, n_h2, n_union, n_extr]
     names = ["Make-Heap", "$H_1$ Heap-Insert", "$H_2$ Heap-Insert", "Heap-Union", "Extract-Min"]
 
     for i in range(5):
         results = [make[i], h1[i], h2[i], union[i], extr[i]]
-        makegraphscatter("experiment" + str(i) + ".png", n, results, names, "Binary Heap", "Comparisons per operation, attempt " + str(i))
+        makegraphscatter("experiment" + str(i) + ".png", n, results, names, "Binomial Heap", "Comparisons per operation, attempt " + str(i))
 
     data = open("data.txt").read().strip().split("\n")
 
@@ -130,4 +132,4 @@ if __name__ == "__main__":
         ans[0][i] /= n[i]
         ans[0][i] /= 10
 
-    makegraph("comparisons.png", n, ans, ["Average comparisons"], "Binary Heap", "Average comparisons per n", False)
+    makegraph("comparisons.png", n, ans, ["Average comparisons"], "Binomial Heap", "Average comparisons per n", False)

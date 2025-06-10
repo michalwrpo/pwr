@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
+#include <sys/time.h>
 
 #include "mtwister.h"
 #include "binHeap.h"
@@ -20,11 +20,13 @@ int main(int argc, char** argv) {
 
     int n = atoi(argv[1]);
 
-    MTRand r = seedRand(time(NULL));
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    MTRand r = seedRand(now.tv_usec);
     long comps = 0;
 
-    BinaryHeap* H1 = makeHeap();    
-    BinaryHeap* H2 = makeHeap();
+    BinomialHeap* H1 = makeHeap();    
+    BinomialHeap* H2 = makeHeap();
 
     for (int i = 0; i < n; i++) {
         heapInsert(H1, genRandLong(&r) % MAX_KEY, &comps);

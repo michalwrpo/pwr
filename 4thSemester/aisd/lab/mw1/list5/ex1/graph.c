@@ -16,7 +16,7 @@ void swap(edge** A, int i, int j) {
 }
 
 int partition(edge** A, int s, int e) {
-    int pivot = A[e]->weight;
+    float pivot = A[e]->weight;
     int i = s;
 
     for (int j = s; j < e; j++) {
@@ -127,7 +127,7 @@ void treeUnion(int* parents, int* rank, int x, int y) {
     }
 }
 
-void kruskal(unsigned int vertexNum, edge* edges[vertexNum * (vertexNum - 1) >> 1], edge* result[vertexNum - 1]) {
+void kruskal(unsigned int vertexNum, edge* edges[vertexNum * (vertexNum - 1) >> 1], edge* result[vertexNum - 1], int print) {
     unsigned int size = vertexNum * (vertexNum - 1) >> 1;
 
     int parents[vertexNum];
@@ -139,7 +139,16 @@ void kruskal(unsigned int vertexNum, edge* edges[vertexNum * (vertexNum - 1) >> 
         rank[i] = 0;
     }
     
-    quicksort(edges, 0, vertexNum - 1);
+    quicksort(edges, 0, size - 1);
+
+    if (print) {
+        printf("Sorted edges:\n");
+        for (unsigned int i = 0; i < size; i++) {
+            printf("(%d, %d, %.2f) ", edges[i]->vertex1, edges[i]->vertex2, edges[i]->weight);
+        }
+        printf("\n");
+    }
+    
 
     for (unsigned int i = 0; i < size; i++) {
         edge* e = edges[i]; 

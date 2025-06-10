@@ -73,7 +73,7 @@ void count(int len, int** children, int* amount, int* weights, int i) {
 // order of which should get the signal first 
 // total rounds is used to return the number
 // of rounds needed to spread the signal
-int** order(int* parents, int len, int* totalrounds) {
+int** order(int* parents, int len, int* totalrounds, int print) {
     int** children = malloc(len * sizeof(int*));    
     int amount[len];
     int filled[len];
@@ -129,16 +129,17 @@ int** order(int* parents, int len, int* totalrounds) {
         }        
     }
 
-    
-    // for (int i = 0; i < len; i++) {
-    //     if (amount[i] < 3) 
-    //         continue;
-    //     printf("%d|%d: ", i, weights[i]);
-    //     for (int j = 0; j < amount[i]; j++) {
-    //         printf("%d|%d, ", children[i][j], weights[children[i][j]]);
-    //     }
-    //     printf("\n");
-    // }
+    if (print) {
+        for (int i = 0; i < len; i++) {
+            if (amount[i] < 1) 
+                continue;
+            printf("%d|%d: ", i, weights[i]);
+            for (int j = 0; j < amount[i]; j++) {
+                printf("%d|%d, ", children[i][j], weights[children[i][j]]);
+            }
+            printf("\n");
+        }
+    }
 
     return children;
 }

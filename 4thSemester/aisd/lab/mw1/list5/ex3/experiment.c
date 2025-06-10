@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
+#include <sys/time.h>
 
 #include "mtwister.h"
 #include "binHeap.h"
@@ -9,13 +9,16 @@
 #define REPETITIONS 5
 
 int main(void) {
-    MTRand r = seedRand(time(NULL));
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    MTRand r = seedRand(now.tv_usec);
+
     long comps = 0;
     int result[1000];
 
     for (int k = 0; k < REPETITIONS; k++) {
-        BinaryHeap* H1 = makeHeap();
-        BinaryHeap* H2 = makeHeap();
+        BinomialHeap* H1 = makeHeap();
+        BinomialHeap* H2 = makeHeap();
     
         for (int i = 0; i < 500; i++) {
             heapInsert(H1, genRandLong(&r) % MAX_KEY, &comps);

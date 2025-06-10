@@ -8,8 +8,8 @@ int compare(int v1, int v2, long* comps) {
     return v1 < v2;
 }
 
-BinaryHeap* makeHeap() {
-    BinaryHeap* BH = malloc(sizeof(BinaryHeap));
+BinomialHeap* makeHeap() {
+    BinomialHeap* BH = malloc(sizeof(BinomialHeap));
     BH->head = NULL;
     return BH;
 }
@@ -21,7 +21,7 @@ void heapLink(BHNode* root1, BHNode* root2) {
     root2->degree++;
 }
 
-BHNode* heapMerge(BinaryHeap* H1, BinaryHeap* H2) {
+BHNode* heapMerge(BinomialHeap* H1, BinomialHeap* H2) {
     BHNode *head, *N1, *N2, *N;
 
     N1 = H1->head;
@@ -71,7 +71,7 @@ BHNode* heapMerge(BinaryHeap* H1, BinaryHeap* H2) {
     return head;
 }
 
-void heapUnion(BinaryHeap* H, BinaryHeap* H1, long* comps) {    
+void heapUnion(BinomialHeap* H, BinomialHeap* H1, long* comps) {    
     H->head = heapMerge(H, H1);
 
     free(H1);
@@ -105,8 +105,8 @@ void heapUnion(BinaryHeap* H, BinaryHeap* H1, long* comps) {
     }
 }
 
-void heapInsert(BinaryHeap* H, int key, long* comps) {
-    BinaryHeap* H1 = makeHeap();
+void heapInsert(BinomialHeap* H, int key, long* comps) {
+    BinomialHeap* H1 = makeHeap();
     
     BHNode* x = malloc(sizeof(BHNode));
     x->key = key;
@@ -120,7 +120,7 @@ void heapInsert(BinaryHeap* H, int key, long* comps) {
     heapUnion(H, H1, comps);
 }
 
-BHNode* heapExtractMin(BinaryHeap* H, long* comps) {
+BHNode* heapExtractMin(BinomialHeap* H, long* comps) {
     if (H == NULL || H->head == NULL)
         return 0;
     
@@ -159,7 +159,7 @@ BHNode* heapExtractMin(BinaryHeap* H, long* comps) {
     
     N->sibling = prev;
 
-    BinaryHeap* H1 = makeHeap();
+    BinomialHeap* H1 = makeHeap();
     H1->head = N;
 
     heapUnion(H, H1, comps);

@@ -2,19 +2,25 @@
 #include <stdlib.h>
 #include <sys/resource.h>
 #include <time.h>
+#include <string.h>
 
 #include "graph.h"
 #include "order.h"
 
 int main(int argc, char** argv) {
-    if (argc != 2) {
-        printf("Usage: %s [n]\n", argv[0]);
+    if (argc != 2 && argc != 3) {
+        printf("Usage: %s [n] [Optional: print]\n", argv[0]);
         return -1;
     }
 
     if (atoi(argv[1]) < 1) {
         printf("n (number of vertices) must be a postive number\n");
         return -1;
+    }
+
+    int print = 0;
+    if (argc == 3 && strcmp(argv[2], "true") == 0) {
+        print = 1;
     }
 
     // default stack wasn't enough matrices big enough
@@ -45,7 +51,7 @@ int main(int argc, char** argv) {
     prim(len, edges, mst);
 
     int ans = 0;
-    order(mst, len, &ans);
+    order(mst, len, &ans, print);
 
     printf("%d %d\n", len, ans);
 
