@@ -76,19 +76,19 @@ if __name__ == "__main__":
     data = open("experiment.txt").read().strip().split("\n")
 
     make = [[0]] * 10
-    n_make = [[1]] * 10
+    n_make = [1]
 
     h1 = [[0 for _ in range(500)] for _ in range(5)]
-    n_h1 = [[i for i in range(2, 502)]] * 5
+    n_h1 = [i for i in range(2, 502)]
 
     h2 = [[0] * 500] * 5
-    n_h2 = [[i for i in range(502, 1002)]] * 5
+    n_h2 = [i for i in range(502, 1002)]
     
     union = [[]] * 5
-    n_union = [[1002]] * 5
+    n_union = [1002]
 
     extr = [[0] * 1000] * 5
-    n_extr = [[i for i in range(1003, 2003)]] * 5
+    n_extr = [i for i in range(1003, 2003)]
 
     result = []
 
@@ -108,13 +108,12 @@ if __name__ == "__main__":
         elif line[2] == "Extract":
             extr[k][i] = int(line[4])
 
-    results = make + h1 + h2 + union + extr
-    n = n_make + n_h1 + n_h2 + n_union + n_extr
-    colors = ['b'] * 10 + ['y'] * 5 + ['r'] * 5 + ['g'] * 5 + ['m'] * 5
-    names = ["Make-Heap"] + [""] * 9 + ["$H_1$ Heap-Insert"] + [""] * 4 + ["$H_2$ Heap-Insert"] + [""] * 4 + ["Heap-Union"] + [""] * 4 + ["Extract-Min"] + [""] * 4
+    n = [n_make, n_h1, n_h2, n_union, n_extr]
+    names = ["Make-Heap", "$H_1$ Heap-Insert", "$H_2$ Heap-Insert", "Heap-Union", "Extract-Min"]
 
-    
-    makegraphscatter("experiments.png", n, results, names, "Binary Heap", "Comparisons per operation", False, colors)
+    for i in range(5):
+        results = [make[i], h1[i], h2[i], union[i], extr[i]]
+        makegraphscatter("experiment" + str(i) + ".png", n, results, names, "Binary Heap", "Comparisons per operation, attempt " + str(i))
 
     data = open("data.txt").read().strip().split("\n")
 
