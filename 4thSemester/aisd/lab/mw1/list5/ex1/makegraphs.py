@@ -56,14 +56,14 @@ if __name__ == "__main__":
     results = [prim, kruskal]
     ans = []
 
-    n = [1000*x for x in range(1, 11)]
+    n = [1000*x for x in range(1, 26)]
 
     for k in range(len(results)):
-        avg = [0 for _ in range(10)]
+        avg = [0 for _ in range(25)]
         for result in results[k]:
             ind = int(result[0]) // 1000 - 1
-            avg[ind] += result[1] * 1000000
-        for j in range(10):
+            avg[ind] += result[1] * 1000 # miliseconds
+        for j in range(25):
             avg[j] = avg[j] / 10 
         if k == 0:
             ans.append(avg)
@@ -72,4 +72,4 @@ if __name__ == "__main__":
             
     print(ans)
 
-makegraph("mst.png", n, ans, ["Prim's algorithm", "Kruskal's algorithm"], "MST", "Time spent [$\mu$s]", True)
+makegraph("mst.png", n, ans, ["Prim's algorithm", "Kruskal's algorithm"], "MST", "Time spent [ms]", True)

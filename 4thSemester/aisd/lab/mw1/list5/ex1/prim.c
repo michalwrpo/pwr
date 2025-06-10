@@ -39,9 +39,9 @@ int main(int argc, char** argv) {
 
     makeGraph(len, edges);
 
-    // for (int i = 0; i < len; i++) {
+    // for (unsigned int i = 0; i < len; i++) {
     //     printf("[");
-    //     for (int j = 0; j < len; j++) {
+    //     for (unsigned int j = 0; j < len; j++) {
     //         printf("%.2f, ", edges[i][j]);
     //     }
     //     printf("\b\b]\n");
@@ -55,8 +55,8 @@ int main(int argc, char** argv) {
 
     printf("Prim %d %.6f\n", len, ((double) (end - start)) / CLOCKS_PER_SEC);
 
-    // for (int i = 0; i < len; i++) {
-    //     printf("(%ld -> %ld) ", mst[i], i);
+    // for (unsigned int i = 0; i < len; i++) {
+    //     printf("(%d -> %u) ", mst[i], i);
     // }
     // printf("\n");
     

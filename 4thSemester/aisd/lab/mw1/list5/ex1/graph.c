@@ -2,10 +2,43 @@
 #include <stdbool.h>
 #include <float.h>
 #include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
 
 #include "mtwister.h"
 
 #include "graph.h"
+
+void swap(edge** A, int i, int j) {
+    edge* temp = A[i];
+    A[i] = A[j];
+    A[j] = temp;
+}
+
+int partition(edge** A, int s, int e) {
+    int pivot = A[e]->weight;
+    int i = s;
+
+    for (int j = s; j < e; j++) {
+        if (A[j]->weight <= pivot) {
+            swap(A, i, j);
+            i++;
+        }
+    }
+
+    swap(A, i, e);
+    return i;
+}
+
+void quicksort(edge** A, int s, int e) {
+    if (s >= e || s < 0)
+        return;
+
+    int p = partition(A, s, e);
+
+    quicksort(A, s, p - 1);
+    quicksort(A, p + 1, e);    
+}
 
 void makeGraph(unsigned int vertexNum, double edges[vertexNum][vertexNum]) {
     MTRand r = seedRand(time(NULL));
@@ -94,12 +127,6 @@ void treeUnion(int* parents, int* rank, int x, int y) {
     }
 }
 
-int compare(const void *a, const void *b) {
-    double arg1 = (*(const edge**)a)->weight;
-    double arg2 = (*(const edge**)b)->weight;
-    return (arg1 > arg2) - (arg1 < arg2);
-}
-
 void kruskal(unsigned int vertexNum, edge* edges[vertexNum * (vertexNum - 1) >> 1], edge* result[vertexNum - 1]) {
     unsigned int size = vertexNum * (vertexNum - 1) >> 1;
 
@@ -112,7 +139,7 @@ void kruskal(unsigned int vertexNum, edge* edges[vertexNum * (vertexNum - 1) >> 
         rank[i] = 0;
     }
     
-    qsort(edges, size, sizeof(edges[0]), compare);
+    quicksort(edges, 0, vertexNum - 1);
 
     for (unsigned int i = 0; i < size; i++) {
         edge* e = edges[i]; 
