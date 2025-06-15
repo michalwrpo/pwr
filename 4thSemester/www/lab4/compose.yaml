@@ -25,8 +25,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: always
-    ports: 
-      - 5000:5000
+    # ports: 
+    #   - 5000:5000
     environment:
       - DATABASE_URL=postgres://appuser:appuser@wwwlab-database:5432/wwwlab?sslmode=disable
     depends_on:
@@ -35,8 +35,38 @@ services:
     networks:
       - wwwlab-internal
 
+  # NodeJS (React) https://hub.docker.com/_/node
+  frontend:
+    container_name: wwwlab-frontend
+    image: node:23
+    restart: always
+    working_dir: /app
+    command: ["npm", "run", "dev", "--", "--host"]
+    volumes: 
+      - ./frontend:/app
+    networks:
+      - wwwlab-internal
+
+  # Nginx https://hub.docker.com/_/nginx
+  nginx:
+    container_name: wwwlab-nginx
+    image: nginx:1.27
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+      - ./proxy/self-signed.crt:/etc/nginx/ssl/self-signed.crt
+      - ./proxy/self-signed.key:/etc/nginx/ssl/self-signed.key
+    networks:
+      - wwwlab-internal
+      - wwwlab-external
+
 networks:
   wwwlab-internal:
+    driver: bridge
+  wwwlab-external:
     driver: bridge
 
 volumes:

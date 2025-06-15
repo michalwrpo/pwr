@@ -3,6 +3,7 @@ import psycopg2
 from hashlib import sha256
 import jwt
 from datetime import datetime, timezone, timedelta
+from flask import Blueprint
 
 app = Flask(__name__)
 
@@ -58,7 +59,7 @@ def forbidden(e):
     return jsonify({'message': e.description}), 403
 
 # Login
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login():
     if request.is_json:
         data = request.get_json()
@@ -84,7 +85,7 @@ def login():
     return jsonify({'access_token': f'{token}'})
 
 # Register
-@app.route('/register', methods=['POST'])
+@app.route('/api/register', methods=['POST'])
 def register():
     if request.is_json:
         data = request.get_json()
@@ -124,7 +125,7 @@ def register():
     return jsonify({'message': 'User registered successfully.'}), 201
 
 # Delete your account
-@app.route('/users/me', methods=['DELETE'])
+@app.route('/api/users/me', methods=['DELETE'])
 def del_account():
     user_id = check_token(request)
 
@@ -137,7 +138,7 @@ def del_account():
     return jsonify({'message': 'Deleted account'}), 200
 
 # Manage Users
-@app.route('/users/', methods=['GET', 'POST'])
+@app.route('/api/users/', methods=['GET', 'POST'])
 def manage_users():
     user_id = check_token(request)
     cur = conn.cursor()
@@ -203,7 +204,7 @@ def manage_users():
     return jsonify({'message': 'User created successfully.'}), 201
 
 # Delete users
-@app.route('/users/<int:target_user_id>', methods=['DELETE'])
+@app.route('/api/users/<int:target_user_id>', methods=['DELETE'])
 def delete_user(target_user_id):
     user_id = check_token(request)
     cur = conn.cursor()
@@ -228,7 +229,7 @@ def delete_user(target_user_id):
     return jsonify({'message': 'User deleted successfully.'}), 200
 
 # Products
-@app.route('/products/', methods=['GET', 'POST'])
+@app.route('/api/products/', methods=['GET', 'POST'])
 def products():
     cur = conn.cursor()
     if request.method == 'GET':
@@ -343,7 +344,7 @@ def products():
         cur.close()
         return jsonify({'message': "Added product."}), 201
 
-@app.route('/products/<int:product_id>', methods=['PUT', 'DELETE'])
+@app.route('/api/products/<int:product_id>', methods=['PUT', 'DELETE'])
 def edit_product(product_id):
     if request.method == 'PUT':
         user_id = check_token(request)
@@ -424,7 +425,7 @@ def edit_product(product_id):
         return jsonify({'message': 'Product deleted successfully'}), 200
 
 # Reviews
-@app.route('/products/<int:product_id>/reviews', methods=['POST', 'PUT', 'DELETE'])
+@app.route('/api/products/<int:product_id>/reviews', methods=['POST', 'PUT', 'DELETE'])
 def handle_reviews(product_id):
     user_id = check_token(request)
     cur = conn.cursor()
@@ -498,7 +499,7 @@ def handle_reviews(product_id):
         return jsonify({'message': 'Review deleted successfully'}), 200
 
 # Get Reviews
-@app.route('/products/<int:product_id>/reviews', methods=['GET'])
+@app.route('/api/products/<int:product_id>/reviews', methods=['GET'])
 def get_reviews(product_id):
     cur = conn.cursor()
     cur.execute(f"SELECT Users.username, Reviews.rating FROM Reviews JOIN Users ON Reviews.user_id = Users.id WHERE Reviews.product_id = {product_id}")

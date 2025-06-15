@@ -29,6 +29,31 @@ services:
       - DATABASE_URL=postgres://appuser:appuser@wwwlab-database:5432/wwwlab?sslmode=disable
     network_mode: host
 
+  # NodeJS (React) https://hub.docker.com/_/node
+  frontend:
+    container_name: wwwlab-frontend
+    image: node:23
+    restart: always
+    working_dir: /app
+    command: ["npm", "run", "dev", "--", "--host"]
+    volumes: 
+      - ./frontend:/app
+    network_mode: host
+
+  # Nginx https://hub.docker.com/_/nginx
+  nginx:
+    container_name: wwwlab-nginx
+    image: nginx:1.27
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./proxy/nginx.dev.conf:/etc/nginx/nginx.conf
+      # - ./proxy/self-signed.crt:/etc/nginx/ssl/self-signed.crt
+      # - ./proxy/self-signed.key:/etc/nginx/ssl/self-signed.key
+    network_mode: host
+
 volumes:
   database-data:
     driver: local
