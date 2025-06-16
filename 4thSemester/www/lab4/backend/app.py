@@ -82,7 +82,9 @@ def login():
     
     cur.close()
 
-    return jsonify({'access_token': f'{token}'})
+    resp = jsonify({'message': 'Login successful'})
+    resp.set_cookie('access_token', f'{token}', httponly=False, samesite='Strict', secure=True)
+    return resp
 
 # Register
 @app.route('/api/register', methods=['POST'])
@@ -123,6 +125,25 @@ def register():
     cur.close()
 
     return jsonify({'message': 'User registered successfully.'}), 201
+
+# Return user info
+@app.route('/api/users/me', methods=['GET'])
+def get_user_info():
+    user_id = check_token(request)
+
+    cur = conn.cursor()
+
+    cur.execute(f"SELECT type, username FROM Users WHERE id='{user_id}'")
+    user_info = cur.fetchone()
+
+    if not user_info:
+        cur.close()
+        return jsonify({'message': 'User not found.'}), 404
+
+    user_type, username = user_info
+    cur.close()
+
+    return jsonify({'id': user_id, 'username': username, 'type': user_type}), 200
 
 # Delete your account
 @app.route('/api/users/me', methods=['DELETE'])

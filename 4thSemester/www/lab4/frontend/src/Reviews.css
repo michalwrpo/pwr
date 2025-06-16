@@ -1,0 +1,204 @@
+.reviews-container {
+    max-width: 600px;
+    margin: 32px auto;
+    padding: 24px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.reviews-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #222;
+    text-align: center;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.review-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+    border-radius: 8px;
+    max-width: 20vw;
+    gap: 20px;
+}
+
+.review-content {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.review-username {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.review-rating {
+    font-size: 1.5rem;
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.remove-review-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+    margin-right: -60px;
+}
+
+.remove-review-btn:hover,
+.remove-review-btn:focus {
+    background: #f0f0f0;
+    color: #555;
+    outline: none;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    margin-top: 24px;
+}
+
+.add-review-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.add-review-form label {
+    font-size: 1.1rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-review-form input[type="number"] {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-left: 8px;
+    background: #f5f5f5;
+    color: #222;
+}
+
+/* hide the arrows */
+input[type="number"] {
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+}
+
+.add-review-form button[type="submit"] {
+    padding: 8px 20px;
+    background: #f5f5f5;
+    color: #222;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-review-form button[type="submit"]:disabled {
+    background: #d6d6d6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .reviews-container {
+        max-width: 98vw;
+        padding: 12px;
+        margin: 16px auto;
+        border-radius: 8px;
+    }
+
+    .reviews-title {
+        font-size: 1.3rem;
+        margin-bottom: 14px;
+    }
+
+    .reviews-list {
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .review-item {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        max-width: 100vw;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .review-content {
+        flex-direction: column;
+        align-self: left;
+    }
+
+    .review-username,
+    .review-rating {
+        font-size: 1.1rem;
+    }
+
+    .remove-review-btn {
+        font-size: 1rem;
+        margin-right: 0;
+        align-self: flex-end;
+        margin-right: -15%;
+    }
+
+    .add-review-form {
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .add-review-form label {
+        font-size: 1rem;
+        gap: 4px;
+    }
+
+    .add-review-form input[type="number"] {
+        width: 40px;
+        font-size: 0.95rem;
+        padding: 4px 6px;
+    }
+
+    .add-review-form button[type="submit"] {
+        padding: 6px 14px;
+        font-size: 0.95rem;
+    }
+
+    .no-reviews {
+        margin-top: 14px;
+        font-size: 0.95rem;
+    }
+}

@@ -1,76 +1,104 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { useEffect } from 'react'
+import Login from './Login'
+import Register from './Register'
+import Products from './Products'
+import Home from './Home'
+import Reviews from './Reviews'
+import User from './User'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useState } from 'react'
 
-function useProducts() {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+const queryClient = new QueryClient()
 
-  useEffect(() => {
-    setLoading(true)
-    fetch('/api/products/')
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok ' + res.statusText)
-        return res.json()
-      })
-      .then(data => setProducts(data))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+const NAV_ITEMS = [
+    { name: 'Home', path: '/' },
+    { name: 'Login', path: '/login' },
+    { name: 'Register', path: '/register' },
+    { name: 'Products', path: '/products' },
+]
 
-  return { products, loading, error }
+// Wrapper for Reviews to get productId from URL
+function ReviewsWrapper(props) {
+    const { productId } = useParams()
+    return <Reviews {...props} productId={productId} />
 }
 
-function ProductsList() {
-  const { products, loading, error } = useProducts()
+function Navbar() {
+    const [menuOpen, setMenuOpen] = useState(false)
+    const location = useLocation()
+    const getUsernameFromCookie = () => {
+        const match = document.cookie.match(/(?:^|;\s*)username=([^;]*)/)
+        return match ? decodeURIComponent(match[1]) : null
+    }
+    const username = getUsernameFromCookie()
+    const navigate = useNavigate()
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
-  if (!products.length) return <div>No products found.</div>
+    const handleMenuToggle = () => setMenuOpen(open => !open)
+    const handleNavClick = (path) => {
+        setMenuOpen(false)
+        navigate(path)
+    }
 
-  console.log('Products:', products)
-  return "Cool"
-  // return (
-  //   <ul>
-  //     {products.map((product, idx) => (
-  //       <li key={product.id || idx}>{JSON.stringify(product)}</li>
-  //     ))}
-  //   </ul>
-  // )
+    return (
+        <nav className='navbar'>
+            <div className='navbar-mobile'>
+                <button
+                    className='hamburger'
+                    onClick={handleMenuToggle}
+                    aria-label="Toggle navigation"
+                >
+                    <span className="bar"></span>
+                    <span className="bar"></span>
+                    <span className="bar"></span>
+                </button>
+                {username && (
+                    <div
+                        className='navbar-username-div'
+                        onClick={() => { setMenuOpen(false); navigate('/user') }}
+                    >
+                        <span className="navbar-username">
+                            {username}
+                        </span>
+                    </div>
+                )}
+            </div>
+            <div className={`navbar-center ${menuOpen ? 'open' : ''}`}>
+                {NAV_ITEMS.map(item => (
+                    <Link
+                        key={item.name}
+                        to={item.path}
+                        className={location.pathname === item.path ? 'nav-btn-active' : 'nav-btn'}
+                        onClick={() => handleNavClick(item.path)}
+                    >
+                        {item.name}
+                    </Link>
+                ))}
+            </div>
+        </nav>
+    )
 }
 
 function App() {
-  const [showProducts, setShowProducts] = useState(false);
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setShowProducts(true)}>
-          {showProducts ? 'Products loaded' : 'Show Products'}
-        </button>
-        {showProducts && <ProductsList />}
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Router>
+                <Navbar />
+                <main>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route path="/products/:productId/reviews" element={<ReviewsWrapper />} />
+                        <Route path="/user" element={<User />} />
+                        {/* fallback route */}
+                        <Route path="*" element={<Home />} />
+                    </Routes>
+                </main>
+            </Router>
+        </QueryClientProvider>
+    )
 }
-
 
 export default App

@@ -1,0 +1,142 @@
+.login-container,
+.register-container {
+    max-width: 30vw;
+    min-width: 450px;
+    margin: 6vh auto;
+    padding: 2.5rem 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #222;
+    text-align: center;
+}
+
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.login-field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
+.login-label {
+    font-size: 1.08rem;
+    color: #444;
+    font-weight: 500;
+}
+
+.login-input {
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    background-color: #fafafa;
+    color: #222;
+    margin-left: 12px;
+    width: 60%;
+}
+
+.login-input:focus {
+    border-color: #bdbdbd;
+    outline: none;
+    background-color: #fff;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px 0;
+    background-color: #f5f5f5;
+    color: #222;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+}
+
+.login-button:hover,
+.login-button:focus {
+    background-color: #e0e0e0;
+}
+
+.login-error {
+    color: red;
+    margin-top: 8px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.login-success {
+    color: green;
+    margin-top: 8px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .login-container,
+    .register-container {
+        min-width: 0;
+        max-width: 95vw;
+        padding: 1.5rem 0.5rem;
+        margin: 3vh auto;
+        border-radius: 8px;
+    }
+
+    .login-title {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+
+    .login-form {
+        gap: 12px;
+    }
+
+    .login-field {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 4px;
+    }
+
+    .login-label {
+        margin-bottom: 4px;
+        font-size: 1rem;
+    }
+
+    .login-input {
+        width: 90%;
+        margin-left: 0;
+        font-size: 0.98rem;
+    }
+
+    .login-button {
+        font-size: 1rem;
+        padding: 10px 0;
+        margin-top: 8px;
+    }
+
+    .login-error,
+    .login-success {
+        font-size: 0.95rem;
+        margin-top: 6px;
+    }
+}

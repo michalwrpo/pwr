@@ -1,42 +1,110 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.nav-btn {
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.nav-btn-active {
+  padding: 0.5rem 1rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  z-index: 1000;
+  padding: 1rem 2rem 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.navbar-username {
+  margin-left: 2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.navbar-username-div {
+  padding: 0 1rem 0 0;
+  cursor: 'pointer';
+}
+
+.navbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.hamburger .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  border-radius: 2px;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.5rem 1rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .nav-btn,
+  .nav-btn-active {
+    width: 90%;
+    box-sizing: border-box;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .navbar-username {
+    margin-left: 0;
+    margin-top: 0.5rem;
+    text-align: left;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .navbar-username-div {
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
 
-.read-the-docs {
-  color: #888;
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar-center {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .navbar-center.open {
+    display: flex;
+  }
 }
