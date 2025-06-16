@@ -83,11 +83,13 @@
     margin-left: 0;
     margin-top: 0.5rem;
     text-align: left;
+    cursor: pointer;
   }
 
   .navbar-username-div {
     padding: 0;
     margin-bottom: 0.5rem;
+    cursor: pointer;
   }
 
   .hamburger {

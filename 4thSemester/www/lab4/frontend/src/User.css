@@ -125,3 +125,18 @@
 .remove-user-btn:hover {
     background: #ffeaea;
 }
+
+.user-type-select {
+    padding: 0.4em 0.8em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    color: #222;
+    font-size: 1em;
+    transition: border-color 0.2s;
+}
+
+.user-type-select:focus {
+    border-color: #bdbdbd;
+    outline: none;
+}

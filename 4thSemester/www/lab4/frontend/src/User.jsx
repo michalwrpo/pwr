@@ -51,6 +51,7 @@ function User() {
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [newUsername, setNewUsername] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [newUserType, setNewUserType] = useState('user');
     const [createError, setCreateError] = useState('');
     const [creating, setCreating] = useState(false);
 
@@ -117,6 +118,7 @@ function User() {
             body: JSON.stringify({
                 username: newUsername,
                 password: newPassword,
+                type: newUserType,
             }),
         });
 
@@ -129,6 +131,7 @@ function User() {
             setShowCreateForm(false);
             setNewUsername('');
             setNewPassword('');
+            setNewUserType('user');
             window.location.reload();
         }
     };
@@ -168,6 +171,17 @@ function User() {
                                 required
                                 disabled={creating}
                             />
+                            <select
+                                className="user-type-select"
+                                value={newUserType || 'user'}
+                                onChange={e => setNewUserType(e.target.value)}
+                                required
+                                disabled={creating}
+                                style={{ marginLeft: '1em', marginRight: '1em' }}
+                            >
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
                             <button type="submit" disabled={creating}>
                                 {creating ? 'Creating...' : 'Create'}
                             </button>
