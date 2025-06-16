@@ -111,6 +111,17 @@ const { products, loading, error, refetch } = useProducts();
     const [formData, setFormData] = useState({ name: '', description: '', price: '' });
     const [formError, setFormError] = useState('');
 
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+
+    // State to hold filtered products
+    const [filteredProducts, setFilteredProducts] = useState(null);
+    
+    // Reset filter when products change
+    useEffect(() => {
+        setFilteredProducts(null);
+    }, [products]);
+
     // Fetch user info on mount
     useEffect(() => {
         fetchUser()
@@ -186,9 +197,74 @@ const { products, loading, error, refetch } = useProducts();
         setFormError('');
     };
 
+
+    // Filter handler
+    const handleFilter = async (e) => {
+        e.preventDefault();
+        let query = [];
+        if (minPrice) query.push(`more=${parseInt(minPrice * 100)}`);
+        if (maxPrice) query.push(`less=${parseInt(maxPrice * 100)}`);
+        const url = `/api/products/${query.length ? '?' + query.join('&') : ''}`;
+        try {
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (!res.ok) throw new Error('Failed to fetch filtered products');
+            const data = await res.json();
+            // Support both array and {products: []}
+            const filtered = Array.isArray(data)
+                ? data
+                : (data && Array.isArray(data.products) ? data.products : []);
+            // Overwrite productsList for this render
+            setFilteredProducts(filtered);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+
     return (
         <div className="products-container">
             <h2 className="products-title">Products</h2>
+            <form
+                className="filter-form"
+                onSubmit={handleFilter}
+                style={{ marginBottom: 16 }}
+            >
+                <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="Min price"
+                    value={minPrice}
+                    onChange={e => setMinPrice(e.target.value)}
+                    className="filter-input filter-input-min"
+                    style={{ marginRight: 8 }}
+                />
+                <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="Max price"
+                    value={maxPrice}
+                    onChange={e => setMaxPrice(e.target.value)}
+                    className="filter-input filter-input-max"
+                    style={{ marginRight: 8 }}
+                />
+                <button type="submit" className="filter-btn">Filter</button>
+                <button
+                    type="button"
+                    className="reset-btn"
+                    onClick={() => {
+                        setMinPrice('');
+                        setMaxPrice('');
+                        setFilteredProducts(null);
+                    }}
+                >
+                    Reset
+                </button>
+            </form>
             {user && user.type === 'admin' && (
                 <div>
                     <button className="create-product-btn" onClick={() => openModal()}>Create Product</button>
@@ -205,7 +281,7 @@ const { products, loading, error, refetch } = useProducts();
                 />
             )}
             <div className="products-list">
-                {productsList.map((product) => (
+                {(filteredProducts !== null ? filteredProducts : productsList).map((product) => (
                     <div
                         key={product.id}
                         className="product-item"
@@ -216,7 +292,7 @@ const { products, loading, error, refetch } = useProducts();
                         <span className="product-description">
                             {product.description ? product.description : 'No description available.'}
                         </span><br />
-                        <span className="product-price">Price: ${product.price}</span>
+                        <span className="product-price">Price: ${parseFloat(product.price).toFixed(2)}</span>
                         {user && user.type === 'admin' && (
                             <>
                                 <button
