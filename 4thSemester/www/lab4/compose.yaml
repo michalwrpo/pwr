@@ -25,8 +25,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     restart: always
-    # ports: 
-    #   - 5000:5000
+    ports: 
+      - 5000:5000
     environment:
       - DATABASE_URL=postgres://appuser:appuser@wwwlab-database:5432/wwwlab?sslmode=disable
     depends_on:

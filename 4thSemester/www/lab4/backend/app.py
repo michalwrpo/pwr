@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, make_response, abort
+from flask_cors import CORS, cross_origin
 import psycopg2
 from hashlib import sha256
 import jwt
@@ -6,38 +7,48 @@ from datetime import datetime, timezone, timedelta
 from flask import Blueprint
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True, resources={r"/api/*": {"origins": "http://localhost:43879/"}})
+app.config['CORS_HEADERS'] = 'Content-Type, Authorization, X-Auth-Token, Access-Control-Allow-Origin, Access-Control-Allow-Credentials'
+app.config['CORS_METHODS'] = 'GET, POST, PUT, DELETE, OPTIONS'
 
 app.config['SECRET_KEY'] = '12345'
 
 conn = psycopg2.connect("dbname=wwwlab user=appuser password=appuser host=wwwlab-database")
 
+@app.route("/api/debug-headers")
+def debug_headers():
+    auth_header = request.headers.get('Authorization')
+    
+    if auth_header:
+        return {"Response": check_token(request)}
+    else:
+        return {k: v for k, v in request.headers.items()}
+
 def check_token(request):
     auth_header = request.headers.get('Authorization')
 
-    if auth_header:
-        if len(auth_header.split(" ")) < 2:
-            abort(403, 'Invalid Authorization Header.')
-        token = auth_header.split(" ")[1]
-    else:
-        token = ''
-    
-    if token:
-        if not token:
-            abort(401, 'Token is missing')
-
-        try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            user_id = data['id']
-
-        except:
-            abort(403, 'Token is invalid!')
-        
-        if datetime.fromtimestamp(data['exp'], timezone.utc) < datetime.now(timezone.utc):
-            abort(401, 'Session expired.')
-
-        return user_id
-    else:
+    if not auth_header:
         abort(401, 'No authentication token present')
+
+    parts = auth_header.split()
+
+    if len(parts) != 2 or parts[0] != 'Bearer':
+        abort(403, 'Invalid Authorization Header.')
+
+    token = parts[1]
+
+    try:
+        data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        abort(401, 'Session expired.')
+    except jwt.InvalidTokenError:
+        abort(403, 'Token is invalid!')
+
+    user_id = data.get('id')
+    if not user_id:
+        abort(403, 'Token is invalid!')
+
+    return user_id
 
 
 def hash_password(password):
@@ -60,6 +71,7 @@ def forbidden(e):
 
 # Login
 @app.route('/api/login', methods=['POST'])
+@cross_origin()
 def login():
     if request.is_json:
         data = request.get_json()
@@ -88,6 +100,7 @@ def login():
 
 # Register
 @app.route('/api/register', methods=['POST'])
+@cross_origin()
 def register():
     if request.is_json:
         data = request.get_json()
@@ -128,6 +141,7 @@ def register():
 
 # Return user info
 @app.route('/api/users/me', methods=['GET'])
+@cross_origin()
 def get_user_info():
     user_id = check_token(request)
 
@@ -147,6 +161,7 @@ def get_user_info():
 
 # Delete your account
 @app.route('/api/users/me', methods=['DELETE'])
+@cross_origin()
 def del_account():
     user_id = check_token(request)
 
@@ -160,6 +175,7 @@ def del_account():
 
 # Manage Users
 @app.route('/api/users/', methods=['GET', 'POST'])
+@cross_origin()
 def manage_users():
     user_id = check_token(request)
     cur = conn.cursor()
@@ -226,6 +242,7 @@ def manage_users():
 
 # Delete users
 @app.route('/api/users/<int:target_user_id>', methods=['DELETE'])
+@cross_origin()
 def delete_user(target_user_id):
     user_id = check_token(request)
     cur = conn.cursor()
@@ -251,6 +268,7 @@ def delete_user(target_user_id):
 
 # Products
 @app.route('/api/products/', methods=['GET', 'POST'])
+@cross_origin()
 def products():
     cur = conn.cursor()
     if request.method == 'GET':
@@ -366,6 +384,7 @@ def products():
         return jsonify({'message': "Added product."}), 201
 
 @app.route('/api/products/<int:product_id>', methods=['PUT', 'DELETE'])
+@cross_origin()
 def edit_product(product_id):
     if request.method == 'PUT':
         user_id = check_token(request)
@@ -447,6 +466,7 @@ def edit_product(product_id):
 
 # Reviews
 @app.route('/api/products/<int:product_id>/reviews', methods=['POST', 'PUT', 'DELETE'])
+@cross_origin()
 def handle_reviews(product_id):
     user_id = check_token(request)
     cur = conn.cursor()
@@ -521,6 +541,7 @@ def handle_reviews(product_id):
 
 # Get Reviews
 @app.route('/api/products/<int:product_id>/reviews', methods=['GET'])
+@cross_origin()
 def get_reviews(product_id):
     cur = conn.cursor()
     cur.execute(f"SELECT Users.username, Reviews.rating FROM Reviews JOIN Users ON Reviews.user_id = Users.id WHERE Reviews.product_id = {product_id}")
