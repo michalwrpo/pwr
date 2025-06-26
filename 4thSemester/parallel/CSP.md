@@ -4,7 +4,7 @@
 
 *Def.* Interfejs - zbiór zdarzeń
 
-*Def.* Krok wykonania - etykietowane przejście $P_1 \xrightarrow{\mu} P_2$, gdzie \$\mu$ to:
+*Def.* Krok wykonania - etykietowane przejście $P_1 \xrightarrow{\mu} P_2$, gdzie $\mu$ to:
 - Zdarzenie zewnętrzne
 - Zdarzenie zakończenia $\checkmark$
 - Zdarzenie wewnętrzne $\tau$
