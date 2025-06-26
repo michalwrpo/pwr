@@ -4,7 +4,7 @@ use HTTP::Status;
 
 my $d = HTTP::Daemon->new(
         LocalAddr => '127.0.0.1',
-        LocalPort => 4321,
+        LocalPort => 5678,
     )|| die;
 
 print "<URL:", $d->url, ">\n";
