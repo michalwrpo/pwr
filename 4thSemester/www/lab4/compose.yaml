@@ -36,16 +36,16 @@ services:
       - wwwlab-internal
 
   # NodeJS (React) https://hub.docker.com/_/node
-  frontend:
-    container_name: wwwlab-frontend
-    image: node:23
-    restart: always
-    working_dir: /app
-    command: ["npm", "run", "dev", "--", "--host"]
-    volumes: 
-      - ./frontend:/app
-    networks:
-      - wwwlab-internal
+  # frontend:
+  #   container_name: wwwlab-frontend
+  #   image: node:23
+  #   restart: always
+  #   working_dir: /app
+  #   command: ["npm", "run", "dev", "--", "--host"]
+  #   volumes: 
+  #     - ./frontend:/app
+  #   networks:
+  #     - wwwlab-internal
 
   # Nginx https://hub.docker.com/_/nginx
   nginx:

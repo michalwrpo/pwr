@@ -71,7 +71,7 @@ def forbidden(e):
 
 # Login
 @app.route('/api/login', methods=['POST'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True, expose_headers='Authorization, X-Auth-Token, Access-Control-Allow-Origin, Access-Control-Allow-Credentials')
 def login():
     if request.is_json:
         data = request.get_json()
@@ -95,12 +95,13 @@ def login():
     cur.close()
 
     resp = jsonify({'message': 'Login successful'})
-    resp.set_cookie('access_token', f'{token}', httponly=False, samesite='Strict', secure=True)
+    resp.set_cookie('access_token', f'{token}', httponly=False, samesite='Lax', secure=False)
     return resp
 
 # Register
 @app.route('/api/register', methods=['POST'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def register():
     if request.is_json:
         data = request.get_json()
@@ -141,7 +142,8 @@ def register():
 
 # Return user info
 @app.route('/api/users/me', methods=['GET'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def get_user_info():
     user_id = check_token(request)
 
@@ -161,7 +163,8 @@ def get_user_info():
 
 # Delete your account
 @app.route('/api/users/me', methods=['DELETE'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def del_account():
     user_id = check_token(request)
 
@@ -175,7 +178,8 @@ def del_account():
 
 # Manage Users
 @app.route('/api/users/', methods=['GET', 'POST'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def manage_users():
     user_id = check_token(request)
     cur = conn.cursor()
@@ -242,7 +246,8 @@ def manage_users():
 
 # Delete users
 @app.route('/api/users/<int:target_user_id>', methods=['DELETE'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def delete_user(target_user_id):
     user_id = check_token(request)
     cur = conn.cursor()
@@ -268,7 +273,8 @@ def delete_user(target_user_id):
 
 # Products
 @app.route('/api/products/', methods=['GET', 'POST'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def products():
     cur = conn.cursor()
     if request.method == 'GET':
@@ -384,7 +390,8 @@ def products():
         return jsonify({'message': "Added product."}), 201
 
 @app.route('/api/products/<int:product_id>', methods=['PUT', 'DELETE'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def edit_product(product_id):
     if request.method == 'PUT':
         user_id = check_token(request)
@@ -466,7 +473,8 @@ def edit_product(product_id):
 
 # Reviews
 @app.route('/api/products/<int:product_id>/reviews', methods=['POST', 'PUT', 'DELETE'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def handle_reviews(product_id):
     user_id = check_token(request)
     cur = conn.cursor()
@@ -541,7 +549,8 @@ def handle_reviews(product_id):
 
 # Get Reviews
 @app.route('/api/products/<int:product_id>/reviews', methods=['GET'])
-@cross_origin()
+@cross_origin(origins="http://localhost:8000", supports_credentials=True)
+
 def get_reviews(product_id):
     cur = conn.cursor()
     cur.execute(f"SELECT Users.username, Reviews.rating FROM Reviews JOIN Users ON Reviews.user_id = Users.id WHERE Reviews.product_id = {product_id}")
