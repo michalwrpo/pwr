@@ -1,3 +1,5 @@
+# Michał Waluś 279695
+
 function eps16()
     x = Float16(1.0)
     while Float16(1.0) + x != Float16(1.0)
