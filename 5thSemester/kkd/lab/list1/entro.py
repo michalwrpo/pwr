@@ -1,52 +1,32 @@
 from sys import argv
 from math import log2
+from collections import defaultdict, Counter
+from typing import Dict, Tuple
 
-def entropy(data:bytearray) -> float:
-    if not data:
-        return 0.0
-
-    freq = [0] * 256
-    for byte in data:
-        freq[byte] += 1
+def entropy(frequencies:Dict[int, float]) -> float:
+    if not frequencies:
+        return -1.0
 
     ent = 0.0
-    length = len(data)
 
-    for count in freq:
-        if count > 0:
-            p = count / length
-            ent -= p * log2(p)
+    for _, p in frequencies.items():
+        ent -= p * log2(p)
 
     return ent
 
-def conditionalEntropy(data:bytearray) -> float:
-    if not data:
-        return 0.0
+def conditionalEntropy(frequencies:Dict[int, float], probabilities:Dict[Tuple, float]) -> float:
+    if not frequencies or not probabilities:
+        return -1.0
 
-    pair_freq = {}
-    pair_freq[(0, data[0])] = 1
-    single_freq = [0] * 256
+    entropies = defaultdict(float)
 
-    for i in range(len(data) - 1):
-        pair = (data[i], data[i + 1])
-        if pair not in pair_freq:
-            pair_freq[pair] = 0
-        pair_freq[pair] += 1
-        single_freq[data[i]] += 1
-
-    single_freq[data[-1]] += 1
+    for (condition, _), p in probabilities.items():
+        entropies[condition] -= p * log2(p)
 
     cond_ent = 0.0
-    length = len(data) - 1
 
-    entropies = [0.0] * 256
-    for (_, y), count in pair_freq.items():
-        p_xy = count / length
-        entropies[y] -= (p_xy) * log2(p_xy)
-
-    for x in range(256):
-        p_x = single_freq[x] / len(data)
-        cond_ent += p_x * entropies[x]
+    for condition, p in frequencies.items():
+        cond_ent += p * entropies[condition]
 
     return cond_ent
 
@@ -59,7 +39,31 @@ if __name__ == "__main__":
 
     with open(filename, "rb") as f:
         data = bytearray(f.read())
-        print(f"Entropy: {entropy(data)}")
-        print(f"Conditional Entropy: {conditionalEntropy(data)}")
-        print(f"Difference: {entropy(data) - conditionalEntropy(data)}")
+
+        frequencies = dict(Counter(data))
+        for k in frequencies.keys():
+            frequencies[k] /= len(data)
+
+        pairs = defaultdict(int)
+        pairs[(0, data[0])] = 1
+        as_first = defaultdict(int)
+        as_first[0] = 1
+
+        for i in range(len(data) - 1):
+            pairs[(data[i], data[i + 1])] += 1
+            as_first[data[i]] += 1
+
+        probabilities = {(condition, value): count / as_first[condition] for (condition, value), count in pairs.items()}
+
+        # print("Frequencies:")
+        # for byte, freq in frequencies.items():
+        #     print(f"{byte:08b}: {freq}")
+        # print(f"Probabilities: {probabilities}")
+
+        ent = entropy(frequencies)
+        cond_ent = conditionalEntropy(frequencies, probabilities)
+
+        print(f"Entropy: {ent:8f}")
+        print(f"Conditional Entropy: {cond_ent:8f}")
+        print(f"Difference: {ent - cond_ent:8f}")
         
