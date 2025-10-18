@@ -9,6 +9,7 @@ graph* createGraph(unsigned int vertexNum, bool directed) {
     G->vertices = (vertex**)malloc(vertexNum * sizeof(vertex*));
     G->edgeNums = (unsigned int*)calloc(vertexNum, sizeof(unsigned int));
     G->edges = (unsigned int**)malloc(vertexNum * sizeof(unsigned int*));
+    G->order = (unsigned int*)malloc(vertexNum * sizeof(unsigned int));
 
     for (unsigned int i = 0; i < vertexNum; i++) {
         G->vertices[i] = (vertex*)malloc(sizeof(vertex));
@@ -47,5 +48,6 @@ void freeGraph(graph* G) {
     free(G->vertices);
     free(G->edgeNums);
     free(G->edges);
+    free(G->order);
     free(G);
 }

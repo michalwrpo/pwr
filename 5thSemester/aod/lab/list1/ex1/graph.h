@@ -18,6 +18,7 @@ typedef struct g {
     vertex** vertices;
     unsigned int* edgeNums; 
     unsigned int** edges; // Adjacency list representation
+    unsigned int* order;
 } graph;
 
 graph* createGraph(unsigned int vertexNum, bool directed);

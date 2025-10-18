@@ -70,8 +70,6 @@ int main(int argc, char* argv[]) {
             fclose(file);
             continue;
         }
-
-        printf("Graph type: %s\n", directed ? "Directed" : "Undirected");
         
         fscanf(file, "%s", buffer);
         vertexNum = (unsigned int)atoi(buffer);
@@ -92,18 +90,16 @@ int main(int argc, char* argv[]) {
             bfs(G, G->vertices[0]);
 
             for (unsigned int i = 0; i < G->vertexNum; i++) {
-                vertex* v = G->vertices[i];
-                printf("Vertex %u: distance = %d, parent = %d\n", v->number + 1, v->distance,
-                    v->parent < (unsigned int)(-1) ? v->parent + 1 : (unsigned int)(-1));
+                printf("%u ", G->order[i] + 1);
             }
+            printf("\n");
         } else if (algorithm == 1) {
             dfs(G);
 
             for (unsigned int i = 0; i < G->vertexNum; i++) {
-                vertex* v = G->vertices[i];
-                printf("Vertex %u: discovered = %d, returned = %d, parent = %d\n", v->number + 1, v->discoveryTime, v->returnTime,
-                    v->parent < (unsigned int)(-1) ? v->parent + 1 : (unsigned int)(-1));
+                printf("%u ", G->order[i] + 1);
             }
+            printf("\n");
         }
         
         freeGraph(G);

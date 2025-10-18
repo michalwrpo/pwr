@@ -20,6 +20,7 @@ void bfs(graph* G, vertex* s) {
 
     while (front < back) {
         vertex* u = queue[front++];
+        G->order[u->number] = front - 1;
         for (unsigned int i = 0; i < G->edgeNums[u->number]; i++) {
             unsigned int vNum = G->edges[u->number][i];
             vertex* v = G->vertices[vNum];
