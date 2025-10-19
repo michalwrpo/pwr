@@ -1,9 +1,18 @@
 # Michał Waluś 279695
 
+function nextFloat(num::Float64)
+    x = Float64(1.0)
+    while Float64(num) + x != Float64(num)
+        x /= Float64(2.0)
+    end
+    return num + x * Float64(2.0)
+end
+
 function notequal(start::Float64)
     x = Float64(start)
+    eps = nextFloat(Float64(start)) - Float64(start)
     while Float64(x * Float64(1/x)) == Float64(1.0)
-        x = nextfloat(x)
+        x += eps
     end
     return x
 end

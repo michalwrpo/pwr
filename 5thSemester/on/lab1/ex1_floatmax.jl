@@ -2,7 +2,7 @@
 
 function max16()
     x = Float16(1.0)
-    while Float16(1.0) + x != Float16(1.0)
+    while Float16(1.0) - x / Float16(2.0) != Float16(1.0)
         x /= Float16(2.0)
     end
     x = Float16(1.0) - x
@@ -14,7 +14,7 @@ end
 
 function max32()
     x = Float32(1.0)
-    while Float32(1.0) + x != Float32(1.0)
+    while Float32(1.0) - x / Float32(2.0) != Float32(1.0)
         x /= Float32(2.0)
     end
     x = Float32(1.0) - x
@@ -26,7 +26,7 @@ end
 
 function max64()
     x = Float64(1.0)
-    while Float64(1.0) + x != Float64(1.0)
+    while Float64(1.0) - x / Float64(2.0) != Float64(1.0)
         x /= Float64(2.0)
     end
     x = Float64(1.0) - x

@@ -7,8 +7,8 @@ function compare(n::Int)
     for i in 1:n
         fVal = f(8^Float64(-i))
         gVal = g(8^Float64(-i))
-        println("n=", i, ", f(8^(-n))=", fVal, ", g(8^(-n))=", gVal, ", f/g=", fVal/gVal)
+        println("n=", i, ", f(x)=", fVal, ", g(x)=", gVal)
     end
 end
 
-compare(10)
+compare(180)

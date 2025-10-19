@@ -18,5 +18,9 @@ for n in 0:54
     h = Float64(2^(-Float64(n)))
     exact = exactDerivative(x0)
     approx = approximation(x0, h)
-    println("n=", n, ", h=", h, ", ~f'(x0)=", approx, ", f'(x0)=", exact, ", difference=", abs(exact - approx), ", 1+h=", 1 + h)
+    # println("n=", n, ", ~f'(x0)=", round(approx, sigdigits=5), 
+    # ", f'(x0)=", round(exact, sigdigits=5), ", difference=", round(abs(exact - approx), sigdigits=5))
+
+    println(n, " & ", approx, " & ", exact, " & ", abs(exact - approx), " \\\\")
+
 end
