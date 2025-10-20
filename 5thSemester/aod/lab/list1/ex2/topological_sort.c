@@ -1,0 +1,41 @@
+#include "topological_sort.h"
+
+void dfsVisit(graph* G, vertex* u, unsigned int* time, unsigned int* index) {
+    (*time)++;
+    u->discoveryTime = *time;
+    u->color = 1; // gray
+    
+    for (unsigned int i = 0; i < G->edgeNums[u->number]; i++) {
+        unsigned int vNum = G->edges[u->number][i];
+        vertex* v = G->vertices[vNum];
+        if (v->color == 0) { // white
+            v->parent = u->number;
+            dfsVisit(G, v, time, index);
+        } else if (v->color == 1) { // black
+            G->order[G->vertexNum - 1] = G->vertexNum; // Indicate a cycle
+        }        
+    }
+    
+    u->color = 2; // black
+    G->order[(*index)--] = u->number;
+    (*time)++;
+    u->returnTime = *time;
+}
+
+void topologicalSort(graph* G) {
+    for (unsigned int i = 0; i < G->vertexNum; i++) {
+        vertex* v = G->vertices[i];
+        v->color = 0; // white
+        v->parent = -1; // NIL
+    }
+
+    unsigned int time = 0;
+    unsigned int index = G->vertexNum - 1;
+
+    for (unsigned int i = 0; i < G->vertexNum; i++) {
+        vertex* v = G->vertices[i];
+        if (v->color == 0) { // white
+            dfsVisit(G, v, &time, &index);
+        }
+    }
+}
