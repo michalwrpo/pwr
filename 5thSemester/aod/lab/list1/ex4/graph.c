@@ -9,18 +9,12 @@ graph* createGraph(unsigned int vertexNum, bool directed) {
     G->vertices = (vertex**)malloc(vertexNum * sizeof(vertex*));
     G->edgeNums = (unsigned int*)calloc(vertexNum, sizeof(unsigned int));
     G->edges = (unsigned int**)malloc(vertexNum * sizeof(unsigned int*));
-    G->order = (unsigned int*)malloc(vertexNum * sizeof(unsigned int));
-    G->cycle = false;
 
     for (unsigned int i = 0; i < vertexNum; i++) {
         G->vertices[i] = (vertex*)malloc(sizeof(vertex));
         vertex* v = G->vertices[i];
         v->number = i;
-        v->color = 0; // white
-        v->distance = -1; // infinity
-        v->parent = -1; // NIL
-        v->discoveryTime = 0;
-        v->returnTime = 0;
+        v->color = 0; // no color
         G->edges[i] = NULL;
     }
 
@@ -49,6 +43,17 @@ void freeGraph(graph* G) {
     free(G->vertices);
     free(G->edgeNums);
     free(G->edges);
-    free(G->order);
+
     free(G);
+}
+
+graph* reverseGraph(graph* G) {
+    graph* revG = createGraph(G->vertexNum, G->directed);
+    for (unsigned int u = 0; u < G->vertexNum; u++) {
+        for (unsigned int i = 0; i < G->edgeNums[u]; i++) {
+            unsigned int v = G->edges[u][i];
+            addEdge(revG, v, u);
+        }
+    }
+    return revG;
 }

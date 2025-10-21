@@ -5,11 +5,7 @@
 
 typedef struct v {
     unsigned int number;
-    unsigned char color; // 0 - white, 1 - gray, 2 - black
-    int distance;
-    unsigned int parent;
-    unsigned int discoveryTime;
-    unsigned int returnTime;
+    unsigned char color; // 0 - no color, 1 - white, 2 - black
 } vertex;
 
 typedef struct g {
@@ -18,12 +14,11 @@ typedef struct g {
     vertex** vertices;
     unsigned int* edgeNums; 
     unsigned int** edges; // Adjacency list representation
-    unsigned int* order;
-    bool cycle;
 } graph;
 
 graph* createGraph(unsigned int vertexNum, bool directed);
 void addEdge(graph* G, unsigned int u, unsigned int v);
 void freeGraph(graph* G);
+graph* reverseGraph(graph* G);  
 
 #endif

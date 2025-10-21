@@ -1,4 +1,5 @@
 #include "bfs.h"
+#include <stdio.h>
 
 void bfs(graph* G, vertex* s) {
     for (unsigned int i = 0; i < G->vertexNum; i++) {
@@ -20,7 +21,7 @@ void bfs(graph* G, vertex* s) {
 
     while (front < back) {
         vertex* u = queue[front++];
-        G->order[u->number] = front - 1;
+        G->order[front - 1] = u->number;
         for (unsigned int i = 0; i < G->edgeNums[u->number]; i++) {
             unsigned int vNum = G->edges[u->number][i];
             vertex* v = G->vertices[vNum];

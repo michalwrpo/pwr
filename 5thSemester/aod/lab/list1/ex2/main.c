@@ -68,7 +68,7 @@ int main() {
 
         topologicalSort(G);
 
-        if (G->order[vertexNum - 1] == vertexNum) {
+        if (G->cycle) {
             printf("Graph has a directed cycle.\n");
         } else {
             printf("Graph does not have a directed cycle.\n");

@@ -12,7 +12,7 @@ void dfsVisit(graph* G, vertex* u, unsigned int* time, unsigned int* index) {
             v->parent = u->number;
             dfsVisit(G, v, time, index);
         } else if (v->color == 1) { // black
-            G->order[G->vertexNum - 1] = G->vertexNum; // Indicate a cycle
+            G->cycle = true;
         }        
     }
     
