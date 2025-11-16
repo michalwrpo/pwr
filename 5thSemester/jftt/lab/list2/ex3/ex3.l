@@ -5,6 +5,7 @@
 
 %s DOCS
 %x INCLUDE
+%x STRING
 
 %%
 "#include \<"       { BEGIN(INCLUDE); printf("%s", yytext); }
@@ -24,11 +25,19 @@
 <DOCS>\/(\\\n)*\*(\\\n)*\*(\*?[^\/\*]+\/?)*\*\/   printf("%s", yytext);
 <DOCS>\/(\\\n)*\*(\\\n)*!(\*?[^\/\*]+\/?)*\*\/   printf("%s", yytext);
 
-\"([^\;\"\\]|\\\\|\\\")*\"        printf("%s", yytext);
+\"                  { BEGIN(STRING); printf("%s", yytext); }
+<STRING>([^\"\\]|\\\\|\\\")*       printf("%s", yytext);
+<STRING>\"          { 
+                        if (docs) {
+                            BEGIN(DOCS);
+                        } else {
+                            BEGIN(INITIAL);
+                        }
+                        printf("%s", yytext); 
+                    }
 
 \/(\\\n)*\/(.|\\\n)*
 \/(\\\n)*\*(\*?[^\/\*]+\/?)*\*\/   printf(" ");
-
 
 %%
 int yywrap() {
