@@ -15,7 +15,7 @@
 \+          {
     if (top < 2) {
         BEGIN(ERROR);
-        fprintf(stderr, "Error: Not enough arguments\n");
+        fprintf(stderr, "Error: Not enough arguments.\n");
         top = 0;
     } else {
         a = stack[--top];
@@ -27,7 +27,7 @@
 -          {
     if (top < 2) {
         BEGIN(ERROR);
-        fprintf(stderr, "Error: Not enough arguments\n");
+        fprintf(stderr, "Error: Not enough arguments.\n");
         top = 0;
     } else {
         a = stack[--top];
@@ -39,7 +39,7 @@
 \*          {
     if (top < 2) {
         BEGIN(ERROR);
-        fprintf(stderr, "Error: Not enough arguments\n");
+        fprintf(stderr, "Error: Not enough arguments.\n");
         top = 0;
     } else {
         a = stack[--top];
@@ -51,19 +51,25 @@
 \/          {
     if (top < 2) {
         BEGIN(ERROR);
-        fprintf(stderr, "Error: Not enough arguments\n");
+        fprintf(stderr, "Error: Not enough arguments.\n");
         top = 0;
     } else {
         a = stack[--top];
         b = stack[--top];
-        stack[top++] = b / a;
+        if (a == 0) {
+            BEGIN(ERROR);
+            fprintf(stderr, "Error: Division by zero.\n");
+            top = 0;
+        } else {
+            stack[top++] = b / a;
+        }
     }
 }
 
 \%          {
     if (top < 2) {
         BEGIN(ERROR);
-        fprintf(stderr, "Error: Not enough arguments\n");
+        fprintf(stderr, "Error: Not enough arguments.\n");
         top = 0;
     } else {
         a = stack[--top];
@@ -80,13 +86,19 @@
     } else {
         a = stack[--top];
         b = stack[--top];
-        stack[top++] = ipow(b, a);
+        if (a < 0) {
+            BEGIN(ERROR);
+            fprintf(stderr, "Error: Negative exponent.\n");
+            top = 0;
+        } else {
+            stack[top++] = ipow(b, a);
+        }
     }
 }
 
 \n      {
     if (top > 1) {
-        fprintf(stderr, "Error: Not enough operators\n");
+        fprintf(stderr, "Error: Not enough operators.\n");
         top = 0;
     } else if (top == 1) {
         printf("%d\n", stack[--top]);
@@ -95,7 +107,7 @@
 
 [^0-9\n-+*/%^]+ {
     BEGIN(ERROR);
-    fprintf(stderr, "Error: Invalid symbol: \"%s\"\n", yytext);
+    fprintf(stderr, "Error: Invalid symbol: \"%s\".\n", yytext);
     top = 0;
 }
 
