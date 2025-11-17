@@ -1,5 +1,6 @@
 %{
     #define N 1234577
+    #define Nexp 1234576
     
     #include <stdio.h>
     #include <stdint.h>
@@ -9,6 +10,10 @@
     void yyerror(const char *s);
     void output();
     void err(char* error);
+
+    int mul_inv(int m, int n);
+    int safe_mul(int x, int y, int mod);
+
 
     int numStack[100];
     char symStack[200];
@@ -56,8 +61,8 @@ line:
 
 expr:
       expr PLUS expr   { $$ = ($1 + $3) % N; symStack[stop++] = '+'; }
-    | expr MINUS expr  { $$ = ($1 - $3) % N; symStack[stop++] = '-'; }
-    | expr TIMES expr  { $$ = ($1 * $3) % N; symStack[stop++] = '*'; }
+    | expr MINUS expr  { $$ = ($1 - $3 + N) % N; symStack[stop++] = '-'; }
+    | expr TIMES expr  { $$ = safe_mul($1, $3, N); symStack[stop++] = '*'; }
     | expr DIVIDE expr { 
             if ($3 == 0) {
                 $$ = 0;
@@ -66,18 +71,52 @@ expr:
                     e = 1;
                 }
             } else {
-                $$ = ($1 * ipow($3, N - 2)) % N; 
+                $$ = safe_mul($1, (mul_inv($3, N) + N) % N, N);
+                // $$ = ($1 * ipow($3, N - 2)) % N; 
                 symStack[stop++] = '/'; 
             }
         }
-    | expr POWER NUMBER  { 
+    | expr POWER expr-no-exp  { 
             $$ = ipow($1, $3); 
-            numStack[ntop++] = ($3 + N) % N; 
-            symStack[stop++] = 128;
             symStack[stop++] = '^';
         }
-    | LEFT expr RIGHT
+    | LEFT expr RIGHT   { $$ = $2; }
     | NUMBER            { $$ = ($1 + N) % N; numStack[ntop++] = ($1 + N) % N; symStack[stop++] = 128; }
+    | MINUS NUMBER      { $$ = (-$2 + N) % N; numStack[ntop++] = (-$2 + N) % N; symStack[stop++] = 128; }
+    ;
+
+expr-no-exp:
+      expr-no-exp PLUS expr-no-exp   { $$ = ($1 + $3) % Nexp; symStack[stop++] = '+'; }
+    | expr-no-exp MINUS expr-no-exp  { $$ = ($1 - $3 + Nexp) % Nexp; symStack[stop++] = '-'; }
+    | expr-no-exp TIMES expr-no-exp  { $$ = safe_mul($1, $3, Nexp); symStack[stop++] = '*'; }
+    | expr-no-exp DIVIDE expr-no-exp { 
+            if ($3 == 0) {
+                $$ = 0;
+                if (!e) {
+                    printf("Error: Division by zero.\n");
+                    e = 1;
+                }
+            } else if ($3 % 2 == 0 || $3 % 7 == 0 || $3 % 73 == 0 || $3 % 151 == 0) {
+                $$ = 0;
+                if (!e) {
+                    printf("Error: Number non-invertible.\n");
+                    e = 1;
+                }
+            } else {
+                $$ = safe_mul($1, (mul_inv($3, Nexp) + Nexp) % Nexp, Nexp); 
+                symStack[stop++] = '/'; 
+            }
+        }
+    | expr-no-exp POWER expr-no-exp  { 
+            $$ = 0;
+            if (!e) {
+                printf("Error: Exponentation inside exponentiation.\n");
+                e = 1;
+            }        
+        }
+    | LEFT expr-no-exp RIGHT    { $$ = $2; }
+    | NUMBER            { $$ = ($1 + Nexp) % Nexp; numStack[ntop++] = ($1 + Nexp) % Nexp; symStack[stop++] = 128; }
+    | MINUS NUMBER      { $$ = (-$2 + Nexp) % Nexp; numStack[ntop++] = (-$2 + Nexp) % Nexp; symStack[stop++] = 128; }
     ;
 
 symbol:
@@ -91,6 +130,31 @@ symbol:
     ;
 
 %%
+
+int safe_mul(int x, int y, int mod) {
+    uint64_t r = x;
+    r *= y;
+    return r % mod;
+}
+
+int mul_inv(int m, int n) {
+	int a = m, b = n;
+    int x = 1, y = 0;
+    int r = 0, s = 1;
+    while (b > 0) {
+        int remainder = a % b;
+        int quotient = a / b;
+        a = b;
+        b = remainder;
+        int rr = r;
+        int ss = s;
+        r = x - quotient * r;
+        s = y - quotient * s;
+        x = rr;
+        y = ss;
+    }
+    return x;
+}
 
 void output() {
     if (!e) {
@@ -114,14 +178,14 @@ void output() {
 }
 
 unsigned int ipow(unsigned int base, unsigned int exp) {
-    base %= N;
-    unsigned int result = 1;
+    uint64_t b = base % N;
+    uint64_t result = 1;
 
     while (exp > 0) {
         if (exp & 1)
-            result = ( (uint64_t)result * base ) % N;
+            result = ( result * b ) % N;
 
-        base = ( (uint64_t)base * base ) % N;
+        b = ( b * b ) % N;
         exp >>= 1;
     }
 
