@@ -1,0 +1,8 @@
+lex.yy.c
+*.tab.c
+*.tab.h
+parser
+test*
+
+__pycache__/
+parsetab.py
