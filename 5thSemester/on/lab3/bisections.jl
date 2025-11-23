@@ -1,12 +1,16 @@
 # Michał Waluś 279695
 
+# f - funkcja, dla której szukamy pierwiastka
+# a, b - końce przedziału
+# delta, epsilon - dokładności obliczeń
 function mbisekcji(f, a::Float64, b::Float64, delta::Float64, epsilon::Float64) 
     maxIter = 1024
     
-    u = f(a)
-    v = f(b)
-    e = b - a
-    w = v
+    u = f(a)  # u - wartość funkcji w a
+    v = f(b)  # v - wartość funkcji w b
+    e = b - a # e - długość przedziału
+    c = a     # c - środek przedziału
+    w = v     # w - wartość funkcji w c
 
     if (sign(u) == sign(v))
         return (0.0, 0.0, 0, 1) 

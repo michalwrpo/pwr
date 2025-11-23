@@ -17,6 +17,7 @@ println("Metoda bisekcji:")
 println("pierwiastek: ", root_bisect)
 println("f(pierwiastek): ", f_root_bisect)
 println("iteracje: ", iterations_bisect)
+println("error: ", status_bisect)
 
 x0 = 1.5
 maxit = 4096
@@ -26,6 +27,7 @@ println("\nMetoda Newtona:")
 println("pierwiastek: ", root_newton)
 println("f(pierwiastek): ", f_root_newton)
 println("iteracje: ", iterations_newton)
+println("error: ", status_newton)
 
 x0 = 1.0
 x1 = 2.0
@@ -35,3 +37,4 @@ println("\nMetoda siecznych:")
 println("pierwiastek: ", root_secant)
 println("f(pierwiastek): ", f_root_secant)
 println("iteracje: ", iterations_secant)
+println("error: ", status_secant)
