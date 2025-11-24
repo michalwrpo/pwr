@@ -42,7 +42,7 @@ line:
     | expr NL   { 
             output(); 
             if (!e)
-                printf("\nResult: %d\n", $1);
+                printf("Result: %d\n", $1);
             
             e = 0;
         }
@@ -54,9 +54,10 @@ line:
             output(); 
             e = 0;
         }
-    | ERR_INV_CHAR NL       { printf("Error: Unrecognized symbol.\n"); }
-    | ERR_OPS NL            { printf("Error: Too many operators.\n"); }
-    | ERR_NUMS NL           { printf("Error: Too many numbers.\n"); }
+    | ERR_INV_CHAR NL       { printf("Error: Unrecognized symbol.\n"); e = 1; output(); }
+    | ERR_OPS NL            { printf("Error: Too many operators.\n"); e = 1; output(); }
+    | ERR_NUMS NL           { printf("Error: Too many numbers.\n"); e = 1; output(); }
+    | error NL              { printf("Syntax error.\n"); e = 1; output(); }
     ;
 
 expr:
@@ -68,13 +69,12 @@ expr:
                 $$ = 0;
                 if (!e) {
                     printf("Error: Division by zero.\n");
-                    e = 1;
+                    e = 2;
                 }
             } else {
                 $$ = safe_mul($1, (mul_inv($3, N) + N) % N, N);
-                // $$ = ($1 * ipow($3, N - 2)) % N; 
-                symStack[stop++] = '/'; 
             }
+            symStack[stop++] = '/'; 
         }
     | expr POWER expr-no-exp  { 
             $$ = ipow($1, $3); 
@@ -94,8 +94,9 @@ expr-no-exp:
                 $$ = 0;
                 if (!e) {
                     printf("Error: Division by zero.\n");
-                    e = 1;
+                    e = 2;
                 }
+                symStack[stop++] = '/'; 
             } else if ($3 % 2 == 0 || $3 % 7 == 0 || $3 % 73 == 0 || $3 % 151 == 0) {
                 $$ = 0;
                 if (!e) {
@@ -157,7 +158,7 @@ int mul_inv(int m, int n) {
 }
 
 void output() {
-    if (!e) {
+    if (!e || e == 2) {
         int j = 0;
         unsigned char c;
         for (int i = 0; i < stop; i++) {
@@ -172,6 +173,7 @@ void output() {
                 printf("%c ", c);
             }
         }
+        printf("\n");
     }
     stop = 0;
     ntop = 0;
@@ -197,5 +199,5 @@ int main(void) {
 }
 
 void yyerror(const char *s) {
-    fprintf(stderr, "Parse error: %s\n", s);
+    // fprintf(stderr, "Parse error: %s\n", s);
 }
