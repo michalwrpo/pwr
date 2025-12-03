@@ -1,10 +1,14 @@
 use std::collections::HashMap;
 
 pub fn calculate_entropy(data: &Vec<i16>) -> f64 {
-    let mut result = 0.0;
-    let map = probability(&data);
+    let mut data_scaled = Vec::new();
 
-    // println!("{map:?}");
+    for n in data {
+        data_scaled.push((n + 256) % 256);
+    }
+
+    let mut result = 0.0;
+    let map = probability(&data_scaled);
 
     for (_, prob) in map {
         result -= prob * prob.log2();

@@ -14,24 +14,41 @@ pub fn calculate_predictions(
     }
 
     let original_entropy = entropy::calculate_entropy(&image_vector);
-    
     println!("Original image entropy: {}", original_entropy);
-
-    let (best, bestarg) = best_prediction(3 * width, height, image, 3);
-
-    println!("Best prediction: {bestarg}\nEntropy: {best}");
 
     let size = width * height;
     let mut red = Vec::new();
     let mut green = Vec::new();
     let mut blue = Vec::new();
 
+    let mut red_v = Vec::new();
+    let mut green_v = Vec::new();
+    let mut blue_v = Vec::new();
+    
+
     for i in 0..size {
         blue.push(image[3 * i]);
         green.push(image[3 * i + 1]);
         red.push(image[3 * i + 2]);
+
+        blue_v.push(image[3 * i] as i16);
+        green_v.push(image[3 * i + 1] as i16);
+        red_v.push(image[3 * i + 2] as i16);
     }
 
+    let blue_entropy = entropy::calculate_entropy(&blue_v);
+    println!("Blue entropy: {}", blue_entropy);
+
+    let green_entropy = entropy::calculate_entropy(&green_v);
+    println!("Green entropy: {}", green_entropy);
+
+    let red_entropy = entropy::calculate_entropy(&red_v);
+    println!("Red entropy: {}", red_entropy);
+
+
+    let (best, bestarg) = best_prediction(3 * width, height, image, 3);
+    println!("\nBest prediction: {bestarg}\nEntropy: {best}");
+    
     let (best_b, b_arg) = best_prediction(width, height, &blue, 1);   
     println!("\nBlue best prediction: {b_arg}\nEntropy: {best_b}");
 
@@ -68,7 +85,7 @@ pub fn best_prediction(
     entropy[6] = entropy::calculate_entropy(&result7);
     entropy[7] = entropy::calculate_entropy(&result8);
 
-    // println!("(step={step}) Hey: {}", entropy[0]);
+    // println!("(step={step}) {}", entropy[7]);
 
     let mut min = entropy[0];
     let mut minarg = 1;
