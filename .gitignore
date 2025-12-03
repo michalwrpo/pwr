@@ -4,3 +4,4 @@
 .svn
 target/
 *.test
+test_data/
