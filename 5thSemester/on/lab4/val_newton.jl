@@ -6,12 +6,13 @@ function warNewton(x::Vector{Float64}, fx::Vector{Float64}, t::Float64)
         error("Vectors x and fx must have the same length.")
     end
 
-    b = zeros(Float64, n)
-    b[n] = fx[n]
+    prev = 0.0
+    ans = fx[n]
 
     for i in (n - 1):-1:1
-        b[i] = fx[i] + (t - x[i]) * b[i + 1]
+        prev = ans
+        ans = fx[i] + (t - x[i]) * prev
     end
         
-    return b[1]
+    return ans
 end
