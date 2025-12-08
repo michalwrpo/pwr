@@ -7,5 +7,6 @@
 
 Graph loadGraph(const std::string &filename);
 std::vector<ull> loadSources(const std::string &filename);
+std::vector<std::pair<ull, ull>> loadPairs(const std::string &filename);
 
 #endif

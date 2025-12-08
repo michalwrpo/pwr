@@ -63,3 +63,27 @@ std::vector<ull> loadSources(const std::string &filename) {
     }
     return sources;
 }
+
+std::vector<std::pair<ull, ull>> loadPairs(const std::string &filename) {
+    std::ifstream in(filename);
+    if (!in) {
+        std::cerr << "Blad: nie mozna otworzyc pliku ze zrodlami: " << filename << "\n";
+        exit(1);
+    }
+
+    std::vector<std::pair<ull, ull>> pairs;
+    std::string line;
+
+    while (getline(in, line)) {
+        if (line.size() == 0 || line[0] == 'c') continue;
+        std::string type;
+        std::stringstream ss(line);
+        ss >> type;
+        if (type == "q") {
+            ull u, v;
+            ss >> u >> v;
+            pairs.push_back({u - 1, v - 1});
+        }
+    }
+    return pairs;
+}

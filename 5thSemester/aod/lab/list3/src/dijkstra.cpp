@@ -159,3 +159,104 @@ std::vector<ull> radix(const Graph &g, ull start) {
     }
     return dist;
 }
+
+ull dijkstra_path(const Graph& graph, ull start, ull end) {
+    ull n = graph.getVerticesCount();
+    std::vector<ull> distances(n, std::numeric_limits<ull>::max());
+    distances[start] = 0;
+
+    using Pair = std::pair<ull, ull>;
+    std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> pq;
+    pq.emplace(0, start);
+
+    while (!pq.empty()) {
+        auto [dist, u] = pq.top();
+        pq.pop();
+
+        if (u == end) return distances[end];
+
+        if (dist > distances[u]) continue;
+
+        for (const auto& [v, weight] : graph.getNeighbors(u)) {
+            if (distances[u] + weight < distances[v]) {
+                distances[v] = distances[u] + weight;
+                pq.emplace(distances[v], v);
+            }
+        }
+    }
+
+    return distances[end];
+}
+
+ull dial_path(const Graph& graph, ull start, ull end, ull maxWeight) {
+    ull n = graph.getVerticesCount();
+    std::vector<ull> distances(n, std::numeric_limits<ull>::max());
+    distances[start] = 0;
+    ull d = 0;
+    ull C = maxWeight + 1;
+    int left = 1;
+
+    std::vector<std::unordered_set<ull>> buckets(C);
+    buckets[0].insert(start);
+
+    ull currentBucket = 0;
+
+    while (left > 0) {
+        if (buckets[currentBucket].empty()) {
+            currentBucket = (currentBucket + 1) % C;
+            ++d;
+            continue;
+        }
+
+        ull u = *buckets[currentBucket].begin();
+        buckets[currentBucket].erase(u);
+        --left;
+
+        if (u == end) return distances[end];
+
+
+        for (const auto& [v, weight] : graph.getNeighbors(u)) {
+            ull newDist = distances[u] + weight;
+            if (newDist < distances[v]) {
+                if (distances[v] != std::numeric_limits<ull>::max()) {
+                    buckets[(currentBucket + distances[v] - d) % C].erase(v);
+                    --left;
+                }
+                ++left;
+                distances[v] = newDist;
+                buckets[(currentBucket + newDist - d) % C].insert(v);
+            }
+        }
+    }
+
+    return distances[end];
+}
+
+
+ull radix_path(const Graph &g, ull start, ull end) {
+    ull n = g.getVerticesCount();
+    const ull INF = std::numeric_limits<ull>::max();
+
+    std::vector<ull> distances(n, INF);
+    distances[start] = 0;
+
+    RadixHeap<ull, ull> heap;
+    heap.push(0, start);
+
+    while (!heap.empty()) {
+        auto [d, u] = heap.pop_min();
+        if (d != distances[u]) continue; // skip outdated entries
+
+        if (u == end) return distances[end];
+
+
+        for (auto &[v, w] : g.getNeighbors(u)) {
+            ull nd = d + w;
+            if (nd < distances[v]) {
+                distances[v] = nd;
+                heap.push(nd, v);
+            }
+        }
+    }
+    return distances[end];
+}
