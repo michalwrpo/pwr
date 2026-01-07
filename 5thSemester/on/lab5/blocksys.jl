@@ -49,97 +49,136 @@ function mult_by_1_vector(A::A_Matrix{Float64})
     return result
 end
 
-# Read A and b from file, solves the system using Gauss elimination without pivoting and writes solution to file
+# Read A and b from file, solves the system using Gauss elimination without pivoting 
+# Measures execution time of the algorithm only
 function solve_Gauss(A_file::AbstractString, b_file::AbstractString, out_file::AbstractString)
     A = read_matrix(A_file)
     b = read_b_vector(b_file)
 
-    x = elimination_simple(A, b)
+    time = @elapsed begin
+        x = elimination_simple(A, b)
+    end
 
     save_vector(out_file, x)
+    
+    return time
 end
 
-# Read A from file, generates x and solves the system using Gauss elimination without pivoting and writes solution to file
-function check_Gauss(A_file::AbstractString, out_file::AbstractString)
-    A = read_matrix(A_file)
-    b = mult_by_1_vector(A)
-
-    x = elimination_simple(A, b)
-    x_exact = x_vector(A.n)
-    err = relative_error(x, x_exact)
-
-    save_vector_err(out_file, x, err)
-end
-
-# Read A and b from file, solves the system using Gauss elimination with pivoting and writes solution to file
+# Read A and b from file, solves the system using Gauss elimination with pivoting 
+# Measures execution time of the algorithm only
 function solve_Gauss_choice(A_file::AbstractString, b_file::AbstractString, out_file::AbstractString)
     A = read_matrix(A_file)
     b = read_b_vector(b_file)
 
-    x = elimination_choice(A, b)
+    time = @elapsed begin
+        x = elimination_choice(A, b)
+    end
 
     save_vector(out_file, x)
+
+    return time
 end
 
-# Read A from file, generates x and solves the system using Gauss elimination with pivoting and writes solution to file
-function check_Gauss_choice(A_file::AbstractString, out_file::AbstractString)
-    A = read_matrix(A_file)
-    b = mult_by_1_vector(A)
-
-    x = elimination_choice(A, b)
-    x_exact = x_vector(A.n)
-    err = relative_error(x, x_exact)
-
-    save_vector_err(out_file, x, err)
-end
-
-# Read A and b from file, solves the system using LU without pivoting and writes solution to file
+# Read A and b from file, solves the system using LU without pivoting 
+# Measures execution time of the algorithm only (Decomposition + Forward/Backward sub)
 function solve_LU(A_file::AbstractString, b_file::AbstractString, out_file::AbstractString)
     A = read_matrix(A_file)
     b = read_b_vector(b_file)
 
-    LU_simple(A)
-    x = solve_LU_simple(A, b)
+    time = @elapsed begin
+        LU_simple(A)
+        x = solve_LU_simple(A, b)
+    end
 
     save_vector(out_file, x)
+
+    return time
 end
 
-# Read A from file, generates x and solves the system using LU without pivoting and writes solution to file
-function check_LU(A_file::AbstractString, out_file::AbstractString)
-    A = read_matrix(A_file)
-    b = mult_by_1_vector(A)
-
-    LU_simple(A)
-    x = solve_LU_simple(A, b)
-    x_exact = x_vector(A.n)
-    err = relative_error(x, x_exact)
-
-    save_vector_err(out_file, x, err)
-end
-
-# Read A and b from file, solves the system using LU with pivoting and writes solution to file
+# Read A and b from file, solves the system using LU with pivoting 
+# Measures execution time of the algorithm only (Decomposition + Forward/Backward sub)
 function solve_LU_pivot(A_file::AbstractString, b_file::AbstractString, out_file::AbstractString)
     A = read_matrix(A_file)
     b = read_b_vector(b_file)
 
-    (Dn, p) = LU_choice(A)
-    x = solve_LU_choice(A, Dn, b, p)
+    time = @elapsed begin
+        (Dn, p) = LU_choice(A)
+        x = solve_LU_choice(A, Dn, b, p)
+    end
 
     save_vector(out_file, x)
+
+    return time
 end
 
-# Read A from file, generates x and solves the system using LU with pivoting and writes solution to file
+# Read A from file, generates x and solves the system using Gauss elimination without pivoting 
+# Measures execution time of solution calculation only
+function check_Gauss(A_file::AbstractString, out_file::AbstractString)
+    A = read_matrix(A_file)
+    b = mult_by_1_vector(A) 
+
+    time = @elapsed begin
+        x = elimination_simple(A, b)
+    end
+
+    x_exact = x_vector(A.n)
+    err = relative_error(x, x_exact)
+    save_vector_err(out_file, x, err)
+
+    return time
+end
+
+# Read A from file, generates x and solves the system using Gauss elimination with pivoting 
+# Measures execution time of solution calculation only
+function check_Gauss_choice(A_file::AbstractString, out_file::AbstractString)
+    A = read_matrix(A_file)
+    b = mult_by_1_vector(A)
+
+    time = @elapsed begin
+        x = elimination_choice(A, b)
+    end
+
+    x_exact = x_vector(A.n)
+    err = relative_error(x, x_exact)
+    save_vector_err(out_file, x, err)
+
+    return time
+end
+
+# Read A from file, generates x and solves the system using LU without pivoting 
+# Measures execution time of solution calculation only (Decomposition + Solver)
+function check_LU(A_file::AbstractString, out_file::AbstractString)
+    A = read_matrix(A_file)
+    b = mult_by_1_vector(A)
+
+    time = @elapsed begin
+        LU_simple(A)
+        x = solve_LU_simple(A, b)
+    end
+
+    x_exact = x_vector(A.n)
+    err = relative_error(x, x_exact)
+    save_vector_err(out_file, x, err)
+
+    return time
+end
+
+# Read A from file, generates x and solves the system using LU with pivoting 
+# Measures execution time of solution calculation only (Decomposition + Solver)
 function check_LU_pivot(A_file::AbstractString, out_file::AbstractString)
     A = read_matrix(A_file)
     b = mult_by_1_vector(A)
 
-    (Dn, p) = LU_choice(A)
-    x = solve_LU_choice(A, Dn, b, p)
+    time = @elapsed begin
+        (Dn, p) = LU_choice(A)
+        x = solve_LU_choice(A, Dn, b, p)
+    end
+
     x_exact = x_vector(A.n)
     err = relative_error(x, x_exact)
-
     save_vector_err(out_file, x, err)
-end
 
+    return time
+end
 
 end
