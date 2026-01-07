@@ -63,9 +63,6 @@ function elimination_simple(A::A_Matrix{Float64}, b::Vector{Float64})
         x[k] = sum / A.An[block][local_k, local_k]
     end
 
-    println("Solution vector x:")
-    println(x)
-
     return x
 end
 
@@ -233,9 +230,6 @@ function elimination_choice(A::A_Matrix{Float64}, b::Vector{Float64})
         x[k] = sum / A.An[block][local_k, local_k]
     end
 
-    println("Solution vector x:")
-    println(x)
-
     return x
 end
 
@@ -323,9 +317,6 @@ function solve_LU_simple(A::A_Matrix{Float64}, b::Vector{Float64})
         x[k] = sum / A.An[block][local_k, local_k]
     end
 
-    println("Solution vector x:")
-    println(x)
-
     return x
 end
 
@@ -335,6 +326,7 @@ function LU_choice(A::A_Matrix{Float64})
     v = div(n, l)
 
     Dn = [zeros(Float64, 2*l - 1) for _ in 1:(v-2)] # to store moved Cn rows, has mirrored structure of Bn
+    choice = Vector{Int64}(undef, n)
 
     # Forward elimination
     for k in 1:v
@@ -362,6 +354,8 @@ function LU_choice(A::A_Matrix{Float64})
                     end
                 end
             end
+
+            choice[(k-1)*l + i] = chosen
 
             if chosen > i && chosen <= l # if it's i then we don't need to switch
                 for col in i:l
@@ -457,17 +451,27 @@ function LU_choice(A::A_Matrix{Float64})
             end
         end
     end
-    return Dn
+    return Dn, choice
 end
 
 
-function solve_LU_choice(A::A_Matrix{Float64}, Dn::Vector{Vector{Float64}}, b::Vector{Float64})
+function solve_LU_choice(A::A_Matrix{Float64}, Dn::Vector{Vector{Float64}}, b::Vector{Float64}, choice::Vector{Int64})
     n = A.n
     l = A.l
     v = div(n, l)
 
     for k in 1:v
         for i in 1:l
+            chosen = choice[(k-1)*l + i]
+
+            if chosen > i && chosen <= l # if it's i then we don't need to switch
+                b[(k-1)*l + i], b[(k-1)*l + chosen] = b[(k-1)*l + chosen], b[(k-1)*l + i]
+            elseif chosen == l + 1
+                b[(k-1)*l + i], b[k * l + 1] = b[k * l + 1], b[(k-1)*l + i]
+            elseif chosen > l + 1
+                b[k*l], b[k * l + row] = b[k * l + row], b[k*l]
+            end
+
             for j in (i+1):l
                 b[(k-1)*l + j] -= A.An[k][j, i] * b[(k-1)*l + i]
             end
@@ -510,9 +514,6 @@ function solve_LU_choice(A::A_Matrix{Float64}, Dn::Vector{Vector{Float64}}, b::V
         end
         x[k] = sum / A.An[block][local_k, local_k]
     end
-
-    println("Solution vector x:")
-    println(x)
 
     return x
 end

@@ -83,3 +83,20 @@ function x_vector(n::Int)
     end
     return x
 end
+
+function save_vector(filename::AbstractString, v::AbstractVector{<:AbstractFloat})
+    open(filename, "w") do io
+        for x in v
+            println(io, x)
+        end
+    end
+end
+
+function save_vector_err(filename::AbstractString, v::AbstractVector{<:AbstractFloat}, err::AbstractFloat)
+    open(filename, "w") do io
+        println(io, err)
+        for x in v
+            println(io, x)
+        end
+    end
+end
