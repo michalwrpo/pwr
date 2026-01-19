@@ -1,35 +1,58 @@
 #include <print>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <chrono>
 #include <iomanip>
 
 #include "flow.hpp"
 #include "graph.hpp"
+#include "glpk.hpp"
 
 int main(int argc, char* argv[]) {
     auto start_time = std::chrono::high_resolution_clock::now();
 
-    if (argc != 3 && argc != 4) {
-        std::println("Usage: ./maxflow --size <k> [--printFlow]");
+    if (argc < 3 || argc > 6) {
+        std::println(stderr, "Usage: ./maxflow.out --size <k> [--glpk <output>] [--printFlow]");
         return 1;
     }
 
     std::string arg1 = argv[1];
     if (arg1 != "--size") {
-        std::println("Usage: ./maxflow --size <k> [--printFlow]");
+        std::println(stderr, "Usage: ./maxflow.out --size <k> [--glpk <output>] [--printFlow]");
         return 1;
     }
 
-    bool flow = false;
-    if (argc == 4) {
-        std::string arg3 = argv[3];
-        if (arg3 != "--printFlow") {
-            std::println("Usage: ./maxflow --size <k> [--printFlow]");
+    bool flow = false, glpk = false;
+    if (argc == 4 || argc == 6) {
+        std::string arg3 = argv[argc - 1];
+        std::string arg4 = argv[argc - 3];
+
+        if (arg3 != "--printFlow" && arg4 != "--printFlow") {
+            std::println(stderr, "Usage: ./maxflow.out --size <k> [--glpk <output>] [--printFlow]");
             return 1;
         }
         flow = true;
     }
+
+    std::string glpkfile = "";
+    if (argc > 4) {
+        std::string arg3 = argv[argc - 3];
+        std::string arg4 = argv[argc - 2];
+        std::string arg5 = argv[argc - 1];
+
+        if (arg3 == "--glpk") {
+            glpk = true;
+            glpkfile = arg4;
+        } else if (arg4 == "--glpk") {
+            glpk = true;
+            glpkfile = arg5;
+        } else {
+            std::println(stderr, "Usage: ./maxflow.out --size <k> [--glpk <output>] [--printFlow]");
+            return 1;
+        }
+    }
+    
     std::size_t k = std::stoul(argv[2]);
 
     Graph graph(k);
@@ -54,6 +77,17 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
+    }
+
+    if (glpk) {
+        std::ofstream outfile(glpkfile);
+        if (!outfile.is_open()) {
+            std::println(stderr, "Error: Could not open file {} for writing.", glpkfile);
+            return 1;
+        }
+
+        generate_mathprog(graph, outfile);
+        outfile.close();
     }
 
     return 0;

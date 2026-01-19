@@ -1,5 +1,6 @@
 #include <random>
 #include <stdexcept>
+#include <algorithm>
 
 #include "graph.hpp"
 
@@ -23,7 +24,12 @@ Graph::Graph(std::size_t k_val, std::size_t i_val) : k(k_val), i(i_val) {
     for (std::size_t j = 1; j < n + 1; ++j) {
         std::uniform_int_distribution<std::size_t> dis(n + 1, 2 * n);
         for (std::size_t e = 0; e < i; ++e) {
-            add_edge(j, dis(gen));
+            std::size_t target = dis(gen);
+            while (std::any_of(adj[j].begin(), adj[j].end(),
+                   [target](const Edge& edge) { return edge.to == target; })) {
+                target = dis(gen);
+            }
+            add_edge(j, target);
         }
     }
 }
