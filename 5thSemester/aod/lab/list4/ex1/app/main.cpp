@@ -46,5 +46,15 @@ int main(int argc, char* argv[]) {
 
     std::cerr << std::fixed << std::setprecision(6) << elapsed.count() << " " << result.second << std::endl;
 
+    if (flow) {
+        for (std::size_t u = 0; u < graph.n; ++u) {
+            for (const Edge& e : graph.adj[u]) {
+                if (e.capacity > 0) {
+                    std::println("Edge from {} to {} carries flow {}/{}", u, e.to, e.flow, e.capacity);
+                }
+            }
+        }
+    }
+
     return 0;
 }

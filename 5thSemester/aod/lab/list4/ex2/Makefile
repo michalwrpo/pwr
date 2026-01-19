@@ -15,7 +15,7 @@ all:
 
 .PHONY:app
 app:
-	$(CXX) $(CXX_FLAGS) ./src/*.cpp ./app/*.cpp -I./include -o ./app.out
+	$(CXX) $(CXX_FLAGS) ./src/*.cpp ./app/*.cpp -I./include -o ./matching.out
 
 .PHONY:test
 test:
