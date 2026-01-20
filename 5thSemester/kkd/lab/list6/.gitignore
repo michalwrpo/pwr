@@ -1,0 +1,3 @@
+*.tga
+__pycache__/
+output/
