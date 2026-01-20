@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def parse_results():
+def parse_results(path="output"):
     """
     Reads files results_1.txt to results_16.txt.
     Returns dictionaries mapping k to lists of values.
@@ -15,7 +15,7 @@ def parse_results():
     data_paths = {}
 
     for k in range(1, 17):
-        filename = f"output/results_{k}.txt"
+        filename = f"{path}/results_{k}.txt"
         
         if not os.path.exists(filename):
             continue
@@ -55,7 +55,7 @@ def parse_results():
 
     return sorted(k_values), data_flows, data_times, data_paths
 
-def plot_metric(k_values, data_dict, metric_name, y_label, use_log_scale=False, fname='Average'):
+def plot_metric(k_values, data_dict, data_dict2, metric_name, y_label, use_log_scale=False, fname='Average'):
     """
     Generates a plot for a specific metric showing mean and min-max range.
     """
@@ -63,6 +63,11 @@ def plot_metric(k_values, data_dict, metric_name, y_label, use_log_scale=False, 
     mins = []
     maxs = []
     valid_ks = []
+
+    means2 = []
+    mins2 = []
+    maxs2 = []
+    valid_ks2 = []
 
     for k in k_values:
         if not data_dict[k]: # Skip if no data for this k
@@ -75,13 +80,29 @@ def plot_metric(k_values, data_dict, metric_name, y_label, use_log_scale=False, 
         mins.append(np.min(values))
         maxs.append(np.max(values))
 
+        if not data_dict2[k]: # Skip if no data for this k
+            continue
+
+        valid_ks2.append(k)
+        values2 = np.array(data_dict2[k])
+
+        means2.append(np.mean(values2))
+        mins2.append(np.min(values2))
+        maxs2.append(np.max(values2))
+
     means = np.array(means)
     mins = np.array(mins)
     maxs = np.array(maxs)
 
+    means2 = np.array(means2)
+    mins2 = np.array(mins2)
+    maxs2 = np.array(maxs2)
+
     plt.figure(figsize=(10, 6))    
-    plt.plot(valid_ks, means, label=fname, color='blue', marker='o')
+    plt.plot(valid_ks, means, label="Dinic", color='blue', marker='o')
+    plt.plot(valid_ks2, means2, label="Edmonds-Karp", color='orange', marker='o')
     plt.fill_between(valid_ks, mins, maxs, color='blue', alpha=0.2, label='Min-Max Range')
+    plt.fill_between(valid_ks2, mins2, maxs2, color='orange', alpha=0.2, label='Min-Max Range EK')
     
     plt.title(f'{metric_name} vs Input Size (k)')
     plt.xlabel('k (Graph Size $2^k$)')
@@ -102,18 +123,19 @@ def plot_metric(k_values, data_dict, metric_name, y_label, use_log_scale=False, 
 
 def main():
     k_values, flows, times, paths = parse_results()
+    _, flows_ek, times_ek, paths_ek = parse_results(path="../ex1/output")
 
     if not k_values:
         print("No results files found (results_k.txt).")
         return
 
-    plot_metric(k_values, flows, "Max Flow", "Flow Value", use_log_scale=True)
+    plot_metric(k_values, flows, flows_ek, "Max Flow", "Flow Value", use_log_scale=True)
     # plot_metric(k_values, {k: [i/(k*2**k) for i in flows[k]] for k in flows}, "Max Flow Comparison", "Normalized flow", use_log_scale=False, fname="$flow / k \\cdot 2^k$")
     
-    plot_metric(k_values, times, "Execution Time", "Time (seconds)", use_log_scale=True)
+    plot_metric(k_values, times, times_ek, "Execution Time", "Time (seconds)", use_log_scale=True)
     # plot_metric(k_values, {k: [10**9*i/(k * 2**(2*k)) for i in times[k]] for k in times}, "Execution Time Comparison", "Normalized time", use_log_scale=True, fname="$10^9 \\cdot time / (k \\cdot 2^{2k})$")
 
-    plot_metric(k_values, paths, "Augmenting Paths", "Count", use_log_scale=True)
+    plot_metric(k_values, paths, paths_ek, "Augmenting Paths", "Count", use_log_scale=True)
     # plot_metric(k_values, {k: [i/(k**(1.5)*2**(1/2*k)) for i in paths[k]] for k in paths}, "Augmenting Paths Comparison", "Normalized Count", use_log_scale=False, fname="$paths / (k^{1.5} \\cdot 2^{k/2})$")
 
 if __name__ == "__main__":
