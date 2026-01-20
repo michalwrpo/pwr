@@ -23,13 +23,14 @@ void generate_mathprog(const Graph& g, std::ostream& out) {
     out << "/* --- SETS AND PARAMETERS --- */\n";
     out << "set V;                       # Set of all nodes in the graph\n";
     out << "set E within V cross V;      # Set of directed edges (arcs)\n";
-    out << "param Capacity{E} >= 0;      # Capacity for each edge\n";
+    // out << "param Capacity{E} >= 0;      # Capacity for each edge\n";
     out << "param Source symbolic in V;  # The Source node index\n";
     out << "param Sink symbolic in V;    # The Sink node index\n\n";
 
     out << "/* --- DECISION VARIABLES --- */\n";
     out << "/* Flow on edge (u,v). Must be non-negative and cannot exceed Capacity */\n";
-    out << "var Flow{(u,v) in E} >= 0, <= Capacity[u,v];\n\n";
+    // out << "var Flow{(u,v) in E} >= 0, <= Capacity[u,v];\n\n";
+    out << "var Flow{(u,v) in E} >= 0, <= 1;\n\n";
 
     out << "/* --- OBJECTIVE FUNCTION --- */\n";
     out << "/* We want to maximize the total flow leaving the Source */\n";
@@ -62,16 +63,15 @@ void generate_mathprog(const Graph& g, std::ostream& out) {
     }
     out << ";\n\n";
 
-    // Define Edges and Capacities
-    // GMPL allows defining the set E and the param Capacity simultaneously
-    out << "# Edge definitions: u v capacity\n";
+    // Define Edges
+    out << "# Edge definitions: u v\n";
     out << "# Note: Only forward edges (capacity > 0) are included.\n";
-    out << "param: E: Capacity :=\n";
+    out << "set E :=\n";
     
     for (std::size_t u = 0; u < g.adj.size(); ++u) {
         for (const auto& edge : g.adj[u]) {
             if (edge.capacity > 0) {
-                out << "  " << u << " " << edge.to << " " << edge.capacity << "\n";
+                out << "  " << u << " " << edge.to << "\n";
             }
         }
     }

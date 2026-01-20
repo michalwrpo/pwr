@@ -96,7 +96,7 @@ def plot_metric(k_values, data_dict, metric_name, y_label, use_log_scale=False, 
     plt.legend()
     plt.tight_layout()
     
-    filename = f"plots/plot_{metric_name.lower().replace(' ', '_')}.png"
+    filename = f"plots/ex4_{metric_name.lower().replace(' ', '_')}.png"
     plt.savefig(filename)
     print(f"Generated plot: {filename}")
 
@@ -108,13 +108,13 @@ def main():
         return
 
     plot_metric(k_values, flows, "Max Flow", "Flow Value", use_log_scale=True)
-    plot_metric(k_values, {k: [i/(k*2**k) for i in flows[k]] for k in flows}, "Max Flow Comparison", "Normalized flow", use_log_scale=False, fname="$flow / k \\cdot 2^k$")
+    # plot_metric(k_values, {k: [i/(k*2**k) for i in flows[k]] for k in flows}, "Max Flow Comparison", "Normalized flow", use_log_scale=False, fname="$flow / k \\cdot 2^k$")
     
     plot_metric(k_values, times, "Execution Time", "Time (seconds)", use_log_scale=True)
-    plot_metric(k_values, {k: [10**9*i/(k * 2**(2*k)) for i in times[k]] for k in times}, "Execution Time Comparison", "Normalized time", use_log_scale=True, fname="$10^9 \\cdot time / (k \\cdot 2^{2k})$")
+    # plot_metric(k_values, {k: [10**9*i/(k * 2**(2*k)) for i in times[k]] for k in times}, "Execution Time Comparison", "Normalized time", use_log_scale=True, fname="$10^9 \\cdot time / (k \\cdot 2^{2k})$")
 
     plot_metric(k_values, paths, "Augmenting Paths", "Count", use_log_scale=True)
-    plot_metric(k_values, {k: [i/(k**(1.5)*2**(1/2*k)) for i in paths[k]] for k in paths}, "Augmenting Paths Comparison", "Normalized Count", use_log_scale=False, fname="$paths / (k^{1.5} \\cdot 2^{k/2})$")
+    # plot_metric(k_values, {k: [i/(k**(1.5)*2**(1/2*k)) for i in paths[k]] for k in paths}, "Augmenting Paths Comparison", "Normalized Count", use_log_scale=False, fname="$paths / (k^{1.5} \\cdot 2^{k/2})$")
 
 if __name__ == "__main__":
     main()
