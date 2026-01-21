@@ -71,14 +71,6 @@ if __name__ == "__main__":
 
         start = time.time()
 
-        # LP_red = lp_data_vectors[:, 0].reshape(lp_original_shape[0], lp_original_shape[1])
-        # LP_green = lp_data_vectors[:, 1].reshape(lp_original_shape[0], lp_original_shape[1])
-        # LP_blue = lp_data_vectors[:, 2].reshape(lp_original_shape[0], lp_original_shape[1]) 
-
-        # HP_red = hp_data_vectors[:, 0].reshape(hp_original_shape[0], hp_original_shape[1])
-        # HP_green = hp_data_vectors[:, 1].reshape(hp_original_shape[0], hp_original_shape[1])
-        # HP_blue = hp_data_vectors[:, 2].reshape(hp_original_shape[0], hp_original_shape[1]) 
-
         decoded_image = decode(lp_data_vectors.reshape(lp_original_shape[0], lp_original_shape[1], 3),
             hp_data_vectors.reshape(hp_original_shape[0], hp_original_shape[1], 3))
 
