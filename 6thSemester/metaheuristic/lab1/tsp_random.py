@@ -69,15 +69,22 @@ if __name__ == "__main__":
             best = permutation
 
 
+    g1 = []
+    g2 = []
+
     print(f"Groups of {size1}", file=outfile)
 
     for i in range(0, permutation_no, size1):
-        print(min(results[i:i+size1]), file=outfile)
+        g1.append(min(results[i:i+size1]))
+
+    print(sum(g1) / len(g1), file=outfile)
 
     print(f"Groups of {size2}", file=outfile)
 
     for i in range(0, permutation_no, size2):
-        print(min(results[i:i+size2]), file=outfile)
+        g2.append(min(results[i:i+size2]))
+
+    print(sum(g2) / len(g2), file=outfile)
 
     print("The best one", file=outfile)
 
