@@ -22,7 +22,7 @@
 
 
 class Wheels {
-    public: 
+    public:
         Wheels();
         /*
          *  pinForward - wejście "naprzód" L298
@@ -42,22 +42,27 @@ class Wheels {
         void back();
         void backLeft();
         void backRight();
-        void stop(int* lspeed, int* rspeed);
-        void stopLeft(int* lspeed);
-        void stopRight(int* rspeed);
+        void stop();
+        void stopLeft();
+        void stopRight();
         /*
          *  ustawienie prędkości obrotowej (przez PWM)
          *   - minimalna efektywna wartość 60
          *      może zależeć od stanu naładowania baterii
          */
-        void setSpeed(uint8_t, int* lspeed, int* rspeed);
-        void setSpeedRight(uint8_t, int* rspeed);
-        void setSpeedLeft(uint8_t, int* lspeed);
+        void setSpeed(uint8_t);
+        void setSpeedRight(uint8_t);
+        void setSpeedLeft(uint8_t);
 
         void goForward(int cm);
         void goBack(int cm); 
 
+        int get_lspeed();
+        int get_rspeed();
+
     private: 
+        int lspeed, rspeed;
+        int ldir, rdir;
         int pinsRight[3];
         int pinsLeft[3];
 };

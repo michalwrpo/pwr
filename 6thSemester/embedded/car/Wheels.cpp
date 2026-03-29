@@ -5,11 +5,10 @@
 #define SET_MOVEMENT(side,f,b) digitalWrite( side[0], f);\
                                digitalWrite( side[1], b)
 
-Wheels::Wheels() 
-{ }
-
-signed char ldir = 1;
-signed char rdir = 1;
+Wheels::Wheels() { 
+    this->lspeed = 0;
+    this->rspeed = 0;
+}
 
 void Wheels::attachRight(int pF, int pB, int pS)
 {
@@ -32,22 +31,22 @@ void Wheels::attachLeft(int pF, int pB, int pS)
     this->pinsLeft[2] = pS;
 }
 
-void Wheels::setSpeedRight(uint8_t s, int* rspeed)
+void Wheels::setSpeedRight(uint8_t s)
 {
     analogWrite(this->pinsRight[2], s);
-    *rspeed = s * rdir;
+    this->rspeed = (this->rdir != 0) ? s * this->rdir : s;
 }
 
-void Wheels::setSpeedLeft(uint8_t s, int* lspeed)
+void Wheels::setSpeedLeft(uint8_t s)
 {
     analogWrite(this->pinsLeft[2], s);
-    *lspeed = s * ldir;
+    this->lspeed = (this->ldir != 0) ? s * this->ldir : s;
 }
 
-void Wheels::setSpeed(uint8_t s, int* lspeed, int* rspeed)
+void Wheels::setSpeed(uint8_t s)
 {
-    setSpeedLeft(s, lspeed);
-    setSpeedRight(s, rspeed);
+    setSpeedLeft(s);
+    setSpeedRight(s);
 }
 
 void Wheels::attach(int pRF, int pRB, int pRS, int pLF, int pLB, int pLS)
@@ -59,25 +58,29 @@ void Wheels::attach(int pRF, int pRB, int pRS, int pLF, int pLB, int pLS)
 void Wheels::forwardLeft() 
 {
     SET_MOVEMENT(pinsLeft, HIGH, LOW);
-    ldir = 1;
+    this->ldir = 1;
+    if (this->lspeed < 0) this->lspeed *= -1;
 }
 
 void Wheels::forwardRight() 
 {
     SET_MOVEMENT(pinsRight, HIGH, LOW);
-    rdir = 1;
+    this->rdir = 1;
+    if (this->rspeed < 0) this->rspeed *= -1;
 }
 
 void Wheels::backLeft()
 {
     SET_MOVEMENT(pinsLeft, LOW, HIGH);
-    ldir = -1;
+    this->ldir = -1;
+    if (this->lspeed > 0) this->lspeed *= -1;
 }
 
 void Wheels::backRight()
 {
     SET_MOVEMENT(pinsRight, LOW, HIGH);
-    rdir = -1;
+    this->rdir = -1;
+    if (this->rspeed > 0) this->rspeed *= -1;    
 }
 
 void Wheels::forward()
@@ -92,22 +95,30 @@ void Wheels::back()
     this->backRight();
 }
 
-void Wheels::stopLeft(int* lspeed)
+void Wheels::stopLeft()
 {
     SET_MOVEMENT(pinsLeft, LOW, LOW);
-    *lspeed = 0;
+    this->lspeed = 0;
 }
 
-void Wheels::stopRight(int* rspeed)
+void Wheels::stopRight()
 {
     SET_MOVEMENT(pinsRight, LOW, LOW);
-    *rspeed = 0;
+    this->rspeed = 0;
 }
 
-void Wheels::stop(int* lspeed, int* rspeed)
+void Wheels::stop()
 {
-    this->stopLeft(lspeed);
-    this->stopRight(rspeed);
+    this->stopLeft();
+    this->stopRight();
+}
+
+int Wheels::get_lspeed() {
+    return this->lspeed;
+}
+
+int Wheels::get_rspeed() {
+    return this->rspeed;
 }
 
 // void Wheels::goForward(int cm) {
