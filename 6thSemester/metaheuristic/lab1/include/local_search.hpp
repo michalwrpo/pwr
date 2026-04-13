@@ -1,0 +1,8 @@
+#ifndef LOCAL_SEARCH_HPP
+#define LOCAL_SEARCH_HPP
+
+#include "permutation.hpp"
+
+int local_search_all(Permutation& p);
+
+#endif
