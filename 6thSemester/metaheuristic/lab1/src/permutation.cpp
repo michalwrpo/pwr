@@ -6,21 +6,15 @@
 #include <random>
 
 long Permutation::invert_cost(size_t from, size_t to) const {
-    long cost = len;
-    auto n = g.get().n;
-
     const size_t first = elements[from];
     const size_t last = elements[to];
-    const size_t prev = elements[(n + from - 1) % n];
-    const size_t next = elements[(to + 1) % n];
+    const size_t prev = elements[from == 0 ? n - 1 : from - 1];
+    const size_t next = elements[to == n - 1 ? 0 : to + 1];
 
-    cost -= g.get().dist[prev][first];
-    cost -= g.get().dist[last][next];
-    cost += g.get().dist[prev][last];
-    cost += g.get().dist[first][next];
+    std::vector<long>& d = g.get().dist;
+    size_t shift = g.get().shift;
 
-
-    return cost;
+    return len + d[(first << shift) + next] + d[(prev << shift) + last] - d[(prev << shift) + first] - d[(last << shift) + next];
 }
 
 
@@ -33,7 +27,7 @@ void Permutation::invert(size_t from, size_t to) {
     );
 }
 
-Permutation::Permutation(Graph& graph) : len{0}, g{graph} {
+Permutation::Permutation(Graph& graph) : n{graph.n}, len{0}, g{graph} {
     elements.resize(g.get().n);
 
     std::iota(elements.begin(), elements.end(), 0);
@@ -44,6 +38,6 @@ Permutation::Permutation(Graph& graph) : len{0}, g{graph} {
     std::shuffle(elements.begin(), elements.end(), gen);
 
     for (size_t i{ 0 }; i < g.get().n; i++) {
-        len += g.get().dist[elements[i]][elements[(i + 1) % g.get().n]];
+        len += g.get().dist[(elements[i] << g.get().shift) + elements[(i + 1) % g.get().n]];
     }
 }

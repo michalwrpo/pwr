@@ -9,6 +9,7 @@
 class Permutation {
     public:
         std::vector<size_t> elements;
+        const size_t n;
         long len;
         std::reference_wrapper<Graph> g;
 
