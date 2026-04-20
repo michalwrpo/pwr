@@ -1,7 +1,9 @@
 #include "graph.hpp"
 #include "local_search.hpp"
+#include "mst.hpp"
 #include "permutation.hpp"
 
+#include <cmath>
 #include <filesystem>
 #include <iostream>
 #include <omp.h>
@@ -32,9 +34,16 @@ int main(int argc, char** argv) {
 
         f = local_search_all;
     } else if (argv[1][0] == '2') {
-        iterations = g.n;
+        iterations = (g.n < 5000) ? g.n : 500;
 
         f = local_search_random;
+    } else if (argv[1][0] == '3') {
+        iterations = (g.n < 500) ? g.n :
+        static_cast<size_t>(std::sqrt(g.n)) + 1;
+
+        f = local_search_all;
+
+        Prim(g);
     } else {
         std::println(stderr, "Unknown exercise: {}", argv[1]);
         return 1;
@@ -79,6 +88,7 @@ int main(int argc, char** argv) {
 
 
     std::println(stderr, "");
+    if (argv[1][0] == '3') std::println("MST weight: {}", g.mst_weight);
     std::println("Average solution: {}", static_cast<double>(sol_sum) / static_cast<double>(iterations));
     std::println("Average steps: {}", static_cast<double>(total_steps) / static_cast<double>(iterations));
     std::println("Best solution: {}", best);
