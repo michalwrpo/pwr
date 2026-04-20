@@ -6,8 +6,10 @@ CXX_DBG := -g
 CXX_WARN := -Weverything -Wno-c++98-compat-pedantic -Wno-shadow-field-in-constructor \
  			-Wno-weak-vtables -Wno-padded -Wno-global-constructors -Wno-exit-time-destructors \
 			-Wno-unsupported-cb -Wno-unsafe-buffer-usage -Wno-newline-eof
+CXX_PARALLEL := -fopenmp
 
-CXX_FLAGS = $(CXX_STANDARD) $(CXX_OPT) $(CXX_WARN) 
+
+CXX_FLAGS = $(CXX_STANDARD) $(CXX_OPT) $(CXX_WARN) $(CXX_PARALLEL)
 
 .PHONY:all
 all:

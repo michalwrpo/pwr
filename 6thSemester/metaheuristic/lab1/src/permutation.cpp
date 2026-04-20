@@ -28,7 +28,7 @@ void Permutation::invert(size_t from, size_t to) {
 }
 
 Permutation::Permutation(Graph& graph) : n{graph.n}, len{0}, g{graph} {
-    elements.resize(g.get().n);
+    elements.resize(n);
 
     std::iota(elements.begin(), elements.end(), 0);
 
@@ -37,7 +37,7 @@ Permutation::Permutation(Graph& graph) : n{graph.n}, len{0}, g{graph} {
 
     std::shuffle(elements.begin(), elements.end(), gen);
 
-    for (size_t i{ 0 }; i < g.get().n; i++) {
-        len += g.get().dist[(elements[i] << g.get().shift) + elements[(i + 1) % g.get().n]];
+    for (size_t i{ 0 }; i < n; i++) {
+        len += g.get().dist[(elements[i] << g.get().shift) + elements[(i + 1) % n]];
     }
 }

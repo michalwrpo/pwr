@@ -29,12 +29,12 @@ Graph::Graph(std::filesystem::path path) {
     n = cords.size();
     shift = 1;
 
-    while ((1 << shift) < n) shift++;
+    while ((1 << shift) < n) ++shift;
     
     dist.resize(n << shift);
 
-    for (size_t i = 0; i < n - 1; i++) {
-        for (size_t j = i + 1; j < n; j++) {
+    for (size_t i = 0; i < n - 1; ++i) {
+        for (size_t j = i + 1; j < n; ++j) {
             long d = calc_distance(this->cords[i], this->cords[j]);
             dist[(i << shift) + j] = d;
             dist[(j << shift) + i] = d;

@@ -17,9 +17,6 @@ class Permutation {
 
         long invert_cost(size_t from, size_t to) const;
         void invert(size_t from, size_t to);
-
-    private:
-        Permutation() = delete;
 };
 
 #endif

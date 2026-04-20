@@ -5,4 +5,6 @@
 
 int local_search_all(Permutation& p);
 
+int local_search_random(Permutation& p);
+
 #endif
