@@ -30,13 +30,16 @@ void Prim(Graph& g) {
 
         for (size_t i { 0 }; i < n; ++i) {
             long dist { g.dist[(node << g.shift) + i] };
-            g.mst_weight += dist;
-
+            
             if (!visited[i] && dist > 0 && dist < key[i]) {
                 pq.push({ dist, i });
                 key[i] = dist;
                 g.mst[i] = node;
             }
         }
+    }
+
+    for (size_t i { 1 }; i < n; ++i) {
+        g.mst_weight += g.dist[(g.mst[i] << g.shift) + i];
     }
 }
