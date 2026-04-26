@@ -108,19 +108,23 @@ namespace Gaussian {
     }
 
     std::vector<Gauss> lcm(std::vector<Gauss> v) {
-        std::vector<Gauss> ans = gcd(v);
-
         if (v.size() == 0 || v.size() == 1) {
-            return ans;
+            return v;
         }
 
         Gauss multiple{1, 0};
 
-        for (Gauss z : v) multiple *= z;
+        for (Gauss z : v) {
+            auto gcd_pair = gcd(multiple, z);
+            multiple *= z / gcd_pair[0];
+        }
 
-        ans[0] = multiple / ans[0];
-        for (size_t j = 1; j < ans.size(); ++j) {
-            ans[j] = ans[j - 1] * i;
+        std::vector<Gauss> ans{multiple};
+
+        if (multiple != 0) {
+            ans.push_back(multiple * i);
+            ans.push_back(-multiple);
+            ans.push_back(-multiple * i);
         }
 
         return ans;
