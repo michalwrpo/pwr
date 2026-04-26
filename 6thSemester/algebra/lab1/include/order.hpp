@@ -15,21 +15,21 @@ enum class Compare {
 
 template <size_t N>
 Compare compare(std::array<int, N> a, std::array<int, N> b) {
-    Compare first{};
-    if (a[0] > b[0]) first = Compare::Greater;
-    else if (a[0] < b[0]) first = Compare::Less;
-    else first = Compare::Equal;
+    Compare comp{};
+    if (a[0] > b[0]) comp = Compare::Greater;
+    else if (a[0] < b[0]) comp = Compare::Less;
+    else comp = Compare::Equal;
 
     for (size_t j = 1; j < N; ++j) {
-        if ((a[j] > b[j] && first == Compare::Less) ||
-            (a[j] < b[j] && first == Compare::Greater)) {
+        if ((a[j] > b[j] && comp == Compare::Less) ||
+            (a[j] < b[j] && comp == Compare::Greater)) {
             return Compare::Incomparable;
         }
-        if (first == Compare::Equal && a[j] > b[j]) first = Compare::Greater;
-        else if (first == Compare::Equal && a[j] < b[j]) first = Compare::Less;
+        if (comp == Compare::Equal && a[j] > b[j]) comp = Compare::Greater;
+        else if (comp == Compare::Equal && a[j] < b[j]) comp = Compare::Less;
     }
 
-    return first;
+    return comp;
 }
 
 std::ostream& operator<<(std::ostream& out, Compare v);

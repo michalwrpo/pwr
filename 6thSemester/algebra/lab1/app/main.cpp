@@ -10,8 +10,7 @@
 int main() {
     int idx{};
     std::cout << "Input your student number: ";
-    // std::cin >> idx;
-    idx = 279695;
+    std::cin >> idx;
 
     int f = idx % 10;
     int e = (idx /= 10) % 10;
@@ -84,7 +83,7 @@ int main() {
 
     {
         Polynomial<double, 1> p{{{{3}, a}, {{2}, b}, {{1}, c}, {{0}, d}}};
-        Polynomial<double, 1> q{{{{3}, d}, {{2}, e}, {{1}, f}}};
+        Polynomial<double, 1> q{{{{3}, d}, {{2}, e}, {{1}, f}, }};
         auto r = gcd(p, q);
         std::cout << "(" << r[1] << ") * (" << p << ") + (" << r[2] << ") * (" << q << ") = " << r[0] << "\n";         
         // std::cout << r[1] * p + r[2] * q << "\n";
