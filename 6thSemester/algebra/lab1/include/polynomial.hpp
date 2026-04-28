@@ -208,7 +208,8 @@ private:
 
 template <typename T>
 std::array<Polynomial<T, 1>, 3> gcd(const Polynomial<T, 1>& a, const Polynomial<T, 1>& b) {
-    if (b.norm() == -1) return { a, Polynomial<T, 1>{{{{0}, 1}}}, Polynomial<T, 1>{{}} };
+    if (b.norm() == -1 || (b.norm() == 0 && b.coeffs.at(b.exponents.at(0)) < 1e-6)) 
+        return { a, Polynomial<T, 1>{{{{0}, 1}}}, Polynomial<T, 1>{{}} };
 
     auto [q, r] = a / b;
     auto [d, x, y] = gcd(b, r);
