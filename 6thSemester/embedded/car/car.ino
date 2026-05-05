@@ -36,6 +36,7 @@ unsigned long t_look = look_delay / 2;
 unsigned long t_lookr = look_delay;
 unsigned long t_press = 0;
 bool blocked = false;
+bool going = false;
 
 long angle = 90;
 long distance = 0;
@@ -183,18 +184,21 @@ void loop() {
 
     case IRup:
         if (t >= t_press + press_delay) IRNoPress();
+        going = true;
 
         w.setSpeed(200);
         w.forward();
         break;
     case IRdown:
         if (t >= t_press + press_delay) IRNoPress();
+        going = true;
 
         w.setSpeed(200);
         w.back();
         break;
     case IRleft:
         if (t >= t_press + press_delay) IRNoPress();
+        going = true;
 
         w.stopLeft();
         w.setSpeed(200);
@@ -202,15 +206,19 @@ void loop() {
         break;
     case IRright:
         if (t >= t_press + press_delay) IRNoPress();
+        going = true;
 
         w.stopRight();
         w.setSpeed(200);
         w.forwardLeft();
         break;
 
+    case IRok:
+        w.stop();
+        break;
     
     default:
-        w.stop();
+        if (going && t >= t_press + press_delay) IRNoPress();
         break;
     }
 }
@@ -229,6 +237,7 @@ void clearTimes() {
 }
 
 void IRNoPress() {
+    going = false;
     ir_code = 0;
     w.stop();
 }
