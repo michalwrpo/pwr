@@ -27,12 +27,14 @@ long dist = 100000; // in mm
 long beep_delay = 250; // in milliseconds
 long look_delay = 500;
 long lcd_delay = 100;
+long press_delay = 100;
 unsigned long t_move_start = 0;
 unsigned long t_lcd = 0;
 unsigned long t_beep = 0;
 unsigned long t_lookl = 0;
 unsigned long t_look = look_delay / 2;
 unsigned long t_lookr = look_delay;
+unsigned long t_press = 0;
 bool blocked = false;
 
 long angle = 90;
@@ -70,16 +72,18 @@ void loop() {
         if (new_ir_code) ir_code = new_ir_code;
         Serial.println(ir_code);
         IrReceiver.resume();
+        clearTimes();
     } else {
         // ir_code = 0;
     }
+
+    unsigned long t = millis();
 
     // Serial.println(ir_code == IR1);
     switch (ir_code) {
     case IR1:
     {
         if (dist > 0) w.forward();
-        unsigned long t = millis();
         
         // argIn = Serial.parseInt(SKIP_ALL);
         
@@ -104,7 +108,8 @@ void loop() {
 
         if (dist && (dr < 30 || dc < 30 || dl < 30)) {
             blocked = true;
-            dodge();
+            if (dc < 30) dodge(1000);
+            else dodge(500);
             blocked = false;
         }
 
@@ -150,14 +155,82 @@ void loop() {
 
         break;
     }
-    case IR2:
-        w.stop();
+    case IR2:        
+        if (t >= t_look + look_delay / 2) {
+            t_look = t;
+            angle = 90;
+            lookAndTellDistance();
+            dc = distance;
+        }
+
+        if (dc > 60) {
+            w.setSpeed(200);
+            w.forward();
+        } else if (dc > 42) {
+            w.setSpeed(120);
+            w.forward();
+        } else if (dc > 37) {
+            w.stop();
+        } else if (dc > 20) {
+            w.setSpeed(120);
+            w.back();
+        } else {
+            w.setSpeed(200);
+            w.back();
+        }
+        
         break;
+
+    case IRup:
+        if (t >= t_press + press_delay) IRNoPress();
+
+        w.setSpeed(200);
+        w.forward();
+        break;
+    case IRdown:
+        if (t >= t_press + press_delay) IRNoPress();
+
+        w.setSpeed(200);
+        w.back();
+        break;
+    case IRleft:
+        if (t >= t_press + press_delay) IRNoPress();
+
+        w.stopLeft();
+        w.setSpeed(200);
+        w.forwardRight();
+        break;
+    case IRright:
+        if (t >= t_press + press_delay) IRNoPress();
+
+        w.stopRight();
+        w.setSpeed(200);
+        w.forwardLeft();
+        break;
+
     
     default:
         w.stop();
         break;
     }
+}
+
+
+void clearTimes() {
+    unsigned long t = millis();
+    t_move_start = t;
+    t_lcd = t;
+    t_beep = t;
+    t_lookl = t;
+    t_look = t + look_delay / 2;
+    t_lookr = t + look_delay;
+    t_press = t;
+    blocked = false;
+}
+
+void IRNoPress() {
+    ir_code = 0;
+    w.stop();
 }
 
 // zmienia wartość pinu BEEPER
@@ -199,7 +272,7 @@ void lookAndTellDistance() {
     distance = tot/59;
 }
 
-void dodge() {
+void dodge(int time) {
     int process_delay = 200;
 
     w.stop();
@@ -235,7 +308,7 @@ void dodge() {
         w.backLeft();
     }
 
-    delay(1000);
+    delay(time);
     
     w.stop();
 
