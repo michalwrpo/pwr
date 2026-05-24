@@ -1,7 +1,7 @@
 
 CXX := clang++
 CXX_STANDARD := -std=c++23
-CXX_OPT := -m64 -O3 -ffast-math
+# CXX_OPT := -m64 -O3
 CXX_DBG := -g
 CXX_WARN := -Weverything -Wno-c++98-compat-pedantic -Wno-shadow-field-in-constructor \
  			-Wno-weak-vtables -Wno-padded -Wno-global-constructors -Wno-exit-time-destructors \
