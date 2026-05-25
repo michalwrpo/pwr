@@ -77,18 +77,7 @@ int main(int argc, char** argv) {
             }
         }
     } else if (argv[1][0] == '2') {
-        if (argc < 4) {
-            std::println(stderr, "Usage: {} 2 FILE TENURE", argv[0]);
-            return 1;
-        }
-
-        iterations = (g.n < 1000) ? g.n : 100;
-        size_t taboo_tenure{};
-
-        {
-            std::stringstream ss{ argv[3]};
-            ss >> taboo_tenure;
-        }
+        iterations = (g.n < 100) ? g.n : 100;
 
         #pragma omp parallel
         {
@@ -100,7 +89,7 @@ int main(int argc, char** argv) {
             #pragma omp for
             for (size_t i = 0 ; i < iterations; ++i) {
                 Permutation p{ g };
-                size_t steps{ taboo_search(p, taboo_tenure) };
+                size_t steps{ taboo_search(p, p.n / 10) };
             
                 if (p.len < thread_best || thread_best == 0) {
                     thread_best = p.len;

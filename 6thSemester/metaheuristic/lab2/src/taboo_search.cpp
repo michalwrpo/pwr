@@ -3,9 +3,10 @@
 #include <random>
 #include <vector>
 
+constexpr int NO_IMPROVEMENT_ITERATIONS{5};
+
 size_t taboo_search(Permutation& p, size_t taboo_tenure) {
     size_t steps{ 0 };
-    const size_t max_no_change{ 5 };
     
     size_t last_changed{ 0 };
     const size_t n{ p.g.get().n };
@@ -25,7 +26,7 @@ size_t taboo_search(Permutation& p, size_t taboo_tenure) {
         size_t best_j { 0 };
         const auto& elem = cur.elements;
 
-        for (size_t i{ 0 }; i < n; ++i) {
+        for (size_t i{ 0 }; i < 3 * n; ++i) {
             size_t v1 { dist(gen) };
             size_t v2 { dist(gen) }; 
             while (v1 == v2) { v2 = dist(gen); }
@@ -63,7 +64,7 @@ size_t taboo_search(Permutation& p, size_t taboo_tenure) {
         }
 
         steps++;
-    } while (last_changed + max_no_change > steps);
+    } while (last_changed + NO_IMPROVEMENT_ITERATIONS > steps);
 
     return steps;
 }
