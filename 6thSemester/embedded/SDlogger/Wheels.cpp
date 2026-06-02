@@ -1,6 +1,8 @@
-#include <Arduino.h>
-
 #include "Wheels.h"
+
+#include "logger.h"
+
+#include <Arduino.h>
 
 #define SET_MOVEMENT(side,f,b) digitalWrite( side[0], f);\
                                digitalWrite( side[1], b)
@@ -35,12 +37,17 @@ void Wheels::setSpeedRight(uint8_t s)
 {
     analogWrite(this->pinsRight[2], s);
     this->rspeed = s;
+    Logger::partial_log("Right speed set to");
+    Logger::log(s);
 }
 
 void Wheels::setSpeedLeft(uint8_t s)
 {
     analogWrite(this->pinsLeft[2], s);
     this->lspeed =  s;
+    Logger::partial_log("Left speed set to");
+    Logger::log(s);
+
 }
 
 void Wheels::setSpeed(uint8_t s)
@@ -60,6 +67,7 @@ void Wheels::forwardLeft()
     SET_MOVEMENT(pinsLeft, HIGH, LOW);
     this->ldir = 1;
     if (this->lspeed < 0) this->lspeed *= -1;
+    Logger::partial_log("Left forward");
 }
 
 void Wheels::forwardRight() 
@@ -67,6 +75,7 @@ void Wheels::forwardRight()
     SET_MOVEMENT(pinsRight, HIGH, LOW);
     this->rdir = 1;
     if (this->rspeed < 0) this->rspeed *= -1;
+    Logger::partial_log("Right forward");
 }
 
 void Wheels::backLeft()
@@ -74,6 +83,7 @@ void Wheels::backLeft()
     SET_MOVEMENT(pinsLeft, LOW, HIGH);
     this->ldir = -1;
     if (this->lspeed > 0) this->lspeed *= -1;
+    Logger::partial_log("Left backwards");
 }
 
 void Wheels::backRight()
@@ -81,6 +91,7 @@ void Wheels::backRight()
     SET_MOVEMENT(pinsRight, LOW, HIGH);
     this->rdir = -1;
     if (this->rspeed > 0) this->rspeed *= -1;    
+    Logger::partial_log("Right backwards");
 }
 
 void Wheels::forward()
@@ -99,12 +110,14 @@ void Wheels::stopLeft()
 {
     SET_MOVEMENT(pinsLeft, LOW, LOW);
     this->ldir = 0;
+    Logger::partial_log("Left stopped");
 }
 
 void Wheels::stopRight()
 {
     SET_MOVEMENT(pinsRight, LOW, LOW);
     this->rdir = 0;
+    Logger::partial_log("Right stopped");
 }
 
 void Wheels::stop()

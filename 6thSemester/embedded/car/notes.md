@@ -35,3 +35,26 @@ left - 0x8
 ok - 0x1C
 right - 0x5A
 down - 0x52
+
+zielony prawo przód 7 
+niebieski prawo tył 8
+biały prawy prędkość 5
+fioletowy lewo przód 2
+szary lewo tył 4
+żółty lewo prędkość 6
+
+servo do servo i 9
+
+sonda:
+echo (A2) i trig (A1)
+ 
+LCD:
+VCC do 5V
+
+IR 3
+
+Micro SD
+- SCK 13
+- MISO 12
+- MOSI 11
+- SS 10
