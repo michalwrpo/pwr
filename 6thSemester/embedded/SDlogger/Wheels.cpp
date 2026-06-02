@@ -35,6 +35,7 @@ void Wheels::attachLeft(int pF, int pB, int pS)
 
 void Wheels::setSpeedRight(uint8_t s)
 {
+    if (this->rspeed == s) return;
     analogWrite(this->pinsRight[2], s);
     this->rspeed = s;
     Logger::partial_log("Right speed set to");
@@ -43,6 +44,7 @@ void Wheels::setSpeedRight(uint8_t s)
 
 void Wheels::setSpeedLeft(uint8_t s)
 {
+    if (this->lspeed == s) return;
     analogWrite(this->pinsLeft[2], s);
     this->lspeed =  s;
     Logger::partial_log("Left speed set to");
@@ -64,34 +66,38 @@ void Wheels::attach(int pRF, int pRB, int pRS, int pLF, int pLB, int pLS)
 
 void Wheels::forwardLeft() 
 {
+    if (this->ldir == 1) return;
     SET_MOVEMENT(pinsLeft, HIGH, LOW);
     this->ldir = 1;
     if (this->lspeed < 0) this->lspeed *= -1;
-    Logger::partial_log("Left forward");
+    Logger::log("Left forward");
 }
 
 void Wheels::forwardRight() 
 {
+    if (this->rdir == 1) return;
     SET_MOVEMENT(pinsRight, HIGH, LOW);
     this->rdir = 1;
     if (this->rspeed < 0) this->rspeed *= -1;
-    Logger::partial_log("Right forward");
+    Logger::log("Right forward");
 }
 
 void Wheels::backLeft()
 {
+    if (this->ldir == -1) return;
     SET_MOVEMENT(pinsLeft, LOW, HIGH);
     this->ldir = -1;
     if (this->lspeed > 0) this->lspeed *= -1;
-    Logger::partial_log("Left backwards");
+    Logger::log("Left backwards");
 }
 
 void Wheels::backRight()
 {
+    if (this->rdir == -1) return;
     SET_MOVEMENT(pinsRight, LOW, HIGH);
     this->rdir = -1;
     if (this->rspeed > 0) this->rspeed *= -1;    
-    Logger::partial_log("Right backwards");
+    Logger::log("Right backwards");
 }
 
 void Wheels::forward()
@@ -108,16 +114,18 @@ void Wheels::back()
 
 void Wheels::stopLeft()
 {
+    if (this->ldir == 0) return;
     SET_MOVEMENT(pinsLeft, LOW, LOW);
     this->ldir = 0;
-    Logger::partial_log("Left stopped");
+    Logger::log("Left stopped");
 }
 
 void Wheels::stopRight()
 {
+    if (this->rdir == 0) return;
     SET_MOVEMENT(pinsRight, LOW, LOW);
     this->rdir = 0;
-    Logger::partial_log("Right stopped");
+    Logger::log("Right stopped");
 }
 
 void Wheels::stop()

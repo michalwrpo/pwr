@@ -21,6 +21,7 @@ static void Logger::init(const char* filename) {
         while (1);
     }
 
+    logFile.write("Start of logs\n");
     logFile.close();
     m_partial_log = false;
 }
@@ -74,7 +75,6 @@ static void Logger::read() {
 
     Serial.println("Reading logs");
     if (logFile) {
-        Serial.println(logFile.available());
         while (logFile.available()) {
             char ch = logFile.read(); 
             Serial.print(ch);

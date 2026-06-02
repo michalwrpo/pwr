@@ -20,7 +20,7 @@ Servo servo;
 Wheels w;
 
 long look_delay = 500;
-long press_delay = 100;
+long press_delay = 250;
 unsigned long t_move_tick = 0;
 unsigned long t_lookl = 0;
 unsigned long t_look = look_delay / 2;
@@ -28,6 +28,8 @@ unsigned long t_lookr = look_delay;
 unsigned long t_press = 0;
 bool blocked = false;
 bool going = false;
+bool newMode = false;
+bool just_read = false;
 
 long angle = 90;
 long distance = 0;
@@ -65,9 +67,18 @@ void setup() {
 void loop() {
     if (IrReceiver.decode()) {
         int new_ir_code = IrReceiver.decodedIRData.command;
-        if (new_ir_code) ir_code = new_ir_code;
-        Logger::partial_log("Pressed");
-        Logger::log(codeName(new_ir_code));
+        if (new_ir_code) {
+            ir_code = new_ir_code;
+
+            if (ir_code != IR3) {
+                just_read = false;
+            }
+            if (new_ir_code != ir_code) {
+                Logger::partial_log("Pressed");
+                Logger::log(new_ir_code);
+                newMode = true;
+            }
+        }
         IrReceiver.resume();
         clearTimes();
     }
@@ -77,7 +88,11 @@ void loop() {
     switch (ir_code) {
     case IR1:
     {
-        Logger::log("Mode: wander");
+        if (newMode) {
+            Logger::log("Mode: wander");
+            newMode = false;
+        }
+        
         w.forward();
 
         if (dr < 30 || dc < 30 || dl < 30) {
@@ -114,7 +129,11 @@ void loop() {
     }
     case IR2:
     {
-        Logger::log("Mode: dog");
+        if (newMode) {
+            Logger::log("Mode: dog");
+            newMode = false;
+        }
+
         if (t >= t_look + look_delay / 2) {
             t_look = t;
             angle = 90;
@@ -142,8 +161,13 @@ void loop() {
     }
     case IR3:
     {
-        Logger::read();
         ir_code = 0;
+        w.stop();
+        if (!just_read) {
+            Logger::read();
+            delay(250);
+            just_read = true;
+        }
         break;
     }
     case IRup:

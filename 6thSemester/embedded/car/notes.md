@@ -47,9 +47,6 @@ servo do servo i 9
 
 sonda:
 echo (A2) i trig (A1)
- 
-LCD:
-VCC do 5V
 
 IR 3
 
