@@ -47,4 +47,4 @@ if __name__ == "__main__":
     
     mpl.gca().set_facecolor("#940409")
     mpl.gca().set_aspect('equal', adjustable='box')
-    mpl.show()
+    mpl.savefig("pyrethrum.png")

@@ -128,27 +128,9 @@ public:
         res.perm = p.perm;
         res.comp = p.comp;
 
-        auto& pe = p.exponents;
-        auto& pc = p.coeffs;
-        auto& qe = q.exponents;
-        auto& qc = q.coeffs;
-        auto& re = res.exponents;
-        auto& rc = res.coeffs;
-
-        for (auto e1 : pe) {
-            for (auto e2 : qe) {
-                auto newe = e1 + e2;
-                size_t j = 0;
-                while (j < re.size() && p.comp(newe, re[j], p.perm) == Compare::Less) ++j;
-                if (j < re.size() && re[j] == newe) {
-                    rc[newe] += pc.at(e1) * qc.at(e2);
-                } else {
-                    re.insert(re.begin() + static_cast<long>(j), newe);
-                    rc[newe] = pc.at(e1) * qc.at(e2);
-
-                    int deg = std::accumulate(newe.begin(), newe.end(), 0);
-                    if (deg > res.degree) res.degree = deg;
-                }
+        for (auto e1 : p.exponents) {
+            for (auto e2 : q.exponents) {
+                res.insertMonomial(e1 + e2, p.coeffs.at(e1) * q.coeffs.at(e2));
             }
         }
 
@@ -167,7 +149,11 @@ private:
 
         if (newDegree > degree) degree = newDegree;
 
-        exponents.insert(exponents.begin() + static_cast<long>(j), exp);
+        if (j == exponents.size() || exponents[j] != exp) {
+            exponents.insert(exponents.begin() + static_cast<long>(j), exp);
+        } else {
+            coeffs[exp] += v;
+        }
         coeffs.emplace(exp, v);
     }
 };
