@@ -53,15 +53,13 @@ size_t taboo_search(Permutation& p, size_t taboo_tenure) {
             }                
         }
 
-        if (best_delta < 0) {
-            cur.invert(best_i, best_j);
-            if (cur.len < p.len) {
-                p.elements = cur.elements;
-                p.len = cur.len;
-                last_changed = steps;
-            }
-            taboo[best_i][best_j] = steps + taboo_tenure;
+        cur.invert(best_i, best_j);
+        if (cur.len < p.len) {
+            p.elements = cur.elements;
+            p.len = cur.len;
+            last_changed = steps;
         }
+        taboo[best_i][best_j] = steps + taboo_tenure;
 
         steps++;
     } while (last_changed + NO_IMPROVEMENT_ITERATIONS > steps);
