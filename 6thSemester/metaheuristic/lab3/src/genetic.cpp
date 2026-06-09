@@ -380,3 +380,102 @@ std::pair<Permutation, int> genetic_meme(Graph& g, size_t population_size, size_
 
     return std::pair{best, steps};
 }
+
+std::pair<Permutation, int> genetic_islands(Graph& g, size_t islands, size_t island_populaiton, size_t parent_pool, double mutation_chance, size_t migration_interval) {
+    int steps{ 0 };
+    int last_changed{ 0 };
+    const size_t n{ g.n };
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> chance(0, 1);
+    std::uniform_int_distribution<size_t> vertex(0, n - 1);
+    std::uniform_int_distribution<size_t> pop(0, island_populaiton - 1);
+    std::uniform_int_distribution<size_t> island_dist(0, islands - 1);
+
+    std::vector<bool> crossover_mask(n, false);
+
+    std::vector<std::vector<Permutation>> population(islands, std::vector<Permutation>{});
+    std::vector<std::vector<Permutation>> next_population(islands, std::vector<Permutation>{});
+    for (size_t i = 0; i < islands; ++i) {
+        population[i].reserve(island_populaiton);
+        next_population[i].resize(island_populaiton, Permutation{g});
+    }
+    
+    Permutation best{ g };
+
+    for (size_t i = 0; i < islands; ++i) {
+        for (size_t j = 0; j < island_populaiton; ++j) {
+            population[i].push_back(Permutation{ g });
+            if (population[i][j].len < best.len) {
+                best.elements = population[i][j].elements;
+                best.len = population[i][j].len;
+            }
+        }
+    }
+        
+    while (last_changed < NO_IMPROVEMENT_ITERATIONS) {
+        ++last_changed;
+        ++steps;
+
+        for (size_t i{ 0 }; i < islands; ++i) {
+            for (size_t j{ 0 }; j < island_populaiton / 2; ++j) {
+                size_t parent_island{ i };
+                size_t parent1{ pop(gen) };
+                for (size_t k = 0; k < parent_pool - 1; k++) {
+                    size_t island{ i };
+                    if (static_cast<size_t>(steps) % migration_interval == 0) {
+                        island = island_dist(gen);
+                    }
+                    size_t v{ pop(gen) };
+
+                    if (population[island][v].len < population[parent_island][parent1].len) {
+                        parent1 = v;
+                    }
+                }
+        
+                size_t parent2{ pop(gen) };
+                for (size_t k = 0; k < parent_pool - 1; k++) {
+                    size_t v{ pop(gen) };
+                    if (v == parent1) continue;
+                    if (population[i][v].len < population[i][parent2].len) {
+                        parent2 = v;
+                    }
+                }
+        
+                size_t c1_idx{ j * 2 };
+                ordered_crossover(
+                    population[parent_island][parent1], population[i][parent2], vertex(gen), vertex(gen), crossover_mask, next_population[i][c1_idx]
+                );
+                
+                if (chance(gen) < mutation_chance) {
+                    mutate(next_population[i][c1_idx], gen, vertex);
+                }
+        
+                if (next_population[i][c1_idx].len < best.len) {
+                    best.elements = next_population[i][c1_idx].elements;
+                    best.len = next_population[i][c1_idx].len;
+                    last_changed = 0;
+                }
+        
+                size_t c2_idx{ j * 2 + 1};
+                ordered_crossover(
+                    population[i][parent2], population[parent_island][parent1], vertex(gen), vertex(gen), crossover_mask, next_population[i][c2_idx]
+                );
+                
+                if (chance(gen) < mutation_chance) {
+                    mutate(next_population[i][c2_idx], gen, vertex);
+                }
+                if (next_population[i][c2_idx].len < best.len) {
+                    best.elements = next_population[i][c2_idx].elements;
+                    best.len = next_population[i][c2_idx].len;
+                    last_changed = 0;
+                }
+            }
+        }
+
+        std::swap(population, next_population);
+    }
+
+    return std::pair{best, steps};
+}

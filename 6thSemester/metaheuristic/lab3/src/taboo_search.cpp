@@ -15,7 +15,6 @@ void taboo_search(Permutation& p, size_t steps_limit, size_t taboo_epoch,
     
     Permutation cur{ p };
 
-
     for (size_t steps{ 0 }; steps < steps_limit; ++steps) {
         long best_delta { 0 };
         size_t best_i { 0 };

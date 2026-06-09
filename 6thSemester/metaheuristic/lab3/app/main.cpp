@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
     size_t iterations { 100 };
     long long sol_sum {};
     long long total_steps {};
+    bool islands { false };
 
     std::pair<Permutation, int> (*genetic)(Graph&, size_t, size_t, double) {};
     
@@ -35,6 +36,8 @@ int main(int argc, char** argv) {
         genetic = genetic_pmx;
     } else if (argv[1][0] == '3') {
         genetic = genetic_meme;
+    } else if (argv[1][0] == '4') {
+        islands = true;
     } else {
         std::println(stderr, "Unknown exercise: {}", argv[1]);
         return 1;
@@ -49,15 +52,27 @@ int main(int argc, char** argv) {
         
         #pragma omp for
         for (size_t i = 0 ; i < iterations; ++i) {
-            auto result{ genetic(g, 10, 10, 0.1 ) };
+            
+            if (!islands) {
+                auto result{ genetic(g, 10, 10, 0.1 ) };
+                if (result.first.len < thread_best || thread_best == 0) {
+                    thread_best = result.first.len;
+                    thread_solution = result.first.elements;
+                }
         
-            if (result.first.len < thread_best || thread_best == 0) {
-                thread_best = result.first.len;
-                thread_solution = result.first.elements;
-            }
-    
-            thread_sol_sum += result.first.len;
-            thread_steps += result.second;
+                thread_sol_sum += result.first.len;
+                thread_steps += result.second;
+            } else {
+                auto result{ genetic_islands(g, 2, 6, 2, 0.1, 10) };
+
+                if (result.first.len < thread_best || thread_best == 0) {
+                    thread_best = result.first.len;
+                    thread_solution = result.first.elements;
+                }
+        
+                thread_sol_sum += result.first.len;
+                thread_steps += result.second;
+            }          
         }
 
         #pragma omp critical
